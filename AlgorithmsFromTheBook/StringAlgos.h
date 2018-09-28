@@ -113,12 +113,13 @@ std::vector<std::pair<unsigned int, unsigned int>> * backwardsSequenceAlignment(
 
 	opt[x.size()][y.size()] = 0;
 
-	for (index i = x.size() - 2; i >= 0; i--) {
-		for (index j = y.size() - 2; j >= 0; j--) {
+	for (index i = x.size() - 1; i >= 0; i--) {
+		for (index j = y.size() - 1; j >= 0; j--) {
 			//if m is a full matching then for every i, j either i, j is in m
 			//or one of them is unmatched (in an matching actually)
 			//check the minimum cost of all these possibilities
-			opt[i][j] = std::min({ opt[i + 1][j + 1] + costFunc(x[i + 1], y[j + 1]), delta + opt[i + 1][j], delta + opt[i][j + 1] });
+
+			opt[i][j] = std::min({ opt[i + 1][j + 1] + costFunc(x[i], y[j]), delta + opt[i + 1][j], delta + opt[i][j + 1] });
 		}
 	}
 
@@ -147,7 +148,7 @@ std::vector<std::pair<unsigned int, unsigned int>> * backwardsSequenceAlignment(
 
 		//if the diagonal is the minimum its a pair, otherwise its not adn just keep going
 		if (min == opt[i + 1][j + 1]) {
-			retVec->push_back(std::make_pair(i - 1, j - 1));
+			retVec->push_back(std::make_pair(i, j));
 			i++;
 			j++;
 		}

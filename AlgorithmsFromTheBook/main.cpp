@@ -1,6 +1,6 @@
 //identifier poisoning so things cant be used outside of their namespaces
 #pragma warning (error : 4995)
-//this is a test comment
+
 #include <stdio.h>
 
 #include <iostream>
@@ -27,7 +27,6 @@
 //TODO
 //edmond algo
 //optimizaitons in segmented linear regression (266/284), calculate errors in constant time
-//backwards sequence alignment
 //linear space sequence alignment
 
 using namespace std;
