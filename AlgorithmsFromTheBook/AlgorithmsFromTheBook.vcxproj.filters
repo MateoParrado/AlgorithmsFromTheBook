@@ -71,5 +71,8 @@
     <ClInclude Include="StringAlgos.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SegmentedRegression.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

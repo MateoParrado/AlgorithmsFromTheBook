@@ -23,11 +23,16 @@
 #include "FastFourierTransform.h"
 #include "RNA.h"
 #include "StringAlgos.h"
+#include "SegmentedRegression.h"
 
 //TODO
 //edmond algo
 //optimizaitons in segmented linear regression (266/284), calculate errors in constant time
-//linear space sequence alignment
+//linear space reverse sequence alignment just val
+//divide and conquor linear space sequence aligmnent
+///square root finder
+///sine and cosine and tangernt finder
+//when done with sequence aligmment remove the printing comments
 
 using namespace std;
 
@@ -55,11 +60,12 @@ int main() {
 	//x.addEdge(3, 5, 4);
 	//x.addEdge(5, 1, 8);
 
-	string x = "ant";
-	string y = "art";
+	string x = "aaabbb";
+	string y = "aabbb";
 
-	auto i = backwardsSequenceAlignment(x, y, 2, costFunc);
-	std::cout << "\n";
-	auto j = sequenceAlignment(x, y, 2, costFunc);
+	auto p = sequenceAlignment(x, y, 2, &costFunc);
+
+	std::cout << "\n\n\n\n\n\n" << spaceEfficientSequenceAligmment(x, y, 2, &costFunc);
+
 	std::getchar();
 }

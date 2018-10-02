@@ -180,7 +180,7 @@ namespace Graph {
 		WeightedGraph(unsigned int size = 10) : Graph(size) {  }
 
 		unsigned int getTotalEdgesInGraph() {
-			return Graph::getTotalEdgesInGraph() * 2;
+			return Graph::getTotalEdgesInGraph()/2;
 		}
 
 		//number of edges connected to vertex _i

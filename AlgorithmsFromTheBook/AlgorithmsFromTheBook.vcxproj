@@ -138,6 +138,7 @@
     <ClInclude Include="Knapsack.h" />
     <ClInclude Include="LinkedList.h" />
     <ClInclude Include="RNA.h" />
+    <ClInclude Include="SegmentedRegression.h" />
     <ClInclude Include="SortingAlgos.h" />
     <ClInclude Include="StableMatching.h" />
     <ClInclude Include="StringAlgos.h" />

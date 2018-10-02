@@ -42,6 +42,10 @@ std::string greatestCommonSubstring(std::string str1, std::string str2) {
 	return y;
 }
 
+//finds the best way to pair up two strings i and j
+//eg "ab", "aab" -> (0, 0), (1, 2)
+//cost func is f aunction that takes two charachters and returns the cost of pairing those two chars
+//example is the cost of mathcing a charachter with itself is 0, a vowel with another vowel is three, and anything else is 9
 std::vector<std::pair<unsigned int, unsigned int>> * sequenceAlignment(std::string x, std::string y, unsigned int delta, unsigned int(*costFunc)(char, char)) {
 	typedef boost::multi_array<unsigned int, 2>::index index;
 	boost::multi_array<unsigned int, 2> opt(boost::extents[x.size() + 1][y.size() + 1]);
@@ -99,6 +103,10 @@ std::vector<std::pair<unsigned int, unsigned int>> * sequenceAlignment(std::stri
 	return retVec;
 }
 
+//finds the best way to pair up two strings i and j
+//eg "ab", "aab" -> (0, 0), (1, 2)
+//cost func is f aunction that takes two charachters and returns the cost of pairing those two chars
+//example is the cost of mathcing a charachter with itself is 0, a vowel with another vowel is three, and anything else is 9
 std::vector<std::pair<unsigned int, unsigned int>> * backwardsSequenceAlignment(std::string x, std::string y, unsigned int delta, unsigned int(*costFunc)(char, char)) {
 	typedef boost::multi_array<unsigned int, 2>::index index;
 	boost::multi_array<unsigned int, 2> opt(boost::extents[x.size() + 1][y.size() + 1]);
@@ -123,12 +131,12 @@ std::vector<std::pair<unsigned int, unsigned int>> * backwardsSequenceAlignment(
 		}
 	}
 
-	for (int i = 0; i < x.size() + 1; i++) {
-		for (int j = 0; j < y.size() + 1; j++) {
-			std::cout << opt[i][j] << " ";
-		}
-		std::cout << std::endl;
-	}
+	//for (int i = 0; i < x.size() + 1; i++) {
+	//	for (int j = 0; j < y.size() + 1; j++) {
+	//		std::cout << opt[i][j] << " ";
+	//	}
+	//	std::cout << std::endl;
+	//}
 
 	std::vector<std::pair<unsigned int, unsigned int>> * retVec = new std::vector<std::pair<unsigned int, unsigned int>>;
 
@@ -161,6 +169,40 @@ std::vector<std::pair<unsigned int, unsigned int>> * backwardsSequenceAlignment(
 	}
 
 	return retVec;
+}
+
+//finds the minimum error of the pairings above in linear space, helper function
+unsigned int spaceEfficientSequenceAligmment(std::string x, std::string y, unsigned int delta, unsigned int(*costFunc)(char, char)) {
+	//str is the shorter string, and therefore th ebetter choice for space efficiency
+	std::string * str = x.length() < y.length() ? &x : &y;
+	std::string * notStr = x.length() < y.length() ? &y : &x;
+
+	typedef boost::multi_array<unsigned int, 2>::index index;
+	boost::multi_array<unsigned int, 2> opt(boost::extents[str->size() + 1][2]);
+
+	//the cost of just not matching it at all
+	for (unsigned int i = 0; i < str->size() + 1; i++) {
+		opt[i][0] = i * delta;
+	}
+	opt[0][1] = delta;
+
+	char ind = 1;
+
+	for (index i = 1; i < str->size() + 1; i++) {
+		opt[i][ind] = std::min({ opt[i - 1][!ind] + costFunc((*notStr)[i - 1], (*str)[!ind]), delta + opt[i - 1][!ind], delta + opt[i][!ind] });
+
+		ind = !ind;
+	}
+	for (unsigned int i = 0; i < str->size() + 1; i++) {
+		std::cout << opt[i][0] << " ";
+	}
+	std::cout << std::endl;
+
+	for (unsigned int i = 0; i < str->size() + 1; i++) {
+		std::cout << opt[i][1] << " ";
+	}
+
+	return opt[str->size()][ind];
 }
 
 #pragma warning (default : 4018)
