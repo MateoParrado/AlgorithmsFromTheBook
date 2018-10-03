@@ -30,8 +30,6 @@
 //optimizaitons in segmented linear regression (266/284), calculate errors in constant time
 //linear space reverse sequence alignment just val
 //divide and conquor linear space sequence aligmnent
-///square root finder
-///sine and cosine and tangernt finder
 //when done with sequence aligmment remove the printing comments
 
 using namespace std;
