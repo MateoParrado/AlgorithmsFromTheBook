@@ -94,12 +94,7 @@ std::vector<std::pair<unsigned int, unsigned int>> * sequenceAlignment(std::stri
 			j--;
 		}
 	}
-	//for (int i = 1; i < x.size() + 1; i++) {
-	//	for (int j = 0; j < y.size() + 1; j++) {
-	//		std::cout << opt[i][j] << " ";
-	//	}
-	//	std::cout << std::endl;
-	//}
+
 	return retVec;
 }
 
@@ -130,13 +125,6 @@ std::vector<std::pair<unsigned int, unsigned int>> * backwardsSequenceAlignment(
 			opt[i][j] = std::min({ opt[i + 1][j + 1] + costFunc(x[i], y[j]), delta + opt[i + 1][j], delta + opt[i][j + 1] });
 		}
 	}
-
-	//for (int i = 0; i < x.size() + 1; i++) {
-	//	for (int j = 0; j < y.size() + 1; j++) {
-	//		std::cout << opt[i][j] << " ";
-	//	}
-	//	std::cout << std::endl;
-	//}
 
 	std::vector<std::pair<unsigned int, unsigned int>> * retVec = new std::vector<std::pair<unsigned int, unsigned int>>;
 
@@ -170,10 +158,8 @@ std::vector<std::pair<unsigned int, unsigned int>> * backwardsSequenceAlignment(
 
 	return retVec;
 }
-
 //finds the minimum error of the pairings above in linear space, helper function
-unsigned int spaceEfficientSequenceAligmment(std::string x, std::string y, unsigned int delta, unsigned int(*costFunc)(char, char)) {
-	std::cout << std::endl;
+unsigned int * spaceEfficientSequenceAligmment(std::string x, std::string y, unsigned int delta, unsigned int(*costFunc)(char, char)) {
 	//str is the shorter string, and therefore th ebetter choice for space efficiency
 	std::string * str = x.length() < y.length() ? &x : &y;
 	std::string * notStr = x.length() < y.length() ? &y : &x;
@@ -211,8 +197,59 @@ doItAgain:
 		goto doItAgain;
 	}
 	
-	//return the value at the leftmost index most recently written to
-	return opt[str->size()][ind];
+	//return an array slice of the row we need
+	unsigned int * ret = new unsigned int[str->size() + 1];
+	for (unsigned int i = 0; i < str->size() + 1; i++) {
+		ret[i] = opt[i][ind];
+	}
+	return ret;
+}
+
+//finds the minimum error of the pairings above in linear space, helper function
+unsigned int * backwardsSpaceEfficientSequenceAligmment(std::string x, std::string y, unsigned int delta, unsigned int(*costFunc)(char, char)) {
+	//str is the shorter string, and therefore th ebetter choice for space efficiency
+	std::string * str = x.length() < y.length() ? &x : &y;
+	std::string * notStr = x.length() < y.length() ? &y : &x;
+
+	typedef boost::multi_array<unsigned int, 2>::index index;
+	boost::multi_array<unsigned int, 2> opt(boost::extents[str->size() + 1][2]);
+
+	//the cost of just not matching it at all
+	for (unsigned int i = 0; i < str->size() + 1; i++) {
+		opt[i][0] = (str->size() - i) * delta;
+	}
+
+	//used to know when were done looping through the second, longer string
+	unsigned int notStrDone = 0;
+
+	//used to switch the index being written to between the zeroth and the first for efficiency
+	char ind = 1;
+
+	//if we havent looped fully through the longer string, keep looping
+doItAgain:
+
+	//sets the cost of not matching anything
+	opt[str->size()][ind] = delta * (notStrDone + 1);
+
+	//same recurrence as the one for the non space efficient version
+	for (index i = str->size() - 1; i >= 0; i--) {
+		opt[i][ind] = std::min({ opt[i + 1][!ind] + costFunc((*str)[i + 1], (*notStr)[notStr->size() - notStrDone]), delta + opt[i + 1][ind], delta + opt[i][!ind] });
+	}
+
+	//check if done
+	if (notStrDone < notStr->size() - 1) {
+		//if done, switch the index being written to
+		ind = !ind;
+		notStrDone++;
+		goto doItAgain;
+	}
+
+	//return an array slice of the row we need
+	unsigned int * ret = new unsigned int[str->size() + 1];
+	for (unsigned int i = 0; i < str->size() + 1; i++) {
+		ret[i] = opt[i][ind];
+	}
+	return ret;
 }
 
 #pragma warning (default : 4018)

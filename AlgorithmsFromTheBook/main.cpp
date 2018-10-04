@@ -61,9 +61,9 @@ int main() {
 	string x = "aaabbb";
 	string y = "aabbb";
 
-	auto p = sequenceAlignment(x, y, 2, &costFunc);
-
-	std::cout << "\n\n\n\n\n\n" << spaceEfficientSequenceAligmment(x, y, 2, &costFunc);
+	auto p = backwardsSequenceAlignment(x, y, 2, &costFunc);
+	std::cout << "\n\n";
+	std::cout << "\n\n\n\n\n\n" << spaceEfficientSequenceAligmment(x, y, 2, &costFunc)[5];
 
 	std::getchar();
 }
