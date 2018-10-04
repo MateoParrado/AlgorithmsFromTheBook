@@ -63,7 +63,7 @@ int main() {
 
 	auto p = backwardsSequenceAlignment(x, y, 2, &costFunc);
 	std::cout << "\n\n";
-	std::cout << "\n\n\n\n\n\n" << spaceEfficientSequenceAligmment(x, y, 2, &costFunc)[5];
+	auto yp = spaceEfficientSequenceAlignment(x, y, 2, &costFunc);
 
 	std::getchar();
 }
