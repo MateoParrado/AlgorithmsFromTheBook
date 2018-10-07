@@ -28,9 +28,9 @@
 //TODO
 //edmond algo
 //optimizaitons in segmented linear regression (266/284), calculate errors in constant time
-//linear space reverse sequence alignment just val
 //divide and conquor linear space sequence aligmnent
 //when done with sequence aligmment remove the printing comments
+//when done witg sequence alirnment, get rid of str and notstr in the sequence alignment vals they arent used anymore
 
 using namespace std;
 
@@ -58,12 +58,25 @@ int main() {
 	//x.addEdge(3, 5, 4);
 	//x.addEdge(5, 1, 8);
 
-	string x = "aaabbb";
+	string x = "aaabbbccc";
 	string y = "aabbb";
 
+	//auto ygfd = sequenceAlignment(x, y, 2, &costFunc);
+	std::cout << "\n\n\n";
 	auto p = backwardsSequenceAlignment(x, y, 2, &costFunc);
 	std::cout << "\n\n";
-	auto yp = spaceEfficientSequenceAlignment(x, y, 2, &costFunc);
+	
+	//unsigned int * front = spaceEfficientSequenceAlignmentVal(x, y.substr(0, y.size() / 2), 2, &costFunc);
+	unsigned int * back = backwardsSpaceEfficientSequenceAlignmentVal(x, y, 2, &costFunc);
+	for (unsigned int i = 0; i < 10; i++) {
+		//std::cout << front[i] << " ";
+	}
+	std::cout << std::endl;
+	for (unsigned int i = 0; i < 10; i++) {
+	//	std::cout << back[i] << " ";
+	}
+
+	//auto yl = spaceEfficientSequenceAlignment(x, y, 2, &costFunc);
 
 	std::getchar();
 }

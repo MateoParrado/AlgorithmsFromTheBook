@@ -94,7 +94,13 @@ std::vector<std::pair<unsigned int, unsigned int>> * sequenceAlignment(std::stri
 			j--;
 		}
 	}
-
+	for (int i = 0; i < x.size() + 1; i++) {
+		for (int j = 0; j < y.size() + 1; j++) {
+			std::cout << opt[i][j] << " ";
+			if (opt[i][j] < 9) std::cout << " ";
+		}
+		std::cout << std::endl;
+	}
 	return retVec;
 }
 
@@ -126,13 +132,21 @@ std::vector<std::pair<unsigned int, unsigned int>> * backwardsSequenceAlignment(
 		}
 	}
 
+	for (int i = 0; i < x.size() + 1; i++) {
+		for (int j = 0; j < y.size() + 1; j++) {
+			std::cout << opt[i][j] << " ";
+			if (opt[i][j] < 9) std::cout << " ";
+		}
+		std::cout << std::endl;
+	}
+
 	std::vector<std::pair<unsigned int, unsigned int>> * retVec = new std::vector<std::pair<unsigned int, unsigned int>>;
 
 	unsigned int i = 0;
 	unsigned int j = 0;
 
 	//if either i or j is zero its done
-	while (i < x.size() && j < x.size()) {
+	while (i < x.size() && j < y.size()) {
 		unsigned int min = std::min({ opt[i + 1][j + 1], opt[i][j + 1], opt[i + 1][j] });
 
 		//sometimes the diagonal will be the minimum but its only because it took two deltas to get to the point, so in reality it shouldnt be included
@@ -161,8 +175,11 @@ std::vector<std::pair<unsigned int, unsigned int>> * backwardsSequenceAlignment(
 //finds the minimum error of the pairings above in linear space, helper function
 unsigned int * spaceEfficientSequenceAlignmentVal(std::string x, std::string y, unsigned int delta, unsigned int(*costFunc)(char, char)) {
 	//str is the shorter string, and therefore th ebetter choice for space efficiency
-	std::string * str = x.length() < y.length() ? &x : &y;
-	std::string * notStr = x.length() < y.length() ? &y : &x;
+	//std::string * str = x.length() < y.length() ? &x : &y;
+	//std::string * notStr = x.length() < y.length() ? &y : &x;
+
+	std::string * str = &x;
+	std::string * notStr = &y;
 
 	typedef boost::multi_array<unsigned int, 2>::index index;
 	boost::multi_array<unsigned int, 2> opt(boost::extents[str->size() + 1][2]);
@@ -208,8 +225,11 @@ doItAgain:
 //finds the minimum error of the pairings above in linear space, helper function
 unsigned int * backwardsSpaceEfficientSequenceAlignmentVal(std::string x, std::string y, unsigned int delta, unsigned int(*costFunc)(char, char)) {
 	//str is the shorter string, and therefore th ebetter choice for space efficiency
-	std::string * str = x.length() < y.length() ? &x : &y;
-	std::string * notStr = x.length() < y.length() ? &y : &x;
+	//std::string * str = x.length() < y.length() ? &x : &y;
+	//std::string * notStr = x.length() < y.length() ? &y : &x;
+
+	std::string * str = &x;
+	std::string * notStr = &y;
 
 	typedef boost::multi_array<unsigned int, 2>::index index;
 	boost::multi_array<unsigned int, 2> opt(boost::extents[str->size() + 1][2]);
@@ -228,12 +248,18 @@ unsigned int * backwardsSpaceEfficientSequenceAlignmentVal(std::string x, std::s
 	//if we havent looped fully through the longer string, keep looping
 doItAgain:
 
+	for (int i = 0; i < str->size() + 1; i++) {
+		std::cout << opt[i][!ind] << " ";
+		if (opt[i][!ind] < 10) std::cout << " ";
+	}
+	std::cout << std::endl;
+
 	//sets the cost of not matching anything
 	opt[str->size()][ind] = delta * (notStrDone + 1);
 
 	//same recurrence as the one for the non space efficient version
 	for (index i = str->size() - 1; i >= 0; i--) {
-		opt[i][ind] = std::min({ opt[i + 1][!ind] + costFunc((*str)[i + 1], (*notStr)[notStr->size() - notStrDone]), delta + opt[i + 1][ind], delta + opt[i][!ind] });
+		opt[i][ind] = std::min({ opt[i + 1][!ind] + costFunc((*str)[i], (*notStr)[notStr->size() - notStrDone - 1]), delta + opt[i + 1][ind], delta + opt[i][!ind] });
 	}
 
 	//check if done
@@ -243,7 +269,11 @@ doItAgain:
 		notStrDone++;
 		goto doItAgain;
 	}
-
+	for (int i = 0; i < str->size() + 1; i++) {
+		std::cout << opt[i][ind] << " ";
+		if (opt[i][!ind] < 10) std::cout << " ";
+	}
+	std::cout << std::endl;
 	//return an array slice of the row we need
 	unsigned int * ret = new unsigned int[str->size() + 1];
 	for (unsigned int i = 0; i < str->size() + 1; i++) {
@@ -252,10 +282,12 @@ doItAgain:
 	return ret;
 }
 
-std::vector<std::pair<unsigned int, unsigned int>> * spaceEfficientSequenceAlignment(std::string x, std::string y, unsigned int delta, unsigned int(*costFunc)(char, char), std::vector<std::pair<unsigned int, unsigned int>> * ptr = nullptr) {
+std::vector<std::pair<unsigned int, unsigned int>> * spaceEfficientSequenceAlignment(std::string x, std::string y, unsigned int delta, unsigned int(*costFunc)(char, char), std::vector<std::pair<unsigned int, unsigned int>> * ptr = nullptr, unsigned int incVal = 0, unsigned int yIncVal = 0) {
 	if (!ptr) {
 		ptr = new std::vector<std::pair<unsigned int, unsigned int>>;
+		ptr->reserve(x.size() + y.size());
 	}
+
 	//if its two then it isnt more space efficient to do it this way so do it normal, also end of recursion
 	if (x.size() < 3 || y.size() < 3) {
 		std::vector<std::pair<unsigned int, unsigned int>> * temp = sequenceAlignment(x, y, delta, costFunc);
@@ -265,29 +297,33 @@ std::vector<std::pair<unsigned int, unsigned int>> * spaceEfficientSequenceAlign
 
 		delete temp;
 
-		return nullptr;
+		return ptr;
 	}
-
+	
 	unsigned int * front = spaceEfficientSequenceAlignmentVal(x, y.substr(0, y.size() / 2), delta, costFunc);
 	unsigned int * back = backwardsSpaceEfficientSequenceAlignmentVal(x, y.substr(y.size() / 2, y.size() - y.size() / 2), delta, costFunc);
 
 	unsigned int minVal = -1;
 	unsigned int minIndex = -1;
-
-	for (unsigned int i = 0; i < x.size(); i++) {
-		if (front[i] + back[i] < minVal) {
+	std::cout << "StART\n";
+	for (unsigned int i = 0; i < std::min(x.size() + 1, y.size() / 2 + 1); i++) {
+		if (front[i] + back[i] <= minVal) {
 			minVal = front[i] + back[i];
+			std::cout << front[i] << " " << back[i] << std::endl;
 			minIndex = i;
 		}
 	}
-
+	std::cout << "END\n";
 	delete[] front;
 	delete[] back;
 
-	ptr->push_back(std::make_pair(minIndex, y.size() / 2));
+	auto ygfd = minIndex + incVal;
+	auto greds = y.size() / 2 + incVal;
 
-	spaceEfficientSequenceAlignment(x.substr(0, minIndex), y.substr(0, y.size() / 2), delta, costFunc, ptr);
-	spaceEfficientSequenceAlignment(x.substr(minIndex, x.size() - minIndex), y.substr(y.size() / 2, y.size() - y.size() / 2), delta, costFunc, ptr);
+	ptr->push_back(std::make_pair(minIndex + incVal, y.size() / 2 + yIncVal));
+
+	spaceEfficientSequenceAlignment(x.substr(0, minIndex), y.substr(0, y.size() / 2), delta, costFunc, ptr, incVal, yIncVal);
+	spaceEfficientSequenceAlignment(x.substr(minIndex, x.size() - minIndex), y.substr(y.size() / 2, y.size() - y.size() / 2), delta, costFunc, ptr, incVal + x.size() - minIndex, yIncVal + y.size() - y.size()/2);
 
 	return ptr;
 }
