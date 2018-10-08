@@ -31,14 +31,9 @@
 
 using namespace std;
 
-unsigned int costFunc(char i, char j) {
-	if (i == j) return 0;
-	return 100;
-}
-
 int main() {
 	//Graph::WeightedGraph<std::pair<int, int>> x(6);
-
+	
 	//x.addNode({ 0, 5 });
 	//x.addNode({ -1, 0 });
 	//x.addNode({ 0, 1 });
@@ -55,16 +50,26 @@ int main() {
 	//x.addEdge(3, 5, 4);
 	//x.addEdge(5, 1, 8);
 
-	string x = "fucking";
-	string y = "finally";
+	Graph::WeightedDirectedGraph<char> g;
+	g.addNode('a');
+	g.addNode('b');
+	g.addNode('c');
+	g.addNode('d');
+	g.addNode('e');
+	g.addNode('f');
 
-	auto ygfd = sequenceAlignment(x, y, 2, &costFunc);
-	std::cout << "\n\n\n";
-	auto p = backwardsSequenceAlignment(x, y, 2, &costFunc);
-	std::cout << "\n\n";
-	
+	g.addEdge(0, 1, -4);
+	g.addEdge(0, 5, -3);
+	g.addEdge(1, 3, -1);
+	g.addEdge(1, 4, -2);
+	g.addEdge(2, 1, 8);
+	g.addEdge(2, 5, 3);
+	g.addEdge(3, 0, 6);
+	g.addEdge(3, 5, 4);
+	g.addEdge(4, 2, -3);
+	g.addEdge(4, 5, 2);
 
-	auto yl = spaceEfficientSequenceAlignment(x, y, 2, &costFunc);
+	auto gtrfd = bellmanFord(&g, 3, 5);
 
 	std::getchar();
 }

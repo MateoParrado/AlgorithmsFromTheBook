@@ -505,6 +505,20 @@ namespace Graph {
 			return (*edges[n])[pos + 1];
 		}
 
+		//get the endpoints of the ith edge of the graph in the order (parent, child)
+		std::pair<unsigned int, unsigned int> getEndpointsOfEdge(unsigned int i) {
+			unsigned int j = 0;
+			for (;;) {
+				if(i * 2 >= edges[j]->size()){
+					i -= edges[j]->size() / 2;
+					j++;
+				}
+				else {
+					return std::make_pair( j, (*edges[j])[2 * i] );
+				}
+			}
+		}
+
 		//get number of edges in graph
 		unsigned int getTotalEdgesInGraph() {
 			return Graph::getTotalEdgesInGraph();

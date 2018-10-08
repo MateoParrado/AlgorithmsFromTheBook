@@ -765,3 +765,50 @@ Graph::WeightedDirectedGraph<T> * edmondsAlgorithm(Graph::WeightedDirectedGraph<
 
 	return retGraph;
 }
+
+template<class T>
+std::vector<unsigned int> * bellmanFord(Graph::WeightedDirectedGraph<T> * g, unsigned int start, unsigned int end) {
+	int * opt = new int[g->size];
+	unsigned int * prev = new unsigned int[g->size];
+
+	for (unsigned int i = 0; i < g->size; i++) {
+		opt[i] = INT_MAX / 2;
+		prev[i] = -1;
+	}
+
+	opt[start] = 0;
+
+	//must be rechecked at least n - 1 times 
+	for (unsigned int k = 0; k < g->size - 1; k++) {
+		//used to check every edge in g
+
+		for (unsigned int i = 0; i < g->size; i++) {
+			//for each edge pointing at vertex i
+			for (unsigned int j = 0; j < g->getParentNum(i); j++) {
+				unsigned int parent = g->getParent(i, j);
+
+				//cast to an int because weights are stored as unsigned ints, returns the sign
+				int tempCost = opt[parent] + (int)g->getWeightOfEdge(parent, i);
+
+				if (tempCost < opt[i]) {
+					opt[i] = tempCost;
+					prev[i] = parent;
+				}
+			}
+		}
+	}
+
+	std::vector<unsigned int> * retPath = new std::vector<unsigned int>;
+	retPath->reserve(g->size);
+
+	while(end != start) {
+		retPath->push_back(end);
+		end = prev[end];
+	}
+	retPath->push_back(start);
+
+	delete[] opt;
+	delete[] prev;
+
+	return retPath;
+}
