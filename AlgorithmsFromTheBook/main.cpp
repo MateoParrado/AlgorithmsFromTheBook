@@ -28,8 +28,6 @@
 //TODO
 //edmond algo
 //optimizaitons in segmented linear regression (266/284), calculate errors in constant time
-//when done with sequence aligmment remove the printing comments
-//when done witg sequence alirnment, get rid of str and notstr in the sequence alignment vals they arent used anymore
 
 using namespace std;
 

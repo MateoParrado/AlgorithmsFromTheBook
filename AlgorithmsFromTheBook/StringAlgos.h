@@ -160,22 +160,15 @@ std::vector<std::pair<unsigned int, unsigned int>> * backwardsSequenceAlignment(
 }
 //finds the minimum error of the pairings above in linear space, helper function
 unsigned int * spaceEfficientSequenceAlignmentVal(std::string x, std::string y, unsigned int delta, unsigned int(*costFunc)(char, char)) {
-	//str is the shorter string, and therefore th ebetter choice for space efficiency
-	//std::string * str = x.length() < y.length() ? &x : &y;
-	//std::string * notStr = x.length() < y.length() ? &y : &x;
-
-	std::string * str = &x;
-	std::string * notStr = &y;
-
 	typedef boost::multi_array<unsigned int, 2>::index index;
-	boost::multi_array<unsigned int, 2> opt(boost::extents[str->size() + 1][2]);
+	boost::multi_array<unsigned int, 2> opt(boost::extents[x.size() + 1][2]);
 
 	//the cost of just not matching it at all
-	for (unsigned int i = 0; i < str->size() + 1; i++) {
+	for (unsigned int i = 0; i < x.size() + 1; i++) {
 		opt[i][0] = i * delta;
 	}
 
-	//used to know when were done looping through the second, longer string
+	//used to know when were done looping through the second string
 	unsigned int notStrDone = 0;
 
 	//used to switch the index being written to between the zeroth and the first for efficiency
@@ -188,12 +181,12 @@ doItAgain:
 	opt[0][ind] = delta * (notStrDone + 1);
 
 	//same recurrence as the one for the non space efficient version
-	for (index i = 1; i < str->size() + 1; i++) {
-		opt[i][ind] = std::min({ opt[i - 1][!ind] + costFunc((*str)[i - 1], (*notStr)[notStrDone]), delta + opt[i - 1][ind], delta + opt[i][!ind] });
+	for (index i = 1; i < x.size() + 1; i++) {
+		opt[i][ind] = std::min({ opt[i - 1][!ind] + costFunc(x[i - 1], y[notStrDone]), delta + opt[i - 1][ind], delta + opt[i][!ind] });
 	}
 
 	//check if done
-	if (notStrDone < notStr->size() - 1) {
+	if (notStrDone < y.size() - 1) {
 		//if done, switch the index being written to
 		ind = !ind;
 		notStrDone++;
@@ -201,8 +194,8 @@ doItAgain:
 	}
 	
 	//return an array slice of the row we need
-	unsigned int * ret = new unsigned int[str->size() + 1];
-	for (unsigned int i = 0; i < str->size() + 1; i++) {
+	unsigned int * ret = new unsigned int[x.size() + 1];
+	for (unsigned int i = 0; i < x.size() + 1; i++) {
 		ret[i] = opt[i][ind];
 	}
 	return ret;
@@ -210,19 +203,12 @@ doItAgain:
 
 //finds the minimum error of the pairings above in linear space, helper function
 std::pair<unsigned int, bool> * backwardsSpaceEfficientSequenceAlignmentVal(std::string x, std::string y, unsigned int delta, unsigned int(*costFunc)(char, char)) {
-	//str is the shorter string, and therefore th ebetter choice for space efficiency
-	//std::string * str = x.length() < y.length() ? &x : &y;
-	//std::string * notStr = x.length() < y.length() ? &y : &x;
-
-	std::string * str = &x;
-	std::string * notStr = &y;
-
 	typedef boost::multi_array<unsigned int, 2>::index index;
-	boost::multi_array<unsigned int, 2> opt(boost::extents[str->size() + 1][2]);
+	boost::multi_array<unsigned int, 2> opt(boost::extents[x.size() + 1][2]);
 
 	//the cost of just not matching it at all
-	for (unsigned int i = 0; i < str->size() + 1; i++) {
-		opt[i][0] = (str->size() - i) * delta;
+	for (unsigned int i = 0; i < x.size() + 1; i++) {
+		opt[i][0] = (x.size() - i) * delta;
 	}
 
 	//used to know when were done looping through the second, longer string
@@ -231,19 +217,19 @@ std::pair<unsigned int, bool> * backwardsSpaceEfficientSequenceAlignmentVal(std:
 	//used to switch the index being written to between the zeroth and the first for efficiency
 	char ind = 1;
 
-	//if we havent looped fully through the longer string, keep looping
+	//if we havent looped fully through the second string, keep looping
 doItAgain:
 
 	//sets the cost of not matching anything
-	opt[str->size()][ind] = delta * (notStrDone + 1);
+	opt[x.size()][ind] = delta * (notStrDone + 1);
 
 	//same recurrence as the one for the non space efficient version
-	for (index i = str->size() - 1; i >= 0; i--) {
-		opt[i][ind] = std::min({ opt[i + 1][!ind] + costFunc((*str)[i], (*notStr)[notStr->size() - notStrDone - 1]), delta + opt[i + 1][ind], delta + opt[i][!ind] });
+	for (index i = x.size() - 1; i >= 0; i--) {
+		opt[i][ind] = std::min({ opt[i + 1][!ind] + costFunc(x[i], y[y.size() - notStrDone - 1]), delta + opt[i + 1][ind], delta + opt[i][!ind] });
 	}
 
 	//check if done
-	if (notStrDone < notStr->size() - 1) {
+	if (notStrDone < y.size() - 1) {
 		//if done, switch the index being written to
 		ind = !ind;
 		notStrDone++;
@@ -251,8 +237,8 @@ doItAgain:
 	}
 
 	//return an array slice of the row we need
-	std::pair<unsigned int, bool> * ret = new std::pair<unsigned int, bool>[str->size() + 1];
-	for (unsigned int i = 0; i < str->size() + 1; i++) {
+	std::pair<unsigned int, bool> * ret = new std::pair<unsigned int, bool>[x.size() + 1];
+	for (unsigned int i = 0; i < x.size() + 1; i++) {
 		ret[i].first = opt[i][ind];
 
 		//if this is false then they souldnt be matched (it is cheaper to leave them free) if it is true they should
