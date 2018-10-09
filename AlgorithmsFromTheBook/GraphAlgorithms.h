@@ -785,7 +785,7 @@ std::vector<unsigned int> * bellmanFord(Graph::WeightedDirectedGraph<T> * g, uns
 	for (unsigned int k = 0; k < g->size - 1; k++) {
 		//used to check every edge in g
 
-		for (unsigned int i = 0; i < g->size; i++) {
+		for (unsigned int i = 0; i < g->size - 1; i++) {
 			//for each edge pointing at vertex i
 			for (unsigned int j = 0; j < g->getParentNum(i); j++) {
 				unsigned int parent = g->getParent(i, j);
@@ -894,8 +894,8 @@ std::vector<unsigned int> * bellmanFordAsynchronous(Graph::WeightedDirectedGraph
 		active[i] = false;
 	}
 
-	opt[end] = 0;
-	active[end] = true;
+	opt[start] = 0;
+	active[start] = true;
 
 	//keep going until all inactive
 	for(;;) {
@@ -912,10 +912,10 @@ std::vector<unsigned int> * bellmanFordAsynchronous(Graph::WeightedDirectedGraph
 					unsigned int parent = g->getParent(i, j);
 
 					//cast to an int because weights are stored as unsigned ints, returns the sign
-					int tempCost = opt[parent] + (int)g->getWeightOfEdge(parent, i);
+					int tempCost = opt[i] + (int)g->getWeightOfEdge(parent, i);
 
-					if (tempCost < opt[i]) {
-						opt[i] = tempCost;
+					if (tempCost < opt[parent]) {
+						opt[parent] = tempCost;
 						prev[i] = parent;
 						curMin = parent;
 						oneActive = true;
@@ -944,4 +944,42 @@ std::vector<unsigned int> * bellmanFordAsynchronous(Graph::WeightedDirectedGraph
 	delete[] active;
 
 	return retPath;
+}
+
+template<class T>
+bool negativCycleDetector(Graph::WeightedDirectedGraph<T> * g) {
+	int * opt = new int[g->size];
+
+	for (unsigned int i = 0; i < g->size; i++) {
+		opt[i] = INT_MAX / 2;
+	}
+
+	opt[0] = 0;
+
+	//must be rechecked at least n - 1 times 
+	for (unsigned int k = 0; k < g->size; k++) {
+		//used to check every edge in g
+
+		for (unsigned int i = 0; i < g->size; i++) {
+			//for each edge pointing at vertex i
+			for (unsigned int j = 0; j < g->getParentNum(i); j++) {
+				unsigned int parent = g->getParent(i, j);
+
+				//cast to an int because weights are stored as unsigned ints, returns the sign
+				int tempCost = opt[parent] + (int)g->getWeightOfEdge(parent, i);
+
+				if (tempCost < opt[i]) {
+					if (k == g->size - 1) {
+						delete[] opt;
+						return true;
+					}
+
+					opt[i] = tempCost;
+				}
+			}
+		}
+	}
+
+	delete[] opt;
+	return false;
 }

@@ -28,6 +28,7 @@
 //TODO
 //edmond algo
 //optimizaitons in segmented linear regression (266/284), calculate errors in constant time
+//asynchronous bellman ford
 
 using namespace std;
 
@@ -50,6 +51,25 @@ int main() {
 	//x.addEdge(3, 5, 4);
 	//x.addEdge(5, 1, 8);
 
+	//Graph::WeightedDirectedGraph<char> g;
+	//g.addNode('a');
+	//g.addNode('b');
+	//g.addNode('c');
+	//g.addNode('d');
+	//g.addNode('e');
+	//g.addNode('f');
+
+	//g.addEdge(0, 1, -4);
+	//g.addEdge(0, 5, -3);
+	//g.addEdge(1, 3, -1);
+	//g.addEdge(1, 4, -2);
+	//g.addEdge(2, 1, 8);
+	//g.addEdge(2, 5, 3);
+	//g.addEdge(3, 0, 6);
+	//g.addEdge(3, 5, 4);
+	//g.addEdge(4, 2, -3);
+	//g.addEdge(4, 5, 2);
+
 	Graph::WeightedDirectedGraph<char> g;
 	g.addNode('a');
 	g.addNode('b');
@@ -58,19 +78,15 @@ int main() {
 	g.addNode('e');
 	g.addNode('f');
 
-	g.addEdge(0, 1, -4);
-	g.addEdge(0, 5, -3);
-	g.addEdge(1, 3, -1);
-	g.addEdge(1, 4, -2);
-	g.addEdge(2, 1, 8);
-	g.addEdge(2, 5, 3);
-	g.addEdge(3, 0, 6);
-	g.addEdge(3, 5, 4);
-	g.addEdge(4, 2, -3);
-	g.addEdge(4, 5, 2);
+	g.addEdge(0, 1, 2);
+	g.addEdge(1, 2, 1);
+	g.addEdge(2, 3, -1);
+	g.addEdge(3, 4, 1);
+	g.addEdge(4, 1, -2);
+	g.addEdge(2, 5, 2);
 
-	auto gtrfd = bellmanFordVectorProtocol(&g, 3, 5);
-	auto gtfd = bellmanFordAsynchronous(&g, 3, 5);
-	
+	//auto gtrfd = bellmanFordVectorProtocol(&g, 3, 5);
+	//auto gtfd = bellmanFordAsynchronous(&g, 3, 5);
+	cout << negativCycleDetector(&g);
 	std::getchar();
 }
