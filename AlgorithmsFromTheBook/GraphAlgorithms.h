@@ -767,6 +767,8 @@ Graph::WeightedDirectedGraph<T> * edmondsAlgorithm(Graph::WeightedDirectedGraph<
 }
 
 template<class T>
+//pathfinding in graphs with potentially negative edge weights
+//must be a graph without any negative cycles
 std::vector<unsigned int> * bellmanFord(Graph::WeightedDirectedGraph<T> * g, unsigned int start, unsigned int end) {
 	int * opt = new int[g->size];
 	unsigned int * prev = new unsigned int[g->size];
@@ -819,6 +821,9 @@ std::vector<unsigned int> * bellmanFord(Graph::WeightedDirectedGraph<T> * g, uns
 }
 
 template<class T>
+//pathfinding in graphs with potentially negative edge weights
+//must be a graph without any negative cycles
+//improved version of bellman ford
 std::vector<unsigned int> * bellmanFordVectorProtocol(Graph::WeightedDirectedGraph<T> * g, unsigned int start, unsigned int end) {
 	int * opt = new int[g->size];
 	unsigned int * prev = new unsigned int[g->size];
@@ -881,6 +886,9 @@ std::vector<unsigned int> * bellmanFordVectorProtocol(Graph::WeightedDirectedGra
 }
 
 template<class T>
+//pathfinding in graphs with potentially negative edge weights
+//must be a graph without any negative cycles
+//improved version of bellman ford
 std::vector<unsigned int> * bellmanFordAsynchronous(Graph::WeightedDirectedGraph<T> * g, unsigned int start, unsigned int end) {
 	int * opt = new int[g->size];
 	unsigned int * prev = new unsigned int[g->size];
@@ -947,6 +955,7 @@ std::vector<unsigned int> * bellmanFordAsynchronous(Graph::WeightedDirectedGraph
 }
 
 template<class T>
+//returns wether there is a negative cycle in the graph or not
 bool negativCycleDetector(Graph::WeightedDirectedGraph<T> * g) {
 	int * opt = new int[g->size];
 
@@ -969,6 +978,7 @@ bool negativCycleDetector(Graph::WeightedDirectedGraph<T> * g) {
 				int tempCost = opt[parent] + (int)g->getWeightOfEdge(parent, i);
 
 				if (tempCost < opt[i]) {
+					//if it gets updated after n - 1 iterations then there must be a negative cycle because any graph without one would already have converged
 					if (k == g->size - 1) {
 						delete[] opt;
 						return true;
@@ -982,4 +992,73 @@ bool negativCycleDetector(Graph::WeightedDirectedGraph<T> * g) {
 
 	delete[] opt;
 	return false;
+}
+
+template<class T>
+//returns a negative cycle of g
+std::vector<unsigned int> * negativCycleGetter(Graph::WeightedDirectedGraph<T> * g) {
+	int * opt = new int[g->size];
+	unsigned int * prev = new unsigned int[g->size];
+
+	for (unsigned int i = 0; i < g->size; i++) {
+		opt[i] = INT_MAX / 2;
+		prev[i] = -1;
+	}
+
+	opt[0] = 0;
+
+	//the starting index of the negative loop
+	unsigned int negLoop = -1;
+
+	//must be rechecked at least n - 1 times 
+	for (unsigned int k = 0; k < g->size; k++) {
+		//used to check every edge in g
+
+		for (unsigned int i = 0; i < g->size; i++) {
+			//for each edge pointing at vertex i
+			for (unsigned int j = 0; j < g->getParentNum(i); j++) {
+				unsigned int parent = g->getParent(i, j);
+
+				//cast to an int because weights are stored as unsigned ints, returns the sign
+				int tempCost = opt[parent] + (int)g->getWeightOfEdge(parent, i);
+
+				if (tempCost < opt[i]) {
+					//if it gets updated after n - 1 iterations then there must be a negative cycle because any graph without one would already have converged
+					if (k == g->size - 1) {
+						prev[i] = parent;
+						negLoop = i;
+
+						goto cycleFound;
+					}
+
+					prev[i] = parent;
+					opt[i] = tempCost;
+				}
+			}
+		}
+	}
+
+	delete[] opt;
+	delete[] prev;
+	
+	return nullptr;
+
+cycleFound:
+
+	std::vector<unsigned int> * retVec = new std::vector<unsigned int>;
+	retVec->reserve(g->size / 2);
+
+	unsigned int loopVal = prev[negLoop];
+
+	retVec->push_back(negLoop);
+
+	while (loopVal != negLoop) {
+		retVec->push_back(loopVal);
+		loopVal = prev[loopVal];
+	}
+
+	delete[] prev;
+	delete[] opt;
+
+	return retVec;
 }

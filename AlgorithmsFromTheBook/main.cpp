@@ -87,6 +87,6 @@ int main() {
 
 	//auto gtrfd = bellmanFordVectorProtocol(&g, 3, 5);
 	//auto gtfd = bellmanFordAsynchronous(&g, 3, 5);
-	cout << negativCycleDetector(&g);
+	auto grtefd = negativCycleGetter(&g);
 	std::getchar();
 }
