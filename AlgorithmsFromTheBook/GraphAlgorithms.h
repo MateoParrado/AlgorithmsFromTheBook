@@ -778,6 +778,9 @@ std::vector<unsigned int> * bellmanFord(Graph::WeightedDirectedGraph<T> * g, uns
 
 	opt[start] = 0;
 
+	//used to check if iteration terminated early
+	bool somethingChanged = false;
+
 	//must be rechecked at least n - 1 times 
 	for (unsigned int k = 0; k < g->size - 1; k++) {
 		//used to check every edge in g
@@ -793,15 +796,17 @@ std::vector<unsigned int> * bellmanFord(Graph::WeightedDirectedGraph<T> * g, uns
 				if (tempCost < opt[i]) {
 					opt[i] = tempCost;
 					prev[i] = parent;
+					somethingChanged = true;
 				}
 			}
 		}
+		if (!somethingChanged) break;
 	}
 
 	std::vector<unsigned int> * retPath = new std::vector<unsigned int>;
 	retPath->reserve(g->size);
 
-	while(end != start) {
+	while (end != start) {
 		retPath->push_back(end);
 		end = prev[end];
 	}
@@ -809,6 +814,134 @@ std::vector<unsigned int> * bellmanFord(Graph::WeightedDirectedGraph<T> * g, uns
 
 	delete[] opt;
 	delete[] prev;
+
+	return retPath;
+}
+
+template<class T>
+std::vector<unsigned int> * bellmanFordVectorProtocol(Graph::WeightedDirectedGraph<T> * g, unsigned int start, unsigned int end) {
+	int * opt = new int[g->size];
+	unsigned int * prev = new unsigned int[g->size];
+
+	//tracks wether its value has been changed, and therefore wether it needs to be recalculated
+	bool * changed = new bool[g->size];
+
+	for (unsigned int i = 0; i < g->size; i++) {
+		opt[i] = INT_MAX / 2;
+		prev[i] = -1;
+		changed[i] = 1;
+	}
+
+	opt[start] = 0;
+
+	//used to check if iteration terminated early
+	bool somethingChanged = false;
+
+	//must be rechecked at least n - 1 times 
+	for (unsigned int k = 0; k < g->size - 1; k++) {
+		//used to check every edge in g
+
+		for (unsigned int i = 0; i < g->size; i++) {
+			//for each edge pointing at vertex i
+			bool changedThisIter = false;
+
+			for (unsigned int j = 0; j < g->getParentNum(i); j++) {
+				unsigned int parent = g->getParent(i, j);
+
+				//cast to an int because weights are stored as unsigned ints, returns the sign
+				int tempCost = opt[parent] + (int)g->getWeightOfEdge(parent, i);
+
+				if (tempCost < opt[i]) {
+					opt[i] = tempCost;
+					prev[i] = parent;
+					somethingChanged = true;
+					changedThisIter = true;
+				}
+			}
+
+			if (!changedThisIter) changed[i] = false;
+		}
+		if (!somethingChanged) break;
+	}
+
+	std::vector<unsigned int> * retPath = new std::vector<unsigned int>;
+	retPath->reserve(g->size);
+
+	while (end != start) {
+		retPath->push_back(end);
+		end = prev[end];
+	}
+	retPath->push_back(start);
+
+	delete[] opt;
+	delete[] prev;
+	delete[] changed;
+
+	return retPath;
+}
+
+template<class T>
+std::vector<unsigned int> * bellmanFordAsynchronous(Graph::WeightedDirectedGraph<T> * g, unsigned int start, unsigned int end) {
+	int * opt = new int[g->size];
+	unsigned int * prev = new unsigned int[g->size];
+
+	//tracks wether its value has been changed, and therefore wether it needs to be recalculated
+	bool * active = new bool[g->size];
+
+	for (unsigned int i = 0; i < g->size; i++) {
+		opt[i] = INT_MAX / 2;
+		prev[i] = -1;
+		active[i] = false;
+	}
+
+	opt[end] = 0;
+	active[end] = true;
+
+	//keep going until all inactive
+	for(;;) {
+		
+		bool oneActive = false;
+
+		//used to check every edge in g
+		for (unsigned int i = 0; i < g->size; i++) {
+			//for each edge pointing at vertex i
+			if (active[i]) {
+				unsigned int curMin = -1;
+
+				for (unsigned int j = 0; j < g->getParentNum(i); j++) {
+					unsigned int parent = g->getParent(i, j);
+
+					//cast to an int because weights are stored as unsigned ints, returns the sign
+					int tempCost = opt[parent] + (int)g->getWeightOfEdge(parent, i);
+
+					if (tempCost < opt[i]) {
+						opt[i] = tempCost;
+						prev[i] = parent;
+						curMin = parent;
+						oneActive = true;
+					}
+				}
+
+				active[curMin] = true;
+
+				active[i] = false;
+			}
+		}
+		if (!oneActive) break;
+	}
+
+	std::vector<unsigned int> * retPath = new std::vector<unsigned int>;
+	retPath->reserve(g->size);
+
+	while (end != start) {
+		retPath->push_back(end);
+		end = prev[end];
+	}
+	retPath->push_back(start);
+
+	delete[] opt;
+	delete[] prev;
+	delete[] active;
 
 	return retPath;
 }

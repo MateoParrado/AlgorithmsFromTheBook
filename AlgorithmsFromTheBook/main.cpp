@@ -69,7 +69,8 @@ int main() {
 	g.addEdge(4, 2, -3);
 	g.addEdge(4, 5, 2);
 
-	auto gtrfd = bellmanFord(&g, 3, 5);
-
+	auto gtrfd = bellmanFordVectorProtocol(&g, 3, 5);
+	auto gtfd = bellmanFordAsynchronous(&g, 3, 5);
+	
 	std::getchar();
 }
