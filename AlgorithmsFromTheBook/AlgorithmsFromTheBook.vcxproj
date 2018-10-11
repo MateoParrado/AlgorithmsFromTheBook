@@ -130,6 +130,7 @@
     <ClInclude Include="Clustering.h" />
     <ClInclude Include="DataCompression.h" />
     <ClInclude Include="FastFourierTransform.h" />
+    <ClInclude Include="Geometry.h" />
     <ClInclude Include="Graph.h" />
     <ClInclude Include="GraphAlgorithms.h" />
     <ClInclude Include="Heap.h" />

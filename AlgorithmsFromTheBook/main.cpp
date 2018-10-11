@@ -24,13 +24,20 @@
 #include "RNA.h"
 #include "StringAlgos.h"
 #include "SegmentedRegression.h"
+#include "Geometry.h"
 
 //TODO
 //edmond algo
 //optimizaitons in segmented linear regression (266/284), calculate errors in constant time
 //asynchronous bellman ford
+//do two line segments intersect
+//does a rectangle intersect with an ellipse
 
 using namespace std;
+
+double calc(double r) {
+	return 6.67 * pow(10, -11) * 8 * pow(10, 24) / r;
+}
 
 int main() {
 	//Graph::WeightedGraph<std::pair<int, int>> x(6);
@@ -70,23 +77,27 @@ int main() {
 	//g.addEdge(4, 2, -3);
 	//g.addEdge(4, 5, 2);
 
-	Graph::WeightedDirectedGraph<char> g;
-	g.addNode('a');
-	g.addNode('b');
-	g.addNode('c');
-	g.addNode('d');
-	g.addNode('e');
-	g.addNode('f');
+	//Graph::WeightedDirectedGraph<char> g;
+	//g.addNode('a');
+	//g.addNode('b');
+	//g.addNode('c');
+	//g.addNode('d');
+	//g.addNode('e');
+	//g.addNode('f');
 
-	g.addEdge(0, 1, 2);
-	g.addEdge(1, 2, 1);
-	g.addEdge(2, 3, -1);
-	g.addEdge(3, 4, 1);
-	g.addEdge(4, 1, -2);
-	g.addEdge(2, 5, 2);
+	//g.addEdge(0, 1, 2);
+	//g.addEdge(1, 2, 1);
+	//g.addEdge(2, 3, -1);
+	//g.addEdge(3, 4, 1);
+	//g.addEdge(4, 1, -2);
+	//g.addEdge(2, 5, 2);
 
-	//auto gtrfd = bellmanFordVectorProtocol(&g, 3, 5);
+	////auto gtrfd = bellmanFordVectorProtocol(&g, 3, 5);
 	//auto gtfd = bellmanFordAsynchronous(&g, 3, 5);
-	auto grtefd = negativCycleGetter(&g);
+	//auto grtefd = negativCycleGetter(&g);
+	//std::pair<int, int> htf;
+
+	cout << lineSegmentIntersection(std::make_pair(-5, -5), std::make_pair(0, 0), std::make_pair(1, 1), std::make_pair(10, 10));
+
 	std::getchar();
 }
