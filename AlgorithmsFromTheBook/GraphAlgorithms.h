@@ -902,8 +902,8 @@ std::vector<unsigned int> * bellmanFordAsynchronous(Graph::WeightedDirectedGraph
 		active[i] = false;
 	}
 
-	opt[start] = 0;
-	active[start] = true;
+	opt[end] = 0;
+	active[end] = true;
 
 	//keep going until all inactive
 	for(;;) {
@@ -914,8 +914,6 @@ std::vector<unsigned int> * bellmanFordAsynchronous(Graph::WeightedDirectedGraph
 		for (unsigned int i = 0; i < g->size; i++) {
 			//for each edge pointing at vertex i
 			if (active[i]) {
-				unsigned int curMin = -1;
-
 				for (unsigned int j = 0; j < g->getParentNum(i); j++) {
 					unsigned int parent = g->getParent(i, j);
 
@@ -924,13 +922,11 @@ std::vector<unsigned int> * bellmanFordAsynchronous(Graph::WeightedDirectedGraph
 
 					if (tempCost < opt[parent]) {
 						opt[parent] = tempCost;
-						prev[i] = parent;
-						curMin = parent;
+						prev[parent] = i;
+						active[parent] = true;
 						oneActive = true;
 					}
 				}
-
-				active[curMin] = true;
 
 				active[i] = false;
 			}
@@ -942,10 +938,10 @@ std::vector<unsigned int> * bellmanFordAsynchronous(Graph::WeightedDirectedGraph
 	retPath->reserve(g->size);
 
 	while (end != start) {
-		retPath->push_back(end);
-		end = prev[end];
+		retPath->push_back(start);
+		start = prev[start];
 	}
-	retPath->push_back(start);
+	retPath->push_back(end);
 
 	delete[] opt;
 	delete[] prev;

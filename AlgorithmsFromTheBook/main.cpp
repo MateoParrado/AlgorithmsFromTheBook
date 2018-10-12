@@ -32,6 +32,7 @@
 //asynchronous bellman ford
 //do two line segments intersect
 //does a rectangle intersect with an ellipse
+//topological sort
 
 using namespace std;
 
@@ -41,7 +42,7 @@ double calc(double r) {
 
 int main() {
 	//Graph::WeightedGraph<std::pair<int, int>> x(6);
-	
+	//
 	//x.addNode({ 0, 5 });
 	//x.addNode({ -1, 0 });
 	//x.addNode({ 0, 1 });
@@ -58,46 +59,31 @@ int main() {
 	//x.addEdge(3, 5, 4);
 	//x.addEdge(5, 1, 8);
 
-	//Graph::WeightedDirectedGraph<char> g;
-	//g.addNode('a');
-	//g.addNode('b');
-	//g.addNode('c');
-	//g.addNode('d');
-	//g.addNode('e');
-	//g.addNode('f');
+	Graph::WeightedDirectedGraph<char> g;
+	g.addNode('a');
+	g.addNode('b');
+	g.addNode('c');
+	g.addNode('d');
+	g.addNode('e');
+	g.addNode('f');
 
-	//g.addEdge(0, 1, -4);
-	//g.addEdge(0, 5, -3);
-	//g.addEdge(1, 3, -1);
-	//g.addEdge(1, 4, -2);
-	//g.addEdge(2, 1, 8);
-	//g.addEdge(2, 5, 3);
-	//g.addEdge(3, 0, 6);
-	//g.addEdge(3, 5, 4);
-	//g.addEdge(4, 2, -3);
-	//g.addEdge(4, 5, 2);
-
-	//Graph::WeightedDirectedGraph<char> g;
-	//g.addNode('a');
-	//g.addNode('b');
-	//g.addNode('c');
-	//g.addNode('d');
-	//g.addNode('e');
-	//g.addNode('f');
-
-	//g.addEdge(0, 1, 2);
-	//g.addEdge(1, 2, 1);
-	//g.addEdge(2, 3, -1);
-	//g.addEdge(3, 4, 1);
-	//g.addEdge(4, 1, -2);
-	//g.addEdge(2, 5, 2);
+	g.addEdge(0, 1, -4);
+	g.addEdge(0, 5, -3);
+	g.addEdge(1, 3, -1);
+	g.addEdge(1, 4, -2);
+	g.addEdge(2, 1, 8);
+	g.addEdge(2, 5, 3);
+	g.addEdge(3, 0, 6);
+	g.addEdge(3, 5, 4);
+	g.addEdge(4, 2, -3);
+	g.addEdge(4, 5, 2);
 
 	////auto gtrfd = bellmanFordVectorProtocol(&g, 3, 5);
-	//auto gtfd = bellmanFordAsynchronous(&g, 3, 5);
+	auto gtfd = bellmanFordAsynchronous(&g, 3, 5);
 	//auto grtefd = negativCycleGetter(&g);
 	//std::pair<int, int> htf;
 
-	cout << lineSegmentIntersection(std::make_pair(-5, -5), std::make_pair(0, 0), std::make_pair(1, 1), std::make_pair(10, 10));
+	//cout << rectIntersectsEllipse(make_pair(-10.5, -3.5), 10, 3, make_pair(0, 0), 2, 1);
 
 	std::getchar();
 }
