@@ -29,10 +29,8 @@
 //TODO
 //edmond algo
 //optimizaitons in segmented linear regression (266/284), calculate errors in constant time
-//asynchronous bellman ford
-//do two line segments intersect
-//does a rectangle intersect with an ellipse
-//topological sort
+//point in polygon
+//polygon intersection
 
 using namespace std;
 
@@ -59,31 +57,20 @@ int main() {
 	//x.addEdge(3, 5, 4);
 	//x.addEdge(5, 1, 8);
 
-	Graph::WeightedDirectedGraph<char> g;
-	g.addNode('a');
-	g.addNode('b');
-	g.addNode('c');
-	g.addNode('d');
-	g.addNode('e');
-	g.addNode('f');
+	Graph::DirectedGraph<char> g(5);
 
-	g.addEdge(0, 1, -4);
-	g.addEdge(0, 5, -3);
-	g.addEdge(1, 3, -1);
-	g.addEdge(1, 4, -2);
-	g.addEdge(2, 1, 8);
-	g.addEdge(2, 5, 3);
-	g.addEdge(3, 0, 6);
-	g.addEdge(3, 5, 4);
-	g.addEdge(4, 2, -3);
-	g.addEdge(4, 5, 2);
+	for (char i = 0; i < 6; i++) {
+		g.addNode(i);
+	}
 
-	////auto gtrfd = bellmanFordVectorProtocol(&g, 3, 5);
-	auto gtfd = bellmanFordAsynchronous(&g, 3, 5);
-	//auto grtefd = negativCycleGetter(&g);
-	//std::pair<int, int> htf;
+	g.addEdge(5, 0);
+	g.addEdge(5, 2);
+	g.addEdge(4, 0);
+	g.addEdge(4, 1);
+	g.addEdge(2, 3);
+	g.addEdge(3, 1);
 
-	//cout << rectIntersectsEllipse(make_pair(-10.5, -3.5), 10, 3, make_pair(0, 0), 2, 1);
+	auto l = topologicalSort(&g);
 
 	std::getchar();
 }

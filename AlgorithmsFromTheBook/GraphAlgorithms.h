@@ -498,6 +498,30 @@ bool isDAG(Graph::DirectedGraph<T> * g) {//object pointed to is destroyed by del
 	return true;
 }
 
+template<class T>
+//returns a sorted vector where every element of the vector has no parents in the graph that come before it
+std::vector<unsigned int> * topologicalSort(Graph::DirectedGraph<T> * g) {
+	std::vector<unsigned int> * retVec = new std::vector<unsigned int>;
+	retVec->reserve(g->size);
+
+	while(g->size) {
+		bool batman = false;
+
+		for (unsigned int i = g->size - 1; i < g->size; i--) {
+			if (!g->getParentNum(i)) {
+				retVec->push_back(g->nodes[i].obj);
+
+				g->removeNode(i);
+				batman = true;
+			}
+		}
+
+		if (!batman) throw 10;
+	}
+
+	return retVec;
+}
+
 /*MINIMUM SPANNING TREE*/
 
 ////build a minimum spanning tree by adding in th echeapest nodes that dont create a cycle
