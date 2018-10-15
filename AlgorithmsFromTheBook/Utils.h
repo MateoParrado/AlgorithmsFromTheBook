@@ -37,6 +37,20 @@ double integral(double(*func)(double), double start, double end, unsigned int tr
 	return ret;
 }
 
+//finds the greatest common divisor of two integers x and y such that x < y
+unsigned int gcd(unsigned int x, unsigned int y) {
+	if (!(x % y)) {
+		return y;
+	}
+	return gcd(y, x % y);
+}
+
+//finds greatest common divisor of two ints
+unsigned int dijkstraGcd(unsigned int x, unsigned int y) {
+	if (x == y) return x;
+
+	return (x > y) ? djykstraGcd(x - y, y) : djykstraGcd(x, y - x);
+}
 template<class T>
 //get a pair in the form {slope, intercept} of the regression line of a group of points
 //no idea how this works

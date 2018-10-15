@@ -57,20 +57,7 @@ int main() {
 	//x.addEdge(3, 5, 4);
 	//x.addEdge(5, 1, 8);
 
-	Graph::DirectedGraph<char> g(5);
-
-	for (char i = 0; i < 6; i++) {
-		g.addNode(i);
-	}
-
-	g.addEdge(5, 0);
-	g.addEdge(5, 2);
-	g.addEdge(4, 0);
-	g.addEdge(4, 1);
-	g.addEdge(2, 3);
-	g.addEdge(3, 1);
-
-	auto l = topologicalSort(&g);
+	std::cout << dijkstraGcd(468, 24);
 
 	std::getchar();
 }
