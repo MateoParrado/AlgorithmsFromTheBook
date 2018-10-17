@@ -143,6 +143,7 @@
     <ClInclude Include="SortingAlgos.h" />
     <ClInclude Include="StableMatching.h" />
     <ClInclude Include="StringAlgos.h" />
+    <ClInclude Include="Tests.h" />
     <ClInclude Include="Utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

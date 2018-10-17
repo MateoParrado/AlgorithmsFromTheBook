@@ -4,6 +4,7 @@
 template<class T>
 //helper func to handle the recursion in the lower func
 std::vector<T> inversionCounter(std::vector<T> vec, unsigned int * counter) {
+	//end recursion
 	if (vec.size() == 1) {
 		return vec;
 	}
@@ -21,6 +22,7 @@ std::vector<T> inversionCounter(std::vector<T> vec, unsigned int * counter) {
 		return vec;
 	}
 
+	//recur on the first and second half of the lists
 	std::vector<T> firstHalf = inversionCounter(std::vector<T>(vec.begin(), vec.begin() + vec.size() / 2), counter);
 	std::vector<T> secondHalf = inversionCounter(std::vector<T>(vec.begin() + vec.size() / 2, vec.end()), counter);
 

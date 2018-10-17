@@ -2,9 +2,10 @@
 #include <vector>
 #include <algorithm>
 
+template<class T>
 //algorithm that creates a 'cache' of size k and figures out how to bring things in and kick things out of it to minimize cache misses
 //this isnt an actually useful algorithm, just practice
-unsigned int cacher(const std::vector<int> &calls, unsigned char k) {
+unsigned int cacher(std::vector<T> &calls, unsigned char k) {
 	unsigned int cacheMisses = 0;
 
 	std::vector<int> cache;
@@ -22,7 +23,7 @@ unsigned int cacher(const std::vector<int> &calls, unsigned char k) {
 
 	for (unsigned int i = 0; i < calls.size(); i++) {
 
-		if (!(std::find(cache.begin(), cache.end(), calls[i]) == cache.end())) {//if not in cache
+		if ((std::find(cache.begin(), cache.end(), calls[i]) == cache.end())) {//if not in cache
 			cacheMisses++;
 
 			unsigned int lastPos = 0;

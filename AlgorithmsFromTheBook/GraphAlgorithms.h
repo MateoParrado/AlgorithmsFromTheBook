@@ -141,6 +141,12 @@ std::vector<unsigned int> djikstraMinDist(Graph::WeightedGraph<T> * g, unsigned 
 //Djikstras pathfinding
 template<class T>
 SinglyLinkedList::LinkedList<unsigned int> djikstra(Graph::WeightedGraph<T> * g, unsigned int startNode, unsigned int endNode) {
+	if (startNode == endNode) {
+		SinglyLinkedList::LinkedList<unsigned int> l;
+		l.pushBackNode((unsigned int)0);
+		return l;
+	}
+
 	std::vector<unsigned int> minDists(g->size, -1);
 	minDists[startNode] = 0;
 
@@ -424,8 +430,10 @@ tryTheRest://to check every connected component for loops
 		goto tryTheRest;
 	}
 
-	//should theoretically never get down here because it will only be done on cyclic graphs
-	throw 0;
+	//the no cycle case
+	std::vector<unsigned int> retVec(0);
+
+	return retVec;
 }
 
 template<class T>
@@ -791,8 +799,7 @@ Graph::WeightedDirectedGraph<T> * edmondsAlgorithm(Graph::WeightedDirectedGraph<
 }
 
 template<class T>
-//pathfinding in graphs with potentially negative edge weights
-//must be a graph without any negative cycles
+//pathfinding with negative edge weights
 std::vector<unsigned int> * bellmanFord(Graph::WeightedDirectedGraph<T> * g, unsigned int start, unsigned int end) {
 	int * opt = new int[g->size];
 	unsigned int * prev = new unsigned int[g->size];
@@ -804,14 +811,11 @@ std::vector<unsigned int> * bellmanFord(Graph::WeightedDirectedGraph<T> * g, uns
 
 	opt[start] = 0;
 
-	//used to check if iteration terminated early
-	bool somethingChanged = false;
-
 	//must be rechecked at least n - 1 times 
 	for (unsigned int k = 0; k < g->size - 1; k++) {
 		//used to check every edge in g
 
-		for (unsigned int i = 0; i < g->size - 1; i++) {
+		for (unsigned int i = 0; i < g->size; i++) {
 			//for each edge pointing at vertex i
 			for (unsigned int j = 0; j < g->getParentNum(i); j++) {
 				unsigned int parent = g->getParent(i, j);
@@ -822,11 +826,9 @@ std::vector<unsigned int> * bellmanFord(Graph::WeightedDirectedGraph<T> * g, uns
 				if (tempCost < opt[i]) {
 					opt[i] = tempCost;
 					prev[i] = parent;
-					somethingChanged = true;
 				}
 			}
 		}
-		if (!somethingChanged) break;
 	}
 
 	std::vector<unsigned int> * retPath = new std::vector<unsigned int>;

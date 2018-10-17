@@ -25,12 +25,17 @@
 #include "StringAlgos.h"
 #include "SegmentedRegression.h"
 #include "Geometry.h"
+#include "Tests.h"
 
 //TODO
 //edmond algo
 //optimizaitons in segmented linear regression (266/284), calculate errors in constant time
 //point in polygon
 //polygon intersection
+//implement operator= for graph
+//implement operator= for linked list
+//implement operator= for heap
+//implement tests for every header file
 
 using namespace std;
 
@@ -57,7 +62,27 @@ int main() {
 	//x.addEdge(3, 5, 4);
 	//x.addEdge(5, 1, 8);
 
-	std::cout << dijkstraGcd(468, 24);
+	//std::cout << dijkstraGcd(468, 24);
+
+	factorialTester();
+	distTester();
+	exponentTester();
+	gcdTester();
+	integralTester();
+	linearRegressionTester();
+	cacheTester();
+	//closestPairTester();
+	inversionCounterTester();
+	greatestCommonSubstringTester();
+	stableMatchingTester();
+	rnaStructureTester();
+	dijkstraMinDistTester();
+	//dijkstraTester();
+	connectivityTestTester();
+	cycleTestTester();
+	//bellmanFordTester();
+	sortingtester();
+	bipartiteTester();
 
 	std::getchar();
 }

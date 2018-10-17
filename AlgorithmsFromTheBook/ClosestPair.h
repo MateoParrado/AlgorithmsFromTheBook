@@ -68,7 +68,7 @@ std::pair<std::pair<unsigned int, unsigned int>, double> pleaseDontUse(std::pair
 }
 
 template<class T>
-std::pair<unsigned int, unsigned int> closestPair(const std::vector<std::pair<T, T>> * nodes) {
+std::pair<unsigned int, unsigned int> closestPair( std::vector<std::pair<T, T>> * nodes) {
 	if (nodes->size() < 2) throw 0;
 	else if (nodes->size() == 2) return std::make_pair(0, 1);
 	else if (nodes->size() == 3) {
@@ -76,7 +76,7 @@ std::pair<unsigned int, unsigned int> closestPair(const std::vector<std::pair<T,
 		std::pair<unsigned int, unsigned int> minPair = { 1, 2 };
 
 		for (unsigned char i = 1; i < 3; i++) {
-			double newMin = dist(7(*nodes)[0], &(*nodes)[i]);
+			double newMin = dist(&(*nodes)[0], &(*nodes)[i]);
 
 			if (newMin < minDist) {
 				minDist = newMin;
