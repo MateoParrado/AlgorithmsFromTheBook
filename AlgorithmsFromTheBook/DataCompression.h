@@ -73,6 +73,8 @@ void retraceThroughTree(char str, std::vector<bool> * vec, Graph::BinaryTree<cha
 
 //return a bitstream (in the form of a bool vector) of a huffman encoding of a string
 std::pair<std::vector<bool>, Graph::BinaryTree<char> *> huffmanEncoder(std::string str) {
+	str += " ";//because the last letter always gets cut off
+
 	//get the frequency list for all the chars in the string
 	std::vector < std::pair< float, char >> freq;
 	freq.reserve(str.size());//this is more than neccessary but will stop it from resizing in the worst case scenario, may change later
@@ -91,7 +93,7 @@ std::pair<std::vector<bool>, Graph::BinaryTree<char> *> huffmanEncoder(std::stri
 	Graph::BinaryTree<char> * codes = generateHoffmanCodes(&freq);
 
 	std::vector<bool> ret;
-	ret.reserve(str.size() * 4); //this is just a random number that i feel like is a good approximation
+	ret.reserve(str.size() * 4);
 
 	for (unsigned int i = 0; i < str.size(); i++) {
 		retraceThroughTree(str[i], &ret, codes);

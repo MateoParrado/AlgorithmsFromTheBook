@@ -113,3 +113,35 @@ unsigned int factorial(unsigned int i) {
 
 	return retVal;
 }
+
+template<class T>
+//get the squared error of a dataset (vertical error, not perpendicular)
+double squaredError(std::pair<T, T> * x, std::pair<double, double> eq, unsigned int size) {
+	auto func = [eq](T x) {return eq.first * x + eq.second;};
+
+	double ret = 0.0;
+
+	for (unsigned int i = 0; i < size; i++) {
+		double temp = func(x[i].first);
+		ret += (x[i].second - temp)*(x[i].second - temp);
+	}
+
+	return ret;
+}
+
+template<class T>
+//get the squared error of a dataset (vertical error, not perpendicular)
+double squaredError(std::pair<T, T> * x, unsigned int size) {
+	std::pair<double, double> eq = linearRegression(x, size);
+
+	auto func = [eq](T x) {return eq.first * x + eq.second;};
+
+	double ret = 0.0;
+
+	for (unsigned int i = 0; i < size; i++) {
+		double temp = func(x[i].first);
+		ret += (x[i].second - temp)*(x[i].second - temp);
+	}
+
+	return ret;
+}

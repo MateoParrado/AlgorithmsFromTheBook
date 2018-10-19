@@ -488,13 +488,13 @@ tryTheRest://to check every connected component for loops
 template<class T>
 //test if a directed graph is acyclic
 //if you want to pass by copy, then you have to remove every node from the graph before you return a value
-bool isDAG(Graph::DirectedGraph<T> * g) {//object pointed to is destroyed by deletions
-	while (g->size) {
+bool isDAG(Graph::DirectedGraph<T> g) {//object pointed to is destroyed by deletions
+	while (g.size) {
 		bool batman = false;//has no parents
 
-		for (unsigned int i = g->size - 1; i < g->size; i--) {
-			if (!g->getParentNum(i)) {
-				g->removeNode(i);
+		for (unsigned int i = g.size - 1; i < g.size; i--) {
+			if (!g.getParentNum(i)) {
+				g.removeNode(i);
 				batman = true; 
 			}
 		}
@@ -711,92 +711,93 @@ Graph::WeightedGraph<T> * primMinTree(Graph::WeightedGraph<T> * g) {
 	return ret;
 }
 
-template<class T>
-//finds the minimum cost arborescence for a weighted directed graph
-//DOES NOT WORK
-Graph::WeightedDirectedGraph<T> * edmondsAlgorithm(Graph::WeightedDirectedGraph<T> * graph, unsigned int rootNode = 0) {
-	Graph::WeightedDirectedGraph<T> * retGraph = copyWithoutEdges(graph);
-
-	//add the minimum cost edge into every vertex v except the root vertex
-	for (unsigned int i = 0; i < retGraph->size; i++) {
-		if (i == rootNode) continue;
-
-		unsigned int min = -1;
-		unsigned int minParent = -1;
-
-		//add the cheapest entrance edge into v into retGraph
-		for (unsigned int j = 0; j < graph->parents[i]->size(); j += 2) {
-			if ((*graph->parents[i])[j + 1] < min) {
-				min = (*graph->parents[i])[j + 1];
-				minParent = (*graph->parents[i])[j];
-			}
-		}
-
-		if (min != -1) {
-			retGraph->addEdge(minParent, i, min);
-		}
-	}
-
-	Graph::WeightedDirectedGraph<T> tempGraph = *retGraph;//because isDAG destroys the copy provided to it
-
-	retGraph->display();
-
-	if (isDAG(&tempGraph)) {
-		return retGraph;
-	}
-	else {//contract the cycle into one node
-		Graph::WeightedDirectedGraph<T> * nextLevelGraph = new Graph::WeightedDirectedGraph<T>(*graph);
-
-		std::vector<unsigned int> cycle = depthFirstCycleGetter(retGraph);
-
-		unsigned int contractedNode = cycle[0];
-
-		nextLevelGraph->display();
-
-		//make any edges coming into the graph point to node 0 and update their weights
-		for (unsigned int i = 1; i < cycle.size(); i++) {
-			for (unsigned int j = 0; j < graph->getParentNum(cycle[i]); j++) {
-				nextLevelGraph->addEdge(graph->getParent(cycle[i], j), cycle[0], graph->getWeightOfEdge(graph->getParent(cycle[i], j), cycle[i]) - graph->getWeightOfEdgeByPos(cycle[i], 0));
-			}
-		}
-
-		nextLevelGraph->display();
-
-		//make any edges leaving the cycle be rooted at node 0
-		for (unsigned int i = 1; i < cycle.size(); i++) {
-			for (unsigned int j = 0; j < graph->getChildNum(cycle[i]); j += 2) {
-				if (!graph->getChild(cycle[i], j) == cycle[0]) {
-					nextLevelGraph->addEdge(cycle[0], graph->getChild(cycle[i], j), graph->getWeightOfEdge(cycle[i], j));
-				}
-			}
-		}
-
-		nextLevelGraph->display();
-
-		//delete all the non contacted nodes
-		for (unsigned int i = 1; i < cycle.size(); i++) {
-			nextLevelGraph->removeNode(cycle[i]);
-		}
-
-		Graph::WeightedDirectedGraph<T> * returnedGraph = edmondsAlgorithm(nextLevelGraph, rootNode);
-
-		//unroll the cycle
-		for (unsigned int i = 1; i < cycle.size(); i++) {
-			returnedGraph->addNode(cycle[i]);
-			returnedGraph->addEdge(cycle[i], cycle[i - 1], graph->getWeightOfEdge(cycle[i], cycle[i-1]));
-		}
-		returnedGraph->addEdge(cycle[0], cycle[cycle.size() - 1], graph->getWeightOfEdge(cycle[0], cycle[cycle.size() - 1]));
-
-		std::cout << "NEW ITERATION \n\n\n";
-		returnedGraph->display();
-		std::cout << "\n\n";
-		returnedGraph->displayParents();
-
-		return returnedGraph;
-	}
-
-	return retGraph;
-}
+//
+//template<class T>
+////finds the minimum cost arborescence for a weighted directed graph
+////DOES NOT WORK
+//Graph::WeightedDirectedGraph<T> * edmondsAlgorithm(Graph::WeightedDirectedGraph<T> * graph, unsigned int rootNode = 0) {
+//	Graph::WeightedDirectedGraph<T> * retGraph = copyWithoutEdges(graph);
+//
+//	//add the minimum cost edge into every vertex v except the root vertex
+//	for (unsigned int i = 0; i < retGraph->size; i++) {
+//		if (i == rootNode) continue;
+//
+//		unsigned int min = -1;
+//		unsigned int minParent = -1;
+//
+//		//add the cheapest entrance edge into v into retGraph
+//		for (unsigned int j = 0; j < graph->parents[i]->size(); j += 2) {
+//			if ((*graph->parents[i])[j + 1] < min) {
+//				min = (*graph->parents[i])[j + 1];
+//				minParent = (*graph->parents[i])[j];
+//			}
+//		}
+//
+//		if (min != -1) {
+//			retGraph->addEdge(minParent, i, min);
+//		}
+//	}
+//
+//	Graph::WeightedDirectedGraph<T> tempGraph = *retGraph;//because isDAG destroys the copy provided to it
+//
+//	retGraph->display();
+//
+//	if (isDAG(&tempGraph)) {
+//		return retGraph;
+//	}
+//	else {//contract the cycle into one node
+//		Graph::WeightedDirectedGraph<T> * nextLevelGraph = new Graph::WeightedDirectedGraph<T>(*graph);
+//
+//		std::vector<unsigned int> cycle = depthFirstCycleGetter(retGraph);
+//
+//		unsigned int contractedNode = cycle[0];
+//
+//		nextLevelGraph->display();
+//
+//		//make any edges coming into the graph point to node 0 and update their weights
+//		for (unsigned int i = 1; i < cycle.size(); i++) {
+//			for (unsigned int j = 0; j < graph->getParentNum(cycle[i]); j++) {
+//				nextLevelGraph->addEdge(graph->getParent(cycle[i], j), cycle[0], graph->getWeightOfEdge(graph->getParent(cycle[i], j), cycle[i]) - graph->getWeightOfEdgeByPos(cycle[i], 0));
+//			}
+//		}
+//
+//		nextLevelGraph->display();
+//
+//		//make any edges leaving the cycle be rooted at node 0
+//		for (unsigned int i = 1; i < cycle.size(); i++) {
+//			for (unsigned int j = 0; j < graph->getChildNum(cycle[i]); j += 2) {
+//				if (!graph->getChild(cycle[i], j) == cycle[0]) {
+//					nextLevelGraph->addEdge(cycle[0], graph->getChild(cycle[i], j), graph->getWeightOfEdge(cycle[i], j));
+//				}
+//			}
+//		}
+//
+//		nextLevelGraph->display();
+//
+//		//delete all the non contacted nodes
+//		for (unsigned int i = 1; i < cycle.size(); i++) {
+//			nextLevelGraph->removeNode(cycle[i]);
+//		}
+//
+//		Graph::WeightedDirectedGraph<T> * returnedGraph = edmondsAlgorithm(nextLevelGraph, rootNode);
+//
+//		//unroll the cycle
+//		for (unsigned int i = 1; i < cycle.size(); i++) {
+//			returnedGraph->addNode(cycle[i]);
+//			returnedGraph->addEdge(cycle[i], cycle[i - 1], graph->getWeightOfEdge(cycle[i], cycle[i-1]));
+//		}
+//		returnedGraph->addEdge(cycle[0], cycle[cycle.size() - 1], graph->getWeightOfEdge(cycle[0], cycle[cycle.size() - 1]));
+//
+//		std::cout << "NEW ITERATION \n\n\n";
+//		returnedGraph->display();
+//		std::cout << "\n\n";
+//		returnedGraph->displayParents();
+//
+//		return returnedGraph;
+//	}
+//
+//	return retGraph;
+//}
 
 template<class T>
 //pathfinding with negative edge weights

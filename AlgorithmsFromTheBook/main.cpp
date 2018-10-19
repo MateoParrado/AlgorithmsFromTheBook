@@ -83,6 +83,9 @@ int main() {
 	//bellmanFordTester();
 	sortingtester();
 	bipartiteTester();
-
+	huffmanTester();
+	//segmentedLinearRegressionTester();
+	lineSegmentIntersectionTester();
+	
 	std::getchar();
 }

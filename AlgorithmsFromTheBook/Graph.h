@@ -443,9 +443,6 @@ namespace Graph {
 		}
 
 		~DirectedGraph() {
-			for (auto i : edges) {
-				delete i;
-			}
 			for (auto i : parents) {
 				delete i;
 			}

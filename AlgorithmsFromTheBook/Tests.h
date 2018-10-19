@@ -340,4 +340,24 @@ void bipartiteTester() {
 	assert(!isBipartite(&g));
 }
 
+void huffmanTester() {
+	assert(huffmanDecoder(huffmanEncoder("float like a butterfly sting like a bee")) == "float like a butterfly sting like a bee");
+	assert(huffmanDecoder(huffmanEncoder("why be a king, when you could be a god")) == "why be a king, when you could be a god");
+}
+
+//this is a sufficient test forf squared error because it needs squared error to work
+void segmentedLinearRegressionTester() {
+	std::pair<int, int> x[9] = { {0, 0}, {1, 0}, {2, 0}, {3, 1}, {4, 2}, {5, 1}, {6, 0}, {7, 0}, {8, 0} };
+
+	std::vector<std::pair<unsigned int, unsigned int>> * vec = segmentedLinearRegression(&x[0], 9, 2);
+
+	delete vec;
+}
+
+void lineSegmentIntersectionTester() {
+	assert(!lineSegmentIntersection({ 1, 1 }, { 10, 1 }, { 1, 2 }, { 10, 2 }));
+	assert(!lineSegmentIntersection({ -5, -5 }, { 0, 0 }, { 1, 1 }, { 10, 10 }));
+	assert(lineSegmentIntersection({ 10, 0 }, { 0, 10 }, { 0, 0 }, { 10, 10 }));
+}
+
 #pragma deprecated (testDeriv, testInt)
