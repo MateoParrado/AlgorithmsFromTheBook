@@ -386,4 +386,82 @@ void lineSegmentIntersectionTester() {
 	assert(lineSegmentIntersection({ 10, 0 }, { 0, 10 }, { 0, 0 }, { 10, 10 }));
 }
 
+void minimumSpanningTreeTester() {
+	Graph::WeightedGraph<int> g(9);
+
+	for (int i = 0; i < 9; i++) g.addNode(i);
+
+	g.addEdge(0, 1, 4);
+	g.addEdge(0, 7, 8);
+	g.addEdge(1, 2, 8);
+	g.addEdge(1, 7, 11);
+	g.addEdge(2, 3, 7);
+	g.addEdge(2, 5, 4);
+	g.addEdge(2, 8, 2);
+	g.addEdge(3, 4, 9);
+	g.addEdge(3, 5, 14);
+	g.addEdge(4, 5, 10);
+	g.addEdge(6, 5, 2);
+	g.addEdge(6, 7, 1);
+	g.addEdge(6, 8, 6);
+	g.addEdge(7, 8, 7);
+
+	Graph::WeightedGraph<int> * g1 = primMinTree(&g);
+
+	assert(g1->size == 9);
+	assert(g1->getTotalEdgesInGraph() == 8);
+	assert(g1->hasChild(0, 1));
+	assert(g1->hasChild(0, 7));	
+	assert(g1->hasChild(2, 8));
+	assert(g1->hasChild(2, 3));
+	assert(g1->hasChild(2, 5));
+	assert(g1->hasChild(3, 4));
+	assert(g1->hasChild(6, 5));
+	assert(g1->hasChild(6, 7));
+
+	delete g1;
+
+	g1 = kruskalMinTree(&g);
+
+	assert(g1->size == 9);
+	assert(g1->getTotalEdgesInGraph() == 8);
+	assert(g1->hasChild(0, 1));
+	assert(g1->hasChild(0, 7));
+	assert(g1->hasChild(2, 8));
+	assert(g1->hasChild(2, 3));
+	assert(g1->hasChild(2, 5));
+	assert(g1->hasChild(3, 4));
+	assert(g1->hasChild(6, 5));
+	assert(g1->hasChild(6, 7));
+
+	delete g1;
+
+	g1 = kruskalMinTreePriorityQueue(&g);
+
+	assert(g1->size == 9);
+	assert(g1->getTotalEdgesInGraph() == 8);
+	assert(g1->hasChild(0, 1));
+	assert(g1->hasChild(0, 7));
+	assert(g1->hasChild(2, 8));
+	assert(g1->hasChild(2, 3));
+	assert(g1->hasChild(2, 5));
+	assert(g1->hasChild(3, 4));
+	assert(g1->hasChild(6, 5));
+	assert(g1->hasChild(6, 7));
+
+	delete g1;
+
+	Graph::WeightedGraph<int> g2 = reverseDeleteMinTree(g);
+
+	assert(g2.size == 9);
+	assert(g2.getTotalEdgesInGraph() == 8);
+	assert(g2.hasChild(0, 1));
+	assert(g2.hasChild(0, 7));
+	assert(g2.hasChild(2, 8));
+	assert(g2.hasChild(2, 3));
+	assert(g2.hasChild(2, 5));
+	assert(g2.hasChild(3, 4));
+	assert(g2.hasChild(6, 5));
+	assert(g2.hasChild(6, 7));
+}
 #pragma deprecated (testDeriv, testInt)

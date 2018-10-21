@@ -84,6 +84,7 @@ int main() {
 	huffmanTester();
 	segmentedLinearRegressionTester();
 	lineSegmentIntersectionTester();
-	
+	minimumSpanningTreeTester();
+
 	std::getchar();
 }

@@ -671,51 +671,44 @@ template<class T>
 Graph::WeightedGraph<T> * primMinTree(Graph::WeightedGraph<T> * g) {
 	std::vector<bool> visited(g->size);
 
-	std::vector<unsigned int> minDists(g->size, -1);
+	Heap::Heap<std::pair<unsigned int, std::pair<unsigned int, unsigned int>>> distHeap(g->size);//estimate size
 
-	Heap::Heap<std::pair<unsigned int * , std::pair<unsigned int, unsigned int>>> distHeap(g->size);//estimate size
-
-	minDists[0] = 0;//start tree at 0
 	visited[0] = true;
 
 	for (int i = 0; i < g->getEdgeNum(0); i++) {
 		unsigned int index = g->getOtherSideOfEdge(0, i);
 		unsigned int weight = g->getWeightOfEdge(0, index);
 
-		minDists[index] = weight;
-
-		distHeap.insert({ &minDists[index], {0, index} });
+		distHeap.insert({ weight, {0, index} });
 	}
 
 	Graph::WeightedGraph<T> * ret = copyWithoutEdges(g);
 
 	while (distHeap.size()) {
-		ret->addEdge(distHeap.getMin().second.first, distHeap.getMin().second.second, *distHeap.getMin().first);
+		ret->addEdge(distHeap.getMin().second.first, distHeap.getMin().second.second, distHeap.getMin().first);
 
 		if (depthFirstCycleTest(ret)) {
 			ret->removeEdge(distHeap.getMin().second.first, distHeap.getMin().second.second);
+			distHeap.popMin();
 			goto cycleFound;
 		}
 
 		unsigned int newNode = (visited[distHeap.getMin().second.first]) ? distHeap.getMin().second.second : distHeap.getMin().second.first;
 
+		distHeap.popMin();
+
+		visited[newNode] = true;
+
 		for (unsigned int i = 0; i < g->getEdgeNum(newNode); i++) {
 			unsigned int otherSideOfEdge = g->getOtherSideOfEdge(newNode, i);
 
-			if (minDists[otherSideOfEdge] == -1) {
-				minDists[otherSideOfEdge] = g->getWeightOfEdge(otherSideOfEdge, newNode);
+			if(visited[otherSideOfEdge]) continue;
 
-				distHeap.insert({ &minDists[otherSideOfEdge], {otherSideOfEdge, newNode} });
-			}
-			else if (g->getWeightOfEdge(otherSideOfEdge, newNode) < minDists[otherSideOfEdge]) {
-				minDists[otherSideOfEdge] = g->getWeightOfEdge(otherSideOfEdge, newNode);
-				distHeap.reheapify();
-			}
+			distHeap.insert({ g->getWeightOfEdge(newNode, otherSideOfEdge), {otherSideOfEdge, newNode} });
 		}
 
-	cycleFound:
+	cycleFound:;
 
-		distHeap.popMin();
 	}
 
 	return ret;

@@ -268,9 +268,5 @@ namespace Heap {
 			else if (nodes[pos / 2] > nodes[pos]) heapifyUp(pos);
 			else heapifyDown(pos);
 		}
-
-		~MaxHeap() {
-			delete nodes;
-		}
 	};
 }

@@ -61,6 +61,15 @@ namespace Graph {
 			return (*edges[_node])[_edge];
 		}
 
+		//get is the node n1 is connected to n by position, not object value
+		bool hasChild(unsigned int n, unsigned int n1) {
+			for (unsigned int i = 0; i < edges[n]->size()/2; i++) {
+				if (getOtherSideOfEdge(n, i) == n1) return true;
+			}
+
+			return false;
+		}
+
 		//get number of edges in graph
 		virtual unsigned int getTotalEdgesInGraph() {
 			unsigned int ret = 0;
