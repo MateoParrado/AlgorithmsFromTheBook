@@ -221,7 +221,7 @@ void dijkstraTester() {
 
 	assert(path1.size == 3);
 	assert(path1.popFrontNode() == 0);
-	assert(path1.popFrontNode() == 1);
+	assert(path1.popFrontNode() == 2);
 	assert(path1.popFrontNode() == 3);
 }
 
@@ -308,6 +308,30 @@ void bellmanFordTester() {
 	assert((*vec)[3] == 1);
 	assert((*vec)[4] == 0);
 	assert((*vec)[5] == 3);
+
+	delete vec;
+
+	vec = bellmanFordVectorProtocol(&g, 3, 5);
+
+	assert((*vec)[0] == 5);
+	assert((*vec)[1] == 2);
+	assert((*vec)[2] == 4);
+	assert((*vec)[3] == 1);
+	assert((*vec)[4] == 0);
+	assert((*vec)[5] == 3);
+
+	delete vec;
+
+	vec = bellmanFordAsynchronous(&g, 3, 5);
+
+	assert((*vec)[5] == 5);
+	assert((*vec)[4] == 2);
+	assert((*vec)[3] == 4);
+	assert((*vec)[2] == 1);
+	assert((*vec)[1] == 0);
+	assert((*vec)[0] == 3);
+
+	delete vec;
 }
 
 void sortingtester() {
@@ -345,11 +369,13 @@ void huffmanTester() {
 	assert(huffmanDecoder(huffmanEncoder("why be a king, when you could be a god")) == "why be a king, when you could be a god");
 }
 
-//this is a sufficient test forf squared error because it needs squared error to work
+//this is a sufficient test for squared error because it needs squared error to work
 void segmentedLinearRegressionTester() {
-	std::pair<int, int> x[9] = { {0, 0}, {1, 0}, {2, 0}, {3, 1}, {4, 2}, {5, 1}, {6, 0}, {7, 0}, {8, 0} };
+	std::pair<int, int> x[9] = { {0, 0}, {1, 0}, {2, 0}, {3, 2}, {4, 4}, {5, 2}, {6, 0}, {7, 0}, {8, 0} };
 
-	std::vector<std::pair<unsigned int, unsigned int>> * vec = segmentedLinearRegression(&x[0], 9, 2);
+	std::vector<std::pair<unsigned int, unsigned int>> * vec = segmentedLinearRegression(&x[0], 9, 3);
+
+	assert(vec->size() == 4);
 
 	delete vec;
 }

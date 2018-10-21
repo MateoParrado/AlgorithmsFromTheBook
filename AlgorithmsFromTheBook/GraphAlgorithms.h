@@ -155,20 +155,30 @@ SinglyLinkedList::LinkedList<unsigned int> djikstra(Graph::WeightedGraph<T> * g,
 	Heap::Heap<std::pair<unsigned int *, unsigned int>> heap(g->size / 2);
 	heap.insert({ &minDists[startNode], startNode });
 
+	//used to make sure that nodes dont get checked after theyve been popped off the heap
+	bool * noMoreChecking = new bool[g->size];
+	for (unsigned int i = 0; i < g->size; i++) {
+		noMoreChecking[i] = false;
+	}
+
 	while (heap.size()) {
 		int index = heap.popMin().second;
+
+		noMoreChecking[index] = true;
+
+		if (index == endNode) {
+			goto doneLoop;
+		}
 
 		for (unsigned int i = 0; i < g->getEdgeNum(index); i++) {
 			int otherSideOfEdge = g->getOtherSideOfEdge(index, i);
 
+			//make sure it hasnt been popped yet
+			if (noMoreChecking[otherSideOfEdge]) continue;
+
 			int len = g->getWeightOfEdge(index, otherSideOfEdge) + minDists[index];
 
-			if (otherSideOfEdge == endNode) {
-				parents[endNode] = index;
-
-				goto doneLoop;
-			}
-			else if (minDists[otherSideOfEdge] == -1) {
+			if (minDists[otherSideOfEdge] == -1) {
 				minDists[otherSideOfEdge] = len;
 				parents[otherSideOfEdge] = index;
 

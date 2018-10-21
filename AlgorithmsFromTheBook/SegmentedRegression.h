@@ -9,17 +9,11 @@ std::vector<std::pair<unsigned int, unsigned int>> * segmentedLinearRegression(s
 	//the minimum possible cost at every point
 	std::vector<double> opt(size);
 
-	//the error[i*size + j] is the minimum error of a line between the two points
+	//the error[i*size + j] is the minimum error of a line between the two points i and j
 	std::vector<double> error(size*size);
 
 	//initialize every error
-	for (unsigned int i = 0; i < size; i++) {
-		error[size*i + i] = 0;
-
-		if (!i) continue;
-
-		error[size*i + i - 1] = 0;
-		error[size*(i - 1) + i] = 0;
+	for (unsigned int i = 1; i < size; i++) {
 
 		for (unsigned int j = 0; j < i - 1; j++) {
 			double temp = squaredError(&x[j], i - j + 1);
@@ -32,7 +26,7 @@ std::vector<std::pair<unsigned int, unsigned int>> * segmentedLinearRegression(s
 	}
 
 	//fill the opt array
-	for (unsigned int i = 1; i < size; i++) {
+	for (unsigned int i = 2; i < size; i++) {
 		double minVal = 1000000000;
 		for (unsigned int j = 1; j < i; j++) {
 			double temp = error[i*size + j] + cost + opt[j - 1];

@@ -32,9 +32,7 @@
 //optimizaitons in segmented linear regression (266/284), calculate errors in constant time
 //point in polygon
 //polygon intersection
-//implement operator= for graph
-//implement operator= for linked list
-//implement operator= for heap
+//bugs in: closest pair
 //implement tests for every header file
 
 using namespace std;
@@ -77,14 +75,14 @@ int main() {
 	stableMatchingTester();
 	rnaStructureTester();
 	dijkstraMinDistTester();
-	//dijkstraTester();
+	dijkstraTester();
 	connectivityTestTester();
 	cycleTestTester();
-	//bellmanFordTester();
+	bellmanFordTester();
 	sortingtester();
 	bipartiteTester();
 	huffmanTester();
-	//segmentedLinearRegressionTester();
+	segmentedLinearRegressionTester();
 	lineSegmentIntersectionTester();
 	
 	std::getchar();
