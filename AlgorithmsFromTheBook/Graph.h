@@ -566,15 +566,15 @@ namespace Graph {
 		}
 
 		void removeEdge(unsigned int parent, unsigned int child) {
-			for (unsigned int i = 0; i < edges[parent]->size(); i++) {
+			for (unsigned int i = 0; i < edges[parent]->size(); i += 2) {
 				if ((*edges[parent])[i] == child) {
 					edges[parent]->erase(edges[parent]->begin() + i, edges[parent]->begin() + i + 2);
 					break;
 				}
 			}
-			for (unsigned int i = 0; i < parents[child]->size(); i++) {
+			for (unsigned int i = 0; i < parents[child]->size(); i += 2) {
 				if ((*parents[child])[i] == parent) {
-					parents[child]->erase(parents[child]->begin() + i, edges[child]->begin() + i + 2);
+					parents[child]->erase(parents[child]->begin() + i, parents[child]->begin() + i + 2);
 					break;
 				}
 			}

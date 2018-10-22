@@ -20,7 +20,7 @@
 
 #include <vector>
 #include <algorithm>
-#include <utility>
+#include <assert.h>
 
 void factorialTester() {
 	assert(factorial(4) == 24);
@@ -464,4 +464,146 @@ void minimumSpanningTreeTester() {
 	assert(g2.hasChild(6, 5));
 	assert(g2.hasChild(6, 7));
 }
-#pragma deprecated (testDeriv, testInt)
+
+void isDAGTester() {
+	Graph::DirectedGraph<int> g;
+
+	for (int i = 0; i < 6; i++) {
+		g.addNode(i);
+	}
+
+	g.addEdge(5, 0);
+	g.addEdge(5, 2);
+	g.addEdge(4, 0);
+	g.addEdge(4, 1);
+	g.addEdge(2, 3);
+	g.addEdge(3, 1);
+
+	assert(isDAG(g));
+
+	g.addEdge(0, 5);
+	g.addEdge(1, 4);
+
+	assert(!isDAG(g));
+}
+
+void topologicalSortTester() {
+	Graph::DirectedGraph<int> g;
+
+	for (int i = 0; i < 6; i++) {
+		g.addNode(i);
+	}
+
+	g.addEdge(5, 0);
+	g.addEdge(5, 2);
+	g.addEdge(4, 0);
+	g.addEdge(4, 1);
+	g.addEdge(2, 3);
+	g.addEdge(3, 1);
+	
+	std::vector<unsigned int> * vec = topologicalSort(g);
+
+	assert((*vec)[0] == 5 || (*vec)[0] == 4);
+	assert((*vec)[1] == 5 || (*vec)[1] == 4);
+	assert((*vec)[2] == 0 || (*vec)[2] == 2);
+	assert((*vec)[3] == 0 || (*vec)[3] == 2);
+	assert((*vec)[4] == 3);
+	assert((*vec)[5] == 1);
+
+	delete vec;
+
+	g.addEdge(0, 5);
+	g.addEdge(1, 4);
+
+	vec = topologicalSort(g);
+
+	assert(!vec);
+
+	assert(!isDAG(g));
+}
+
+unsigned int testingOnlyCostFunc(char a, char b) {
+	if (a == b) return 0;
+	return 3;
+}
+
+void sequenceAlignmentTester() {
+	std::vector<std::pair<unsigned int, unsigned int>> * vec = sequenceAlignment("abc", "def", 1, testingOnlyCostFunc);
+
+	assert(!vec->size());
+
+	delete vec;
+
+	vec = sequenceAlignment("abc", "acf", 2, testingOnlyCostFunc);
+
+	assert(vec->size() == 2);
+	assert((*vec)[0].first == 2 && (*vec)[0].second == 1);
+	assert((*vec)[1].first == 0 && (*vec)[1].second == 0);
+
+	delete vec;
+
+	vec = backwardsSequenceAlignment("abc", "def", 1, testingOnlyCostFunc);
+
+	assert(!vec->size());
+
+	delete vec;
+
+	vec = backwardsSequenceAlignment("abc", "acf", 2, testingOnlyCostFunc);
+
+	assert(vec->size() == 2);
+	assert((*vec)[0].first == 0 && (*vec)[0].second == 0);
+	assert((*vec)[1].first == 2 && (*vec)[1].second == 1);
+
+	delete vec;
+
+	vec = spaceEfficientSequenceAlignment("abc", "def", 1, testingOnlyCostFunc);
+
+	assert(!vec->size());
+
+	delete vec;
+
+	vec = spaceEfficientSequenceAlignment("abc", "acf", 2, testingOnlyCostFunc);
+
+	assert(vec->size() == 2);
+	assert((*vec)[0].first == 2 && (*vec)[0].second == 1);
+	assert((*vec)[1].first == 0 && (*vec)[1].second == 0);
+
+	delete vec;
+
+}
+
+void negativeCycleTester() {
+	Graph::WeightedDirectedGraph<int> g;
+
+	for (int i = 0; i < 6; i++) {
+		g.addNode(i);
+	}
+
+	g.addEdge(0, 1, 2);
+	g.addEdge(1, 2, 1);
+	g.addEdge(2, 3, -1);
+	g.addEdge(3, 4, 1);
+	g.addEdge(4, 1, -2);
+	g.addEdge(2, 5, 1);
+
+	assert(negativeCycleDetector(&g));
+
+	std::vector<unsigned int> * vec = negativeCycleGetter(&g);
+
+	assert((*vec)[0] == 1);
+	assert((*vec)[1] == 4);
+	assert((*vec)[2] == 3);
+	assert((*vec)[3] == 2);
+
+	delete vec;
+
+	g.removeEdge(4, 1);
+	g.addEdge(4, 1, 2);
+
+	assert(!negativeCycleDetector(&g));
+
+	vec = negativeCycleGetter(&g);
+
+	assert(!vec);
+}
+#pragma deprecated (testDeriv, testInt, testingOnlyCostFunc)

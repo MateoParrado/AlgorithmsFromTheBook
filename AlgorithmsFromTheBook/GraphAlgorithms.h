@@ -518,23 +518,27 @@ bool isDAG(Graph::DirectedGraph<T> g) {//object pointed to is destroyed by delet
 
 template<class T>
 //returns a sorted vector where every element of the vector has no parents in the graph that come before it
-std::vector<unsigned int> * topologicalSort(Graph::DirectedGraph<T> * g) {
+std::vector<unsigned int> * topologicalSort(Graph::DirectedGraph<T> g) {
 	std::vector<unsigned int> * retVec = new std::vector<unsigned int>;
-	retVec->reserve(g->size);
+	retVec->reserve(g.size);
 
-	while(g->size) {
+	while(g.size) {
 		bool batman = false;
 
-		for (unsigned int i = g->size - 1; i < g->size; i--) {
-			if (!g->getParentNum(i)) {
-				retVec->push_back(g->nodes[i].obj);
+		for (unsigned int i = g.size - 1; i < g.size; i--) {
+			if (!g.getParentNum(i)) {
+				retVec->push_back(g.nodes[i].obj);
 
-				g->removeNode(i);
+				g.removeNode(i);
 				batman = true;
 			}
 		}
 
-		if (!batman) throw 10;
+		if (!batman) {
+			delete retVec;
+
+			return nullptr;
+		}
 	}
 
 	return retVec;
@@ -982,7 +986,7 @@ std::vector<unsigned int> * bellmanFordAsynchronous(Graph::WeightedDirectedGraph
 
 template<class T>
 //returns wether there is a negative cycle in the graph or not
-bool negativCycleDetector(Graph::WeightedDirectedGraph<T> * g) {
+bool negativeCycleDetector(Graph::WeightedDirectedGraph<T> * g) {
 	int * opt = new int[g->size];
 
 	for (unsigned int i = 0; i < g->size; i++) {
@@ -1022,7 +1026,7 @@ bool negativCycleDetector(Graph::WeightedDirectedGraph<T> * g) {
 
 template<class T>
 //returns a negative cycle of g
-std::vector<unsigned int> * negativCycleGetter(Graph::WeightedDirectedGraph<T> * g) {
+std::vector<unsigned int> * negativeCycleGetter(Graph::WeightedDirectedGraph<T> * g) {
 	int * opt = new int[g->size];
 	unsigned int * prev = new unsigned int[g->size];
 

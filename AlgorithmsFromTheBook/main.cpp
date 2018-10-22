@@ -32,8 +32,10 @@
 //optimizaitons in segmented linear regression (266/284), calculate errors in constant time
 //point in polygon
 //polygon intersection
+//creating polygon from given set of points
 //bugs in: closest pair
-//implement tests for every header file
+//implement tests for every algo (20 left)
+//write reverse delete min tree in nlogn
 
 using namespace std;
 
@@ -85,6 +87,10 @@ int main() {
 	segmentedLinearRegressionTester();
 	lineSegmentIntersectionTester();
 	minimumSpanningTreeTester();
+	isDAGTester();
+	topologicalSortTester();
+	sequenceAlignmentTester();
+	negativeCycleTester();
 
 	std::getchar();
 }

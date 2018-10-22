@@ -1,10 +1,11 @@
 #pragma once
+#include <assert.h>
+
 #include "Utils.h"
 
 template<class T>
-//DO NOT USE OUTSIDE OF CLOSESTPAIR.H EVERYTHING WILL BREAK
 //helper function to the function below
-std::pair<std::pair<unsigned int, unsigned int>, double> pleaseDontUse(std::pair<T, T> * start, unsigned int size) {
+std::pair<std::pair<unsigned int, unsigned int>, double> closestPairHelperFunc(std::pair<T, T> * start, unsigned int size) {
 	//end recursion
 	if (size == 2) {
 		return std::make_pair(std::make_pair(0, 1), dist(start, start + 1));
@@ -21,14 +22,15 @@ std::pair<std::pair<unsigned int, unsigned int>, double> pleaseDontUse(std::pair
 				minPair = { 0, i };
 			}
 		}
+
 		return std::make_pair(minPair, minDist);
 		
 	}
 
 	//split it into two sections and get the minimums from them
-	std::pair<std::pair<unsigned int, unsigned int>, double> min = pleaseDontUse(start, size / 2);
+	std::pair<std::pair<unsigned int, unsigned int>, double> min = closestPairHelperFunc(start, size / 2);
 	{
-		std::pair<std::pair<unsigned int, unsigned int>, double> temp = pleaseDontUse(start + size / 2, size - (size / 2));
+		std::pair<std::pair<unsigned int, unsigned int>, double> temp = closestPairHelperFunc(start + size / 2, size - (size / 2));
 
 		if (temp.second < min.second) {
 			min = temp;
@@ -95,9 +97,9 @@ std::pair<unsigned int, unsigned int> closestPair( std::vector<std::pair<T, T>> 
 	std::sort(xSort->begin(), xSort->end());
 	
 	//cut it in haf and find the mins of each half
-	std::pair<std::pair<unsigned int, unsigned int>, double> min = pleaseDontUse(&(*xSort)[0], xSort->size() / 2);
+	std::pair<std::pair<unsigned int, unsigned int>, double> min = closestPairHelperFunc(&(*xSort)[0], xSort->size() / 2);
 	{
-		std::pair<std::pair<unsigned int, unsigned int>, double> temp = pleaseDontUse(&(*xSort)[xSort->size() / 2], xSort->size() - (xSort->size() / 2));
+		std::pair<std::pair<unsigned int, unsigned int>, double> temp = closestPairHelperFunc(&(*xSort)[xSort->size() / 2], xSort->size() - (xSort->size() / 2));
 
 		if (temp.second < min.second) { 
 			min = temp; 
@@ -133,7 +135,7 @@ std::pair<unsigned int, unsigned int> closestPair( std::vector<std::pair<T, T>> 
 			}
 		}
 	}
-
+	
 	delete xSort;
 	return min.first;
 }
@@ -144,10 +146,6 @@ template<class T>
 std::pair<unsigned int, unsigned int> bruteForceClosestPair(std::vector<std::pair<T, T>> * nodes) {
 	double min = 100000000000;
 	std::pair<unsigned int, unsigned int> minInd;
-
-	auto dist = [](std::pair<T, T> * p1, std::pair<T, T> * p2) {
-		return sqrt((p1->first - p2->first)*(p1->first - p2->first) + (p1->second - p2->second)*(p1->second - p2->second));
-	};
 
 	for (unsigned int i = 0; i < nodes->size() - 1; i++) {
 		for (unsigned int j = i + 1; j < nodes->size(); j++) {
@@ -160,4 +158,22 @@ std::pair<unsigned int, unsigned int> bruteForceClosestPair(std::vector<std::pai
 	return minInd;
 }
 
-#pragma deprecated (pleaseDontUse)
+template<class T>
+//check which pair of points is closest using brute force
+//designed only to check the above algoruthms accuracy
+std::pair<unsigned int, unsigned int> bruteForceClosestPair(std::pair<T, T> * start, unsigned int size) {
+	double min = 100000000000;
+	std::pair<unsigned int, unsigned int> minInd;
+
+	for (unsigned int i = 0; i < size - 1; i++) {
+		for (unsigned int j = i + 1; j < size; j++) {
+			if (dist(&start[i], &start[j]) < min) {
+				min = dist(&start[i], &start[j]);
+				minInd = { i, j };
+			}
+		}
+	}
+	return minInd;
+}
+
+#pragma deprecated (closestPairHelperFunc)

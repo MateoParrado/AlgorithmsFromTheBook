@@ -47,6 +47,16 @@ std::string greatestCommonSubstring(std::string str1, std::string str2) {
 //cost func is f aunction that takes two charachters and returns the cost of pairing those two chars
 //example is the cost of mathcing a charachter with itself is 0, a vowel with another vowel is three, and anything else is 9
 std::vector<std::pair<unsigned int, unsigned int>> * sequenceAlignment(std::string x, std::string y, unsigned int delta, unsigned int(*costFunc)(char, char)) {
+	
+	if (x.size() == 1 && y.size() == 1) {
+		std::vector<std::pair<unsigned int, unsigned int>> * retVec = new std::vector<std::pair<unsigned int, unsigned int>>();
+		if (costFunc(x[0], y[0]) < delta) {
+			retVec->push_back({ 0, 0 });
+		}
+
+		return retVec;
+	}
+
 	typedef boost::multi_array<unsigned int, 2>::index index;
 	boost::multi_array<unsigned int, 2> opt(boost::extents[x.size() + 1][y.size() + 1]);
 
