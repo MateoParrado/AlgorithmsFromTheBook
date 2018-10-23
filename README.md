@@ -62,14 +62,24 @@ SinglyLinkedList::LinkedList<int> path = depthFirstSearch(&g, 0, 4);
 An important note is that whenever a function returns a pointer, it must be deleted to prevent a memory leak.
 ### Running the tests
 The tests for this library were mainly used for development purposes. They verify the correctness of the algorithms by checking them against a couple of test cases. However, they can help you to better understand some of the algorithms by seeing example input and output.
+
 For example, take the sequence alignment algorithm. If you don't understand how to use it, or what it does, from the comment above the function definition, simply open the tests header, Tests.h.
 
 Then, look at the example input and output. For sequence alignment, there are two different inputs tested.
 
 The first is "abc" and "def". You see that this returns an empty vector. 
 The second is "abc", "acf". This returns a vector with two elements, (0, 0), and (2, 1).
+
 From these two examples, you would be able to deduce that it returns pairs of the two strings that should be matched with each other in order to match them as well as possible. There are no matching charchters in "abc" and "def". However, in "abc" and "acf", the two As match, and the two Cs match.
-You could also deduc that backwards sequence alignment and space efficient sequence alignment are simply variations of the same algorithm, as they have the same input and output.
+
+You could also deduce that backwards sequence alignment and space efficient sequence alignment are simply variations of the same algorithm, as they have the same input and output.
+
+Another possible use for the testing functions is to check if modifications to the current algorithms are correct. Say you make an optimizaiton in the sequence alignment algorithm. You can simply type:
+
+```
+sequenceAlignmentTester();
+```
+to verify the correctness of your algorithm. You can also add more tests into it if you suspect you have created a bug somewhere else. 
 ## Built with
 Miscoroft Visual Studio 2015 C/C++ Compiler
 
