@@ -2,10 +2,10 @@
 This is a project that takes all of the theoretical concepts from Algorithm Design by Jon Kleinberg and Eva Tardos and puts them into practice. The goal was to improve my C++ skills, as well as to be able to write and understand more complex algorithms. It is written as a header only library because many of the functions and data structures are templated, and templates don't play well with .cpp files.
 
 ## Getting Started
-TODO: download on a different computer and figure out how to get started
+Either clone or download the zip of the repository. Take the header files you need and put them into your working directory. 
 
 ### Prerequisites
-TODO: figure out if boost needs to be downloaded or if it is packaged in there with it
+Some of the header files require boost::multiarray for thier algorithms. If you are using an algorithm from those headers but don't need that algorithm, simply delete it. Otherwise, you can download it at www.boost.org.
 
 ## How to use?
 ### Code Examples
