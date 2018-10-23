@@ -40,7 +40,7 @@ for(int i = 0; i < 6; i++){
 ```
 You now have a graph that is ready for use.
 ### Using the Algorithms
-The use of the algorithms will be demonstrated using the graph we defined above and depth first search as an example.
+The use of the algorithms will be demonstrated using the graph we defined above. We will find the path between node 0 and node 4 with depth first search.
 
 As above, the first step is to include the header that contains the algorithm, and if the algorithm returns a data structure that you haven't included yet, include that as well.
 Depth first search returns a singly linked list, and is defined int GraphAlgorithms.h so you would write the code as follows:
@@ -48,7 +48,18 @@ Depth first search returns a singly linked list, and is defined int GraphAlgorit
 #include "GraphAlgorithms.h"
 #include "LinkedList.h"
 ```
+Then, you consult the comment above the algorithm's definition for an explanation of the parameters.
+The comment above depth first search is:
+```
+//find path between node start and node end using DFS
+```
+The function definition on the next line takes a pointer to a graph g, an unsigned int start, and an unsigned int end. 
+Using this information combined with what the comment said, you can deduce that the code should look like this:
+```
+SinglyLinkedList::LinkedList<int> path = depthFirstSearch(&g, 0, 4);
+```
 
+An important note is that whenever a function returns a pointer, it must be deleted to prevent a memory leak.
 ### Running the tests
 TODO: show examples of tests and write how they help people
 (they show what the expected output is for each algo, and show some examples)
