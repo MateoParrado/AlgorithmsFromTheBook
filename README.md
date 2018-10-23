@@ -67,7 +67,8 @@ For example, take the sequence alignment algorithm. If you don't understand how 
 
 Then, look at the example input and output. For sequence alignment, there are two different inputs tested.
 
-The first is "abc" and "def". You see that this returns an empty vector. \n
+The first is "abc" and "def". You see that this returns an empty vector.
+
 The second is "abc", "acf". This returns a vector with two elements, (0, 0), and (2, 1).
 
 From these two examples, you would be able to deduce that it returns pairs of the two strings that should be matched with each other in order to match them as well as possible. There are no matching charchters in "abc" and "def". However, in "abc" and "acf", the two As match, and the two Cs match.
