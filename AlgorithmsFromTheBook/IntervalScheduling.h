@@ -36,23 +36,21 @@ std::vector < std::vector<std::pair<int, int>>> parallelScheduler(std::vector<st
 	std::vector<int> nums;//storing the number of the vector to be returned in
 	nums.reserve(tasks.size());
 
-	unsigned int minCheck = 0; //to avoid rechecking tasks that cant overlap
-
 	unsigned int numVecs = 0;//number of vectors to return
 
 	std::vector<int> numInVec(5);//number of times a task is pushed to a vector
 
 	for (unsigned int i = 0; i < tasks.size(); i++) {
-		std::vector<int> opts;
+		std::vector<int> opts;//options to put the task in
 
-		for (unsigned int j = minCheck; j < i; j++) {//finding which vectors it cant be returned in
-			if (tasks[j].second <= tasks[i].first) minCheck++;
-			else {
+		for (unsigned int j = 0; j < i; j++) {//finding which vectors it cant be returned in
+			if (!(tasks[j].second <= tasks[i].first)){
 				opts.push_back(nums[j]);
 			}
 		}
 
-		for (unsigned int j = 0; j > -1; j++) {//infinite loop
+		//adding the object to its identified vector
+		for (unsigned int j = 0; j > -1; j++) {//infinite loop but for in loop purposes cant just be "for(;;)"
 			if (std::find(opts.begin(), opts.end(), j) == opts.end()) {
 				nums.push_back(j);
 

@@ -28,14 +28,16 @@
 #include "Tests.h"
 
 //TODO
-//edmond algo
-//optimizaitons in segmented linear regression (266/284), calculate errors in constant time
-//point in polygon
-//polygon intersection
-//creating polygon from given set of points
-//bugs in: closest pair
-//implement tests for every algo (20 left)
-//write reverse delete min tree in nlogn
+///edmonds algorithm
+///optimizaitons in segmented linear regression (266/284), calculate errors in constant time
+///point in polygon
+///polygon intersection
+///creating polygon from given set of points
+///fix bugs in: closest pair
+//				weighted interval scheduler
+//implement tests for every algo (11 left)
+///write reverse delete min tree in nlogn
+///fix weirdo loop in weighted interval scheduler
 
 using namespace std;
 
@@ -64,33 +66,7 @@ int main() {
 
 	//std::cout << dijkstraGcd(468, 24);
 
-	factorialTester();
-	distTester();
-	exponentTester();
-	gcdTester();
-	integralTester();
-	linearRegressionTester();
-	cacheTester();
-	//closestPairTester();
-	inversionCounterTester();
-	greatestCommonSubstringTester();
-	stableMatchingTester();
-	rnaStructureTester();
-	dijkstraMinDistTester();
-	dijkstraTester();
-	connectivityTestTester();
-	cycleTestTester();
-	bellmanFordTester();
-	sortingtester();
-	bipartiteTester();
-	huffmanTester();
-	segmentedLinearRegressionTester();
-	lineSegmentIntersectionTester();
-	minimumSpanningTreeTester();
-	isDAGTester();
-	topologicalSortTester();
-	sequenceAlignmentTester();
-	negativeCycleTester();
+	runAllTests();
 
 	std::getchar();
 }

@@ -34,7 +34,7 @@ std::string breadthFirstSearch(Graph::Graph<T> * g, int start, int end) {
 
 	ret.pushBackNode(std::to_string(start));
 
-	while (true) {
+	while (ret.size) {
 		int nextCheck = ret.getVal(0)[ret.getVal(0).size() - 1] - '0';//0 is 48 in ascii for some reason
 
 		for (int i = 0; i < g->getEdgeNum(nextCheck); i++) {//loop through nextCheck's children
@@ -64,13 +64,16 @@ std::string breadthFirstSearch(Graph::Graph<T> * g, int start, int end) {
 		} ret.popFrontNode();
 	}
 
+	//this should only be called if the algorithm can't find a path between the points, otherwise the only way to exit the loop is a goto to endLoop
+	return "";
+
 endLoop:
 
 	return ret.getVal(0) + std::to_string(end);
 }
 
 template<class T>
-//find path between two nodes using DFS
+//find path between node start and node end using DFS
 SinglyLinkedList::LinkedList<int> depthFirstSearch(Graph::Graph<T> * g, int start, int end) {
 	std::vector<bool> visited((*g).size);//to not double count nodes
 	visited[start] = true;
@@ -97,9 +100,13 @@ SinglyLinkedList::LinkedList<int> depthFirstSearch(Graph::Graph<T> * g, int star
 
 	edgeFound:
 
-		if (ret.getVal(0) == end) break;
+		if (ret.head) {
+			if (ret.getVal(0) == end) break;
 
-		if (!ret.size) { throw 4; }
+			if (!ret.size) { return ret; }
+		}
+		else
+			return ret;
 	}
 
 	return ret;
