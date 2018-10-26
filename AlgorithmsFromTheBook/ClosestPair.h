@@ -27,6 +27,10 @@ std::pair<std::pair<unsigned int, unsigned int>, double> closestPairHelperFunc(s
 		
 	}
 
+	if (start->first == 11 && start->second == 625) {
+		bool b = true;
+	}
+
 	//split it into two sections and get the minimums from them
 	std::pair<std::pair<unsigned int, unsigned int>, double> min = closestPairHelperFunc(start, size / 2);
 	{
@@ -35,8 +39,8 @@ std::pair<std::pair<unsigned int, unsigned int>, double> closestPairHelperFunc(s
 		if (temp.second < min.second) {
 			min = temp;
 
-			min.first.first += size - (size / 2);
-			min.first.second += size - (size / 2);
+			min.first.first += (size / 2);
+			min.first.second += (size / 2);
 		}
 	}
 
@@ -44,6 +48,7 @@ std::pair<std::pair<unsigned int, unsigned int>, double> closestPairHelperFunc(s
 	std::vector<std::pair<std::pair<T, T>, unsigned int>> closeToLine;
 	closeToLine.reserve(size / 4);
 	for (unsigned int i = 0; i < size; i++) {
+		auto auti = *(start + i);
 		if (abs((start + size / 2)->first - (start + i)->first) <= min.second) {
 			closeToLine.push_back({ *(start + i), i });
 		}
@@ -104,8 +109,8 @@ std::pair<unsigned int, unsigned int> closestPair( std::vector<std::pair<T, T>> 
 		if (temp.second < min.second) { 
 			min = temp; 
 
-			min.first.first += xSort->size() - (xSort->size() / 2);
-			min.first.second += xSort->size() - (xSort->size() / 2);
+			min.first.first += (xSort->size() / 2);
+			min.first.second += (xSort->size() / 2);
 		}
 	}
 
@@ -136,8 +141,25 @@ std::pair<unsigned int, unsigned int> closestPair( std::vector<std::pair<T, T>> 
 		}
 	}
 	
+	//now you have to find which indexes the sorted list corresponds to
+	std::pair<unsigned int, unsigned int> retPair = { 0, 0 };
+
+	for (int i = 0; i < nodes->size(); i++) {
+		if ((*nodes)[i].first == (*xSort)[min.first.first].first && (*nodes)[i].second == (*xSort)[min.first.first].second) {
+			retPair.first = i;
+			break;
+		}
+	}
+	for (int i = 0; i < nodes->size(); i++) {
+		if ((*nodes)[i].first == (*xSort)[min.first.second].first && (*nodes)[i].second == (*xSort)[min.first.second].second) {
+			retPair.second = i;
+			break;
+		}
+	}
+
 	delete xSort;
-	return min.first;
+
+	return retPair;
 }
 
 template<class T>

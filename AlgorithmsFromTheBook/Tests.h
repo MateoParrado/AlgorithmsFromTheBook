@@ -43,7 +43,7 @@ void closestPairTester() {
 
 	std::pair<unsigned int, unsigned int> a = closestPair(&testVec);
 	std::pair<unsigned int, unsigned int> b = bruteForceClosestPair(&testVec);
-	std::cout << a.first << " " << a.second << " " << b.first << " " << b.second;
+
 	assert(dist(&testVec[a.first], &testVec[a.second]) == dist(&testVec[b.first], &testVec[b.second]));
 }
 
@@ -712,7 +712,7 @@ void runAllTests() {
 	integralTester();
 	linearRegressionTester();
 	cacheTester();
-	//closestPairTester();
+	closestPairTester();
 	inversionCounterTester();
 	greatestCommonSubstringTester();
 	stableMatchingTester();
