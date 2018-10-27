@@ -482,7 +482,9 @@ void schedulingTester() {
 	x.push_back(weightedTask(7, 9, 2));
 	x.push_back(weightedTask(7, 9, 1));
 
-	//std::vector<weightedTask> sched = weightedIntervalScheduler(&x);
+	std::string sched = weightedIntervalScheduler(&x);
+	
+	assert(sched == "420");
 }
 
 /*INVERSION COUNTER*/
