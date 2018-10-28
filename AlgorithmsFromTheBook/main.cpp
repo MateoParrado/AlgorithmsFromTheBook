@@ -34,10 +34,8 @@
 ///polygon intersection
 ///creating polygon from given set of points
 ///convex hull problem and graham scans
-//fix bugs in: weighted interval scheduler
 //implement tests for every algo (11 left)
 ///write reverse delete min tree in nlogn
-//fix weirdo loop in weighted interval scheduler
 
 using namespace std;
 

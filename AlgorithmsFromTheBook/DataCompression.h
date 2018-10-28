@@ -6,8 +6,8 @@
 #include "Graph.h"
 
 //generate an encryption scheme for a given set of frequencies
-//frequencies must add up to 1, do not put in a value for the second parameter
-//must be in the form (freq, chaachter) for heap sort reasons
+//frequencies must add up to 1, do not put in a value for the second or third parameters
+//must be in the form (freq, charachter) for heap sort reasons
 //even though frequencies is a pointer it will still get modified
 Graph::BinaryTree<char> * generateHoffmanCodes(std::vector<std::pair<float, char>> * frequencies, Heap::Heap<std::pair<float, char>> * minWeights = nullptr, Graph::BinaryTree<char> * retHeap = nullptr) {
 

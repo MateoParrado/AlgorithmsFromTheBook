@@ -145,20 +145,23 @@ std::vector<unsigned int> djikstraMinDist(Graph::WeightedGraph<T> * g, unsigned 
 	return minDists;
 }
 
-//Djikstras pathfinding
 template<class T>
+//Djikstras pathfinding algorithm
 SinglyLinkedList::LinkedList<unsigned int> djikstra(Graph::WeightedGraph<T> * g, unsigned int startNode, unsigned int endNode) {
+	//edge case
 	if (startNode == endNode) {
 		SinglyLinkedList::LinkedList<unsigned int> l;
 		l.pushBackNode((unsigned int)0);
 		return l;
 	}
 
+	//the minimum cost of getting to any node, which is initialized at infinity
 	std::vector<unsigned int> minDists(g->size, -1);
 	minDists[startNode] = 0;
 
 	std::vector<unsigned int> parents(g->size, -1);//the node leading to n in the shortest path to n
 
+	//heap to make choosing the cheapest unvisited node cheaper
 	Heap::Heap<std::pair<unsigned int *, unsigned int>> heap(g->size / 2);
 	heap.insert({ &minDists[startNode], startNode });
 
@@ -168,15 +171,18 @@ SinglyLinkedList::LinkedList<unsigned int> djikstra(Graph::WeightedGraph<T> * g,
 		noMoreChecking[i] = false;
 	}
 
+	//as long as there are unchecked nodes
 	while (heap.size()) {
+		//take the cheapest node
 		int index = heap.popMin().second;
 
 		noMoreChecking[index] = true;
 
 		if (index == endNode) {
-			goto doneLoop;
+			break;//done
 		}
 
+		//check all edges coming off of the node we picked to see if they create a shorter path to that node
 		for (unsigned int i = 0; i < g->getEdgeNum(index); i++) {
 			int otherSideOfEdge = g->getOtherSideOfEdge(index, i);
 
@@ -185,12 +191,14 @@ SinglyLinkedList::LinkedList<unsigned int> djikstra(Graph::WeightedGraph<T> * g,
 
 			int len = g->getWeightOfEdge(index, otherSideOfEdge) + minDists[index];
 
+			//if the node hasnt been visited yet do
 			if (minDists[otherSideOfEdge] == -1) {
 				minDists[otherSideOfEdge] = len;
 				parents[otherSideOfEdge] = index;
 
+				//add it into the heap
 				heap.insert({ &minDists[otherSideOfEdge], otherSideOfEdge });
-			}
+			}//if its already been check then just adjust its value
 			else if (len < minDists[otherSideOfEdge]) {
 				minDists[otherSideOfEdge] = len;
 				parents[otherSideOfEdge] = index;
@@ -198,12 +206,12 @@ SinglyLinkedList::LinkedList<unsigned int> djikstra(Graph::WeightedGraph<T> * g,
 			}
 		}
 	}
-doneLoop:
 
 	SinglyLinkedList::LinkedList<unsigned int> ret;
 
 	ret.pushBackNode(endNode);
 
+	//trace back through the array
 	while (parents[ret.getVal(0)] != -1) {
 		ret.pushForwardsNode(parents[ret.getVal(0)]);
 	}
@@ -553,7 +561,7 @@ std::vector<unsigned int> * topologicalSort(Graph::DirectedGraph<T> g) {
 
 /*MINIMUM SPANNING TREE*/
 
-////build a minimum spanning tree by adding in th echeapest nodes that dont create a cycle
+////build a minimum spanning tree by adding in the cheapest nodes that dont create a cycle
 //slow, better version is written below, but i kept it because i like it
 template<class T>
 Graph::WeightedGraph<T> * kruskalMinTreePriorityQueue(Graph::WeightedGraph<T> * g) {
@@ -814,22 +822,26 @@ Graph::WeightedGraph<T> * primMinTree(Graph::WeightedGraph<T> * g) {
 //}
 
 template<class T>
-//pathfinding with negative edge weights
+//optimal pathfinding with negative edge weights
+//graph cannot contain negative cycles
 std::vector<unsigned int> * bellmanFord(Graph::WeightedDirectedGraph<T> * g, unsigned int start, unsigned int end) {
+	//array of the minimum cost of getting to every node
 	int * opt = new int[g->size];
+	//array of the node leading to every node(in the path 1->2->3 prev[3] is 2 and prev[2] is one)
 	unsigned int * prev = new unsigned int[g->size];
 
+	//initialize infinite initial costs for each node
 	for (unsigned int i = 0; i < g->size; i++) {
-		opt[i] = INT_MAX / 2;
+		opt[i] = INT_MAX / 2;//to prevent overfows
 		prev[i] = -1;
 	}
 
+	//path from start to start is zero
 	opt[start] = 0;
 
-	//must be rechecked at least n - 1 times 
+	//will find the solution in at most n - 1 iterations
 	for (unsigned int k = 0; k < g->size - 1; k++) {
-		//used to check every edge in g
-
+		//check every edge in g
 		for (unsigned int i = 0; i < g->size; i++) {
 			//for each edge pointing at vertex i
 			for (unsigned int j = 0; j < g->getParentNum(i); j++) {
@@ -838,6 +850,7 @@ std::vector<unsigned int> * bellmanFord(Graph::WeightedDirectedGraph<T> * g, uns
 				//cast to an int because weights are stored as unsigned ints, returns the sign
 				int tempCost = opt[parent] + (int)g->getWeightOfEdge(parent, i);
 
+				//if this is a cheaper path, update the values of opt and prev
 				if (tempCost < opt[i]) {
 					opt[i] = tempCost;
 					prev[i] = parent;
@@ -849,6 +862,7 @@ std::vector<unsigned int> * bellmanFord(Graph::WeightedDirectedGraph<T> * g, uns
 	std::vector<unsigned int> * retPath = new std::vector<unsigned int>;
 	retPath->reserve(g->size);
 
+	//trace back through the optimal array
 	while (end != start) {
 		retPath->push_back(end);
 		end = prev[end];

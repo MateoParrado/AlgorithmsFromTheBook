@@ -30,7 +30,7 @@ void FFT(std::complex<double> * x, unsigned int size) {
 		FFT(x, size / 2);
 		FFT(x + size / 2, size - size / 2);
 
-		//rejoin it using some techniques i dont understand
+		//this is the calculation of the twiddle factor used to rejoin the arrays
 		for (unsigned int i = 0; i < size / 2; i++) {
 			std::complex<double> even = x[i];
 			std::complex<double> odd = x[i + 1];
