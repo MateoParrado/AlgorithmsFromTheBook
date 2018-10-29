@@ -76,6 +76,17 @@ void lineSegmentIntersectionTester() {
 	assert(lineSegmentIntersection({ 10, 0 }, { 0, 10 }, { 0, 0 }, { 10, 10 }));
 }
 
+void pointInPolygonTester() {
+	std::pair<double, double> poly[3] = { {0, 0}, {1, 0}, {.5, 1} };
+
+	assert(pointInPolygon({ .5, .5 }, &poly[0], 3));
+	assert(!pointInPolygon({ 0, 1 }, &poly[0], 3));
+	assert(pointInPolygon({ .5, 1 }, &poly[0], 3));
+	assert(!pointInPolygon({ .5, 1.5 }, &poly[0], 3));
+	assert(!pointInPolygon({ 1.5, .5 }, &poly[0], 3));
+	assert(!pointInPolygon({ -.5, .5 }, &poly[0], 3));
+}
+
 /*GRAPH ALGORITHMSH*/
 
 void connectivityTestTester() {
@@ -737,6 +748,7 @@ void runAllTests() {
 	firstSearchesTester();
 	rectIntersectsEllipseTester();
 	schedulingTester();
+	pointInPolygonTester();
 }
 
 #pragma deprecated (testDeriv, testInt, testingOnlyCostFunc)

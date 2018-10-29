@@ -596,34 +596,35 @@ template<class T>
 Graph::WeightedGraph<T> * kruskalMinTree(Graph::WeightedGraph<T> * g) {
 	//the "nodes" for the union find
 	struct unionPtr {
-		unsigned int num;
-		unionPtr * ptr;
-
-		unionPtr(unsigned int val) : num(val), ptr(nullptr) { }
+		unionPtr * ptr = nullptr;
 	};
 
 	//initialize union find
 	std::vector < unionPtr > unionFind;
 	unionFind.reserve(g->size);
 	for (int i = 0; i < g->size; i++) {
-		unionFind.push_back(i);
+		unionFind.push_back(unionPtr());
 	}
 
-	//want to create the same priotity queue as above
-	Heap::Heap<std::pair<unsigned int, std::pair<unsigned int, unsigned int>>> weightHeap(g->getTotalEdgesInGraph());//the orderings of the weights
+	//want to create a priority queue of the weights of each edge, the second part is to keep which two nodes get connected
+	Heap::Heap<std::pair<unsigned int, std::pair<unsigned int, unsigned int>>> weightHeap(g->getTotalEdgesInGraph());
 
 	//initialize heap
-	for (int i = 0; i < g->edges.size(); i++) {
+	//for every node
+	for (int i = 0; i < g->nodes.size(); i++) {
+		//for every edge of that node
 		for (int j = 0; j < g->edges[i]->size(); j += 2) {
-			auto test = (*g->edges[i])[j];
+			//make sure you don't double count any edges
 			if ((*g->edges[i])[j] > i) {
 				weightHeap.insert({ (*g->edges[i])[j + 1] ,{ i, (*g->edges[i])[j] } });
 			}
 		}
 	}
 
+	//the graph of only the nodes
 	Graph::WeightedGraph<T> * ret = copyWithoutEdges(g);
 
+	//as long as there are edges that havent been checked
 	while (weightHeap.size()) { 
 		unionPtr * firstPtr = unionFind[weightHeap.getMin().second.first].ptr;
 		unionPtr * secondPtr = unionFind[weightHeap.getMin().second.second].ptr;
@@ -644,10 +645,11 @@ Graph::WeightedGraph<T> * kruskalMinTree(Graph::WeightedGraph<T> * g) {
 			secondPtr = secondPtr->ptr;
 		}
 
-		//if roots are different then add join the groups
+		//if roots are different then add the edge and join the groups
 		if (firstPtr != secondPtr) {
 			ret->addEdge(weightHeap.getMin().second.first, weightHeap.getMin().second.second, weightHeap.getMin().first);
 
+			//make the original root node of one point to the new root
 			firstPtr->ptr = secondPtr;
 		}
 
