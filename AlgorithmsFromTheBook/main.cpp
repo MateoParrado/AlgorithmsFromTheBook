@@ -25,42 +25,38 @@
 #include "StringAlgos.h"
 #include "SegmentedRegression.h"
 #include "Geometry.h"
+#include "NetworkFlowAlgorithms.h"
 #include "Tests.h"
 
 //TODO
 ///edmonds algorithm
 ///optimizaitons in segmented linear regression (266/284), calculate errors in constant time
-///point in polygon
-///polygon intersection
-///creating polygon from given set of points
-///convex hull problem and graham scans
-//implement tests for every algo (11 left)
+//implement tests for A*, kmeans, kruskal cluster, dfsresidualgraph, knapsack packer, FFT
+//bug in parallel scheduler
 ///write reverse delete min tree in nlogn
 
 using namespace std;
 
-double calc(double r) {
-	return 6.67 * pow(10, -11) * 8 * pow(10, 24) / r;
-}
-
 int main() {
-	//Graph::WeightedGraph<std::pair<int, int>> x(6);
-	//
-	//x.addNode({ 0, 5 });
-	//x.addNode({ -1, 0 });
-	//x.addNode({ 0, 1 });
-	//x.addNode({ 1, 0 });
-	//x.addNode({ 0, -1 });
-	//x.addNode({ 0, -5 });
+	Graph::WeightedDirectedGraph<std::pair<int, int>> x(6);
+	
+	x.addNode({ 0, 5 });
+	x.addNode({ -1, 0 });
+	x.addNode({ 0, 1 });
+	x.addNode({ 1, 0 });
+	x.addNode({ 0, -1 });
+	x.addNode({ 0, -5 });
 
-	//x.addEdge(0, 1, 10);
-	//x.addEdge(0, 3, 10);
-	//x.addEdge(1, 2, 1);
-	//x.addEdge(2, 3, 4);
-	//x.addEdge(3, 4, 2);
-	//x.addEdge(4, 2, 2);
-	//x.addEdge(3, 5, 4);
-	//x.addEdge(5, 1, 8);
+	x.addEdge(0, 1, 10);
+	x.addEdge(0, 3, 10);
+	x.addEdge(1, 2, 1);
+	x.addEdge(2, 3, 4);
+	x.addEdge(3, 4, 2);
+	x.addEdge(4, 2, 2);
+	x.addEdge(3, 5, 4);
+	x.addEdge(5, 1, 8);
+
+	Graph::ResidualGraph<std::pair<int, int>> y(x);
 
 	//std::cout << dijkstraGcd(468, 24);
 

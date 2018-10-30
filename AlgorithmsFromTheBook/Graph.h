@@ -635,6 +635,86 @@ namespace Graph {
 	};
 
 	template<class T>
+	struct ResidualGraph : WeightedDirectedGraph<T> {
+	public:
+		std::vector<std::vector<unsigned int> * > flows;
+
+		void addEdge(unsigned int parent, unsigned int child, unsigned int weight) {
+			WeightedDirectedGraph::addEdge(parent, child, weight);
+
+			flows[parent]->push_back(0);
+		}
+
+		void addNode(T val) {
+			WeightedDirectedGraph::addNode(val);
+
+			flows.push_back(new std::vector<unsigned int>(0));
+
+			(*(flows.end() - 1))->reserve(10);
+		}
+
+		//construct it from a weighted directed graph (only way to construct it)
+		ResidualGraph(const WeightedDirectedGraph& g) {
+			nodes.reserve(g.size);
+			edges.reserve(g.size);
+			flows.reserve(g.size);
+
+			for (unsigned int i = 0; i < g.nodes.size(); i++) {
+				this->addNode(g.nodes[i].obj);
+
+				for (unsigned int j = 0; j < const_cast<WeightedDirectedGraph&>(g).edges[i]->size(); j++) {
+
+					(*edges[i]).push_back((*const_cast<WeightedDirectedGraph&>(g).edges[i])[j]);
+				}
+
+				for (unsigned int j = 0; j < const_cast<WeightedDirectedGraph&>(g).parents[i]->size(); j++) {
+
+					(*parents[i]).push_back((*const_cast<WeightedDirectedGraph&>(g).parents[i])[j]);
+					(*flows[i]).push_back(0);
+				}
+			}
+		}
+
+		//make sure it doesnt use its parent constructor
+		ResidualGraph(unsigned int size = 10) {
+			throw 40;
+		}
+
+		unsigned int getFlow(unsigned int node, unsigned int edge) {
+			return (*flows[node])[edge];
+		}
+
+		unsigned int getFlowCapacity(unsigned int node, unsigned int edge) {
+			return WeightedDirectedGraph::getWeightOfEdge(node, edge);
+		}
+
+		unsigned int getResidualCapacity(unsigned int node, unsigned int edge) {
+			return getFlowCapacity(node, edge) - getFlow(node, edge);
+		}
+
+		ResidualGraph(const ResidualGraph& g) {
+			nodes.reserve(g.size);
+			edges.reserve(g.size);
+			flows.reserve(g.size);
+
+			for (unsigned int i = 0; i < g.nodes.size(); i++) {
+				this->addNode(g.nodes[i].obj);
+
+				for (unsigned int j = 0; j < const_cast<ResidualGraph&>(g).edges[i]->size(); j++) {
+
+					(*edges[i]).push_back((*const_cast<ResidualGraph&>(g).edges[i])[j]);
+				}
+
+				for (unsigned int j = 0; j < const_cast<ResidualGraph&>(g).parents[i]->size(); j++) {
+
+					(*parents[i]).push_back((*const_cast<ResidualGraph&>(g).parents[i])[j]);
+					(*flows[i]).push_back(0);
+				}
+			}
+		}
+	};
+
+	template<class T>
 	struct BinaryTree : public Graph<T> {
 	private:
 
