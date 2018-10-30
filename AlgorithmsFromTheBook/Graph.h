@@ -701,15 +701,17 @@ namespace Graph {
 			return -1;
 		}
 
+		//weight of edge with better name
 		unsigned int getFlowCapacity(unsigned int node, unsigned int edge) {
 			return WeightedDirectedGraph::getWeightOfEdgeByPos(node, edge);
 		}
 
+		//get how much more flow you can put through an edge
 		unsigned int getResidualCapacity(unsigned int node, unsigned int edge) {
 			return getFlowCapacity(node, edge) - getFlow(node, edge);
 		}
 
-		//get flow between the two nodes
+		//get residual capacity between the two nodes
 		unsigned int getResidualCapacityBetweenNodes(unsigned int n, unsigned int m) {
 			if (edges[n]->size() < edges[m]->size()) {
 				for (unsigned int i = 0; i < edges[n]->size(); i += 2) {
@@ -724,6 +726,7 @@ namespace Graph {
 			return -1;
 		}
 
+		//copy constructor
 		ResidualGraph(const ResidualGraph& g) {
 			nodes.reserve(g.size);
 			edges.reserve(g.size);

@@ -48,17 +48,8 @@ SinglyLinkedList::LinkedList<int> * findAugmentingPath(Graph::ResidualGraph<T> *
 	return ret;
 }
 
-virtual T getVal(unsigned int _i) {
-	Node<T> * temp = head;
-
-	for (unsigned int i = 0; i < _i; i++) {
-		temp = (*temp).next;
-	}
-
-	return (*temp).obj;
-}
-
 template<class T>
+//get the value of the minimum possible capacity to increase the flow in a path
 unsigned int getBottleneck(Graph::ResidualGraph<T> * g, SinglyLinkedList::LinkedList<unsigned int> * path) {
 	SinglyLinkedList::Node<unsigned int> * head = path->head;
 	
