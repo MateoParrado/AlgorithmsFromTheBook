@@ -637,6 +637,8 @@ namespace Graph {
 	template<class T>
 	struct ResidualGraph : WeightedDirectedGraph<T> {
 	public:
+		unsigned int start, end;
+
 		std::vector<std::vector<unsigned int> * > flows;
 
 		void addEdge(unsigned int parent, unsigned int child, unsigned int weight) {
@@ -654,7 +656,7 @@ namespace Graph {
 		}
 
 		//construct it from a weighted directed graph (only way to construct it)
-		ResidualGraph(const WeightedDirectedGraph& g) {
+		ResidualGraph(const WeightedDirectedGraph& g, unsigned int start, unsigned int end) : start(start), end(end){
 			nodes.reserve(g.size);
 			edges.reserve(g.size);
 			flows.reserve(g.size);
@@ -684,12 +686,42 @@ namespace Graph {
 			return (*flows[node])[edge];
 		}
 
+		//get flow between the two nodes
+		unsigned int getFlowBetweenNodes(unsigned int n, unsigned int m) {
+			if (edges[n]->size() < edges[m]->size()) {
+				for (unsigned int i = 0; i < edges[n]->size(); i += 2) {
+					if ((*edges[n])[i] == m) return getFlow(n, i / 2);
+				}
+			}
+
+			for (unsigned int i = 0; i < edges[m]->size(); i += 2) {
+				if ((*edges[m])[i] == n) return getFlow(m, i / 2);
+			}
+
+			return -1;
+		}
+
 		unsigned int getFlowCapacity(unsigned int node, unsigned int edge) {
-			return WeightedDirectedGraph::getWeightOfEdge(node, edge);
+			return WeightedDirectedGraph::getWeightOfEdgeByPos(node, edge);
 		}
 
 		unsigned int getResidualCapacity(unsigned int node, unsigned int edge) {
 			return getFlowCapacity(node, edge) - getFlow(node, edge);
+		}
+
+		//get flow between the two nodes
+		unsigned int getResidualCapacityBetweenNodes(unsigned int n, unsigned int m) {
+			if (edges[n]->size() < edges[m]->size()) {
+				for (unsigned int i = 0; i < edges[n]->size(); i += 2) {
+					if ((*edges[n])[i] == m) return (*edges[n])[i + 1] - getFlow(n, i / 2);
+				}
+			}
+
+			for (unsigned int i = 0; i < edges[m]->size(); i += 2) {
+				if ((*edges[m])[i] == n) return (*edges[m])[i + 1] - getFlow(m, i / 2);
+			}
+
+			return -1;
 		}
 
 		ResidualGraph(const ResidualGraph& g) {

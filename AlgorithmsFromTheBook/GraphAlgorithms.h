@@ -160,7 +160,7 @@ Graph::WeightedGraph<T> * primMinTree(Graph::WeightedGraph<T> * g) {
 
 	for (int i = 0; i < g->getEdgeNum(0); i++) {
 		unsigned int index = g->getOtherSideOfEdge(0, i);
-		unsigned int weight = g->getWeightOfEdge(0, index);
+		unsigned int weight = g->getWeightOfEdgeByPos(0, i);
 
 		distHeap.insert({ weight,{ 0, index } });
 	}

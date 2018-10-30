@@ -31,7 +31,7 @@
 //TODO
 ///edmonds algorithm
 ///optimizaitons in segmented linear regression (266/284), calculate errors in constant time
-//implement tests for A*, kmeans, kruskal cluster, dfsresidualgraph, knapsack packer, FFT
+//implement tests for A*, kmeans, kruskal cluster, knapsack packer, FFT
 //bug in parallel scheduler
 ///write reverse delete min tree in nlogn
 
@@ -56,7 +56,7 @@ int main() {
 	x.addEdge(3, 5, 4);
 	x.addEdge(5, 1, 8);
 
-	Graph::ResidualGraph<std::pair<int, int>> y(x);
+//	Graph::ResidualGraph<std::pair<int, int>> y(x);
 
 	//std::cout << dijkstraGcd(468, 24);
 

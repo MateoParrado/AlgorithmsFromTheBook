@@ -1,14 +1,14 @@
 #pragma once
 
 template<class T>
-//find path between node start and node end using DFS
-SinglyLinkedList::LinkedList<int> depthFirstSearch(Graph::ResidualGraph<T> * g, int start, int end) {
+//find path between node start and end node end using DFS
+SinglyLinkedList::LinkedList<int> * findAugmentingPath(Graph::ResidualGraph<T> * g) {
 	std::vector<bool> visited((*g).size);//to not double count nodes
 	visited[start] = true;
 
-	SinglyLinkedList::LinkedList<int> ret;
+	SinglyLinkedList::LinkedList<int> & ret = new SinglyLinkedList::LinkedList<int>();
 
-	ret.pushBackNode(start);
+	ret.pushBackNode(g->start);
 
 	while (true) {
 		//for easy lookup, nodes will be added at the end
@@ -31,14 +31,63 @@ SinglyLinkedList::LinkedList<int> depthFirstSearch(Graph::ResidualGraph<T> * g, 
 
 	edgeFound:
 
+		//prevents segfaults
 		if (ret.head) {
-			if (ret.getVal(0) == end) break;
+			if (ret.getVal(0) == g->end) break;
 
-			if (!ret.size) { return ret; }
+			if (!ret.size) {
+				delete ret;
+				return nullptr; 
+			}
 		}
-		else
-			return ret;
+		else//if head is a nullptr, throw it away
+			delete ret;
+			return nullptr;
 	}
 
 	return ret;
+}
+
+virtual T getVal(unsigned int _i) {
+	Node<T> * temp = head;
+
+	for (unsigned int i = 0; i < _i; i++) {
+		temp = (*temp).next;
+	}
+
+	return (*temp).obj;
+}
+
+template<class T>
+unsigned int getBottleneck(Graph::ResidualGraph<T> * g, SinglyLinkedList::LinkedList<unsigned int> * path) {
+	SinglyLinkedList::Node<unsigned int> * head = path->head;
+	
+	unsigned int minVal = -1;
+
+	while (head->next) {
+		minVal = std::min(minVal, g->getResidualFlowBetweenNodes(head->obj, head->next->obj));
+		head = head->next;
+	}
+
+	return minVal;
+}
+
+template<class T>
+unsigned int fordFulkersonMaxFlow(Graph::WeightedDirectedGraph<T> * graph, unsigned int start, unsigned int end) {
+	Graph::ResidualGraph<T> g(graph, start, end);
+
+	int curFlow = 0;
+
+	for (;;) {
+		SinglyLinkedList::LinkedList<unsigned int> * augPath = findAugmentingPath(&g);
+
+		//if there are no more paths then end
+		if (!augPath)
+			return curFlow;
+
+		//find the bottleneck
+		unsigned int bottleneck = getBottleneck(&g, augPath);
+
+		delete augPath;
+	}
 }
