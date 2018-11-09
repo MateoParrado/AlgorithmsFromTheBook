@@ -446,37 +446,39 @@ void edmondsTester() {
 
 	assert(totalWeight == 15);
 
-	//Graph::WeightedDirectedGraph<int> g2(6);
+	delete edmonds;
 
-	//for (int i = 0; i < 6; i++) {
-	//	g2.addNode(i);
-	//}
+	Graph::WeightedDirectedGraph<int> g2(6);
 
-	//g2.addEdge(0, 1, 2);
-	//g2.addEdge(0, 2, 10);
-	//g2.addEdge(0, 3, 10);
-	//g2.addEdge(1, 3, 4);
-	//g2.addEdge(2, 1, 1);
-	//g2.addEdge(2, 5, 8);
-	//g2.addEdge(3, 4, 2);
-	//g2.addEdge(3, 5, 4);
-	//g2.addEdge(4, 2, 2);
+	for (int i = 0; i < 6; i++) {
+		g2.addNode(i);
+	}
 
-	//delete edmonds;
+	g2.addEdge(0, 1, 2);
+	g2.addEdge(0, 2, 10);
+	g2.addEdge(0, 3, 10);
+	g2.addEdge(1, 3, 4);
+	g2.addEdge(2, 1, 1);
+	g2.addEdge(2, 5, 8);
+	g2.addEdge(3, 4, 2);
+	g2.addEdge(3, 5, 4);
+	g2.addEdge(4, 2, 2);
 
-	//edmonds = edmondsAlgorithm(&g2, 0);
+	for (int i = 0; i < 10000; i++) {
+		edmonds = edmondsAlgorithm(&g2, 0);
 
-	//totalWeight = 0;
+		totalWeight = 0;
 
-	//for (unsigned int i = 0; i < edmonds->size; i++) {
-	//	for (unsigned int j = 0; j < edmonds->getEdgeNum(i); j++) {
-	//		totalWeight += edmonds->getWeightOfEdgeByPos(i, j);
-	//	}
-	//}
+		for (unsigned int i = 0; i < edmonds->size; i++) {
+			for (unsigned int j = 0; j < edmonds->getEdgeNum(i); j++) {
+				totalWeight += edmonds->getWeightOfEdgeByPos(i, j);
+			}
+		}
 
-	//assert(totalWeight == 14);
+		assert(totalWeight == 14);
 
-	//delete edmonds;
+		delete edmonds;
+	}
 }
 
 void isDAGTester() {
@@ -851,7 +853,7 @@ void runAllTests() {
 	schedulingTester();
 	pointInPolygonTester();
 	testMaxFlow();
-	edmondsTester();
+	//edmondsTester();
 }
 
 #pragma deprecated (testDeriv, testInt, testingOnlyCostFunc)

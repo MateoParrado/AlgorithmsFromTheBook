@@ -239,35 +239,50 @@ Graph::WeightedDirectedGraph<T> * edmondsAlgorithm(Graph::WeightedDirectedGraph<
 	//then for every node in the cycle
 	for (unsigned int i = 0; i < cycle.size(); i++) {
 		//for every edge leading into that node
-		for(unsigned int j = 0; j < g->getParentNum(cycle[i]); j++){
-			//move the edge to the contracted node, and update its weight to be the cost of the edge minus the cost of the parent of the node in the cycle
-			unsigned int tempWeight = g->getWeightOfEdge(g->getParent(cycle[i], j), i) - retGraph->getWeightOfEdgeFromParentByPos(cycle[i], 0);
+		for (unsigned int j = 0; j < g->getParentNum(cycle[i]); j++) {
 
-			//if the edge is already leading to the node that will survive the contraction, we need to remove the old edge
-			if (!i) {
-				contractedGraph->removeEdge(g->getParent(cycle[i], 0), cycle[i]);
+			//only do it if its not an edge inside the cycle
+			if (std::find(cycle.begin(), cycle.end(), g->getParent(cycle[i], j)) == cycle.end()) {
+			
+				//move the edge to the contracted node, and update its weight to be the cost of the edge minus the cost of the parent of the node in the cycle
+				unsigned int tempWeight = g->getWeightOfEdge(g->getParent(cycle[i], j), cycle[i]) - retGraph->getWeightOfEdgeFromParentByPos(cycle[i], 0);
+
+				//if the edge is already leading to the node that will survive the contraction, we need to remove the old edge
+				if (!i) {
+					contractedGraph->removeEdge(g->getParent(cycle[i], 0), cycle[i]);
+				}
+
+				contractedGraph->addEdge(g->getParent(cycle[i], j), cycle[0], tempWeight);
 			}
-
-			contractedGraph->addEdge(g->getParent(cycle[i], j), cycle[0], tempWeight);
 		}
 
 		//for every edge going out of the cycle replace it with the same edge just leaving from the contracted node
 		if (i) {
-			for (unsigned int j = 0; j < g->getChildNum(cycle[i]); j++) {
-				contractedGraph->addEdge(cycle[0], g->getChild(cycle[i], j), g->getWeightOfEdgeByPos(cycle[i], j));
+			for (unsigned int j = 0; j < retGraph->getChildNum(cycle[i]); j++) {
+				//only if it isnt within a cycle
+				if (std::find(cycle.begin(), cycle.end(), retGraph->getChild(cycle[i], j)) == cycle.end()) {
+					contractedGraph->addEdge(cycle[0], retGraph->getChild(cycle[i], j), retGraph->getWeightOfEdgeByPos(cycle[i], j));
+				}
 			}
 		}
 	}
 
+	//to find the contracted graph's index
+	unsigned int contractedGraphIndex = cycle[0];
+
 	//remove the nodes form the graph
 	for (unsigned int i = 1; i < cycle.size(); i++) {
+		if (cycle[i] < cycle[0]) {
+			contractedGraphIndex--;
+		}
+
 		contractedGraph->removeNode(cycle[i]);
 	}
 
 	//run it recursively
 	Graph::WeightedDirectedGraph<T> * recur = edmondsAlgorithm(contractedGraph, rootNode);
 
-	T testObj = recur->nodes[recur->getParent(cycle[0], 0)].obj;
+	T testObj = recur->nodes[recur->getParent(contractedGraphIndex, 0)].obj;
 
 	unsigned int parentNode;
 
@@ -284,7 +299,7 @@ Graph::WeightedDirectedGraph<T> * edmondsAlgorithm(Graph::WeightedDirectedGraph<
 
 	//find which one of the edges of the node matches the contracted edge
 	for (unsigned int i = 0; i < g->getChildNum(parentNode); i++) {
-		unsigned int tempVal = g->getWeightOfEdgeByPos(parentNode, i) - g->getWeightOfEdgeFromParentByPos(g->getChild(parentNode, i), 0);
+		unsigned int tempVal = g->getWeightOfEdgeFromParentByPos(g->getChild(parentNode, i), 0) - g->getWeightOfEdgeByPos(parentNode, i);
 
 		if (tempVal < minEdgeVal && std::find(cycle.begin(), cycle.end(), g->getChild(parentNode, i)) != cycle.end()) {
 			minEdgeVal = tempVal;
@@ -294,6 +309,10 @@ Graph::WeightedDirectedGraph<T> * edmondsAlgorithm(Graph::WeightedDirectedGraph<
 
 	retGraph->removeEdge(retGraph->getParent(minNodeNum, 0), minNodeNum);
 	retGraph->addEdge(parentNode, minNodeNum, g->getWeightOfEdge(parentNode, minNodeNum));
+
+	//memory leak cleanup
+	delete recur;
+	delete contractedGraph;
 
 	return retGraph;
 }

@@ -29,7 +29,8 @@
 #include "Tests.h"
 
 //TODO
-//edmonds algorithm, especially memory leaks
+//edmonds algorithm memory leaks
+//MEMORY LEAKS IN OTHER ALGORITHMS
 ///optimizaitons in segmented linear regression (266/284), calculate errors in constant time
 //implement tests for A*, kmeans, kruskal cluster, knapsack packer, FFT
 //bug in parallel scheduler
@@ -59,8 +60,9 @@ int main() {
 //	Graph::ResidualGraph<std::pair<int, int>> y(x);
 
 	//std::cout << dijkstraGcd(468, 24);
-
-	runAllTests();
+//	for (int i = 0; i < 100000; i++) {
+		runAllTests();
+//	}
 
 	std::getchar();
 }
