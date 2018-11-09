@@ -30,8 +30,8 @@ Graph::WeightedGraph<T> * kruskalMinTreePriorityQueue(Graph::WeightedGraph<T> * 
 	Heap::Heap<std::pair<unsigned int, std::pair<unsigned int, unsigned int>>> weightHeap(g->getTotalEdgesInGraph());//the orderings of the weights
 
 																													 //initialize heap
-	for (int i = 0; i < g->edges.size(); i++) {
-		for (int j = 0; j < g->edges[i]->size(); j += 2) {
+	for (unsigned int i = 0; i < g->edges.size(); i++) {
+		for (unsigned int j = 0; j < g->edges[i]->size(); j += 2) {
 			auto test = (*g->edges[i])[j];
 			if ((*g->edges[i])[j] > i) {
 				weightHeap.insert({ (*g->edges[i])[j + 1] ,{ i, (*g->edges[i])[j] } });
@@ -64,7 +64,7 @@ Graph::WeightedGraph<T> * kruskalMinTree(Graph::WeightedGraph<T> * g) {
 	//initialize union find
 	std::vector < unionPtr > unionFind;
 	unionFind.reserve(g->size);
-	for (int i = 0; i < g->size; i++) {
+	for (unsigned int i = 0; i < g->size; i++) {
 		unionFind.push_back(unionPtr());
 	}
 
@@ -73,9 +73,9 @@ Graph::WeightedGraph<T> * kruskalMinTree(Graph::WeightedGraph<T> * g) {
 
 	//initialize heap
 	//for every node
-	for (int i = 0; i < g->nodes.size(); i++) {
+	for (unsigned int i = 0; i < g->nodes.size(); i++) {
 		//for every edge of that node
-		for (int j = 0; j < g->edges[i]->size(); j += 2) {
+		for (unsigned int j = 0; j < g->edges[i]->size(); j += 2) {
 			//make sure you don't double count any edges
 			if ((*g->edges[i])[j] > i) {
 				weightHeap.insert({ (*g->edges[i])[j + 1] ,{ i, (*g->edges[i])[j] } });
@@ -127,9 +127,9 @@ Graph::WeightedGraph<T> reverseDeleteMinTree(Graph::WeightedGraph<T> g) {
 	Heap::MaxHeap<std::pair<unsigned int, std::pair<unsigned int, unsigned int>>> weightHeap(g.getTotalEdgesInGraph());//the orderings of the weights
 
 																													   //initialize heap
-	for (int i = 0; i < g.edges.size(); i++) {
-		for (int j = 0; j < g.edges[i]->size(); j += 2) {
-			auto test = (*g.edges[i])[j];
+	for (unsigned int i = 0; i < g.edges.size(); i++) {
+		for (unsigned int j = 0; j < g.edges[i]->size(); j += 2) {
+			
 			if ((*g.edges[i])[j] > i) {
 				weightHeap.insert({ (*g.edges[i])[j + 1] ,{ i, (*g.edges[i])[j] } });
 			}
@@ -158,7 +158,7 @@ Graph::WeightedGraph<T> * primMinTree(Graph::WeightedGraph<T> * g) {
 
 	visited[0] = true;
 
-	for (int i = 0; i < g->getEdgeNum(0); i++) {
+	for (unsigned int i = 0; i < g->getEdgeNum(0); i++) {
 		unsigned int index = g->getOtherSideOfEdge(0, i);
 		unsigned int weight = g->getWeightOfEdgeByPos(0, i);
 
@@ -197,93 +197,106 @@ Graph::WeightedGraph<T> * primMinTree(Graph::WeightedGraph<T> * g) {
 	return ret;
 }
 
-//
-//template<class T>
-////finds the minimum cost arborescence for a weighted directed graph
-////DOES NOT WORK
-//Graph::WeightedDirectedGraph<T> * edmondsAlgorithm(Graph::WeightedDirectedGraph<T> * graph, unsigned int rootNode = 0) {
-//	Graph::WeightedDirectedGraph<T> * retGraph = copyWithoutEdges(graph);
-//
-//	//add the minimum cost edge into every vertex v except the root vertex
-//	for (unsigned int i = 0; i < retGraph->size; i++) {
-//		if (i == rootNode) continue;
-//
-//		unsigned int min = -1;
-//		unsigned int minParent = -1;
-//
-//		//add the cheapest entrance edge into v into retGraph
-//		for (unsigned int j = 0; j < graph->parents[i]->size(); j += 2) {
-//			if ((*graph->parents[i])[j + 1] < min) {
-//				min = (*graph->parents[i])[j + 1];
-//				minParent = (*graph->parents[i])[j];
-//			}
-//		}
-//
-//		if (min != -1) {
-//			retGraph->addEdge(minParent, i, min);
-//		}
-//	}
-//
-//	Graph::WeightedDirectedGraph<T> tempGraph = *retGraph;//because isDAG destroys the copy provided to it
-//
-//	retGraph->display();
-//
-//	if (isDAG(&tempGraph)) {
-//		return retGraph;
-//	}
-//	else {//contract the cycle into one node
-//		Graph::WeightedDirectedGraph<T> * nextLevelGraph = new Graph::WeightedDirectedGraph<T>(*graph);
-//
-//		std::vector<unsigned int> cycle = depthFirstCycleGetter(retGraph);
-//
-//		unsigned int contractedNode = cycle[0];
-//
-//		nextLevelGraph->display();
-//
-//		//make any edges coming into the graph point to node 0 and update their weights
-//		for (unsigned int i = 1; i < cycle.size(); i++) {
-//			for (unsigned int j = 0; j < graph->getParentNum(cycle[i]); j++) {
-//				nextLevelGraph->addEdge(graph->getParent(cycle[i], j), cycle[0], graph->getWeightOfEdge(graph->getParent(cycle[i], j), cycle[i]) - graph->getWeightOfEdgeByPos(cycle[i], 0));
-//			}
-//		}
-//
-//		nextLevelGraph->display();
-//
-//		//make any edges leaving the cycle be rooted at node 0
-//		for (unsigned int i = 1; i < cycle.size(); i++) {
-//			for (unsigned int j = 0; j < graph->getChildNum(cycle[i]); j += 2) {
-//				if (!graph->getChild(cycle[i], j) == cycle[0]) {
-//					nextLevelGraph->addEdge(cycle[0], graph->getChild(cycle[i], j), graph->getWeightOfEdge(cycle[i], j));
-//				}
-//			}
-//		}
-//
-//		nextLevelGraph->display();
-//
-//		//delete all the non contacted nodes
-//		for (unsigned int i = 1; i < cycle.size(); i++) {
-//			nextLevelGraph->removeNode(cycle[i]);
-//		}
-//
-//		Graph::WeightedDirectedGraph<T> * returnedGraph = edmondsAlgorithm(nextLevelGraph, rootNode);
-//
-//		//unroll the cycle
-//		for (unsigned int i = 1; i < cycle.size(); i++) {
-//			returnedGraph->addNode(cycle[i]);
-//			returnedGraph->addEdge(cycle[i], cycle[i - 1], graph->getWeightOfEdge(cycle[i], cycle[i-1]));
-//		}
-//		returnedGraph->addEdge(cycle[0], cycle[cycle.size() - 1], graph->getWeightOfEdge(cycle[0], cycle[cycle.size() - 1]));
-//
-//		std::cout << "NEW ITERATION \n\n\n";
-//		returnedGraph->display();
-//		std::cout << "\n\n";
-//		returnedGraph->displayParents();
-//
-//		return returnedGraph;
-//	}
-//
-//	return retGraph;
-//}
+
+template<class T>
+//finds the minimum cost arborescence for a weighted directed graph
+Graph::WeightedDirectedGraph<T> * edmondsAlgorithm(Graph::WeightedDirectedGraph<T> * g, unsigned int rootNode = 0) {
+	Graph::WeightedDirectedGraph<T> * retGraph = copyWithoutEdges(g);
+
+	//first we take every node of the graph and include only the edge with minimum cost leading into it
+	for (unsigned int i = 0; i < g->size; i++) {
+		if (i == rootNode) continue;
+
+		unsigned int minVal = INT_MAX;
+		unsigned int parent = -1;
+
+		//find the minimum cost parent of the node
+		for (unsigned int j = 0; j < g->getParentNum(i); j++) {
+			unsigned int temp = g->getWeightOfEdgeFromParentByPos(i, j);
+
+			if (temp < minVal) {
+				minVal = temp;
+				parent = g->getParent(i, j);
+			}
+		}
+
+		//add the minimum cost edge in
+		retGraph->addEdge(parent, i, minVal);
+	}
+
+	//is there a cycle?
+	std::vector<unsigned int> cycle = depthFirstCycleGetter(retGraph);
+
+	//if not, return
+	if (!cycle.size())
+		return retGraph;
+
+	//if yes, contract the cycle and then run the algorithm on the contracted graph
+
+	//first create a graph that is the same as retgraph
+	Graph::WeightedDirectedGraph<T> * contractedGraph = new Graph::WeightedDirectedGraph<T>(*retGraph);
+
+	//then for every node in the cycle
+	for (unsigned int i = 0; i < cycle.size(); i++) {
+		//for every edge leading into that node
+		for(unsigned int j = 0; j < g->getParentNum(cycle[i]); j++){
+			//move the edge to the contracted node, and update its weight to be the cost of the edge minus the cost of the parent of the node in the cycle
+			unsigned int tempWeight = g->getWeightOfEdge(g->getParent(cycle[i], j), i) - retGraph->getWeightOfEdgeFromParentByPos(cycle[i], 0);
+
+			//if the edge is already leading to the node that will survive the contraction, we need to remove the old edge
+			if (!i) {
+				contractedGraph->removeEdge(g->getParent(cycle[i], 0), cycle[i]);
+			}
+
+			contractedGraph->addEdge(g->getParent(cycle[i], j), cycle[0], tempWeight);
+		}
+
+		//for every edge going out of the cycle replace it with the same edge just leaving from the contracted node
+		if (i) {
+			for (unsigned int j = 0; j < g->getChildNum(cycle[i]); j++) {
+				contractedGraph->addEdge(cycle[0], g->getChild(cycle[i], j), g->getWeightOfEdgeByPos(cycle[i], j));
+			}
+		}
+	}
+
+	//remove the nodes form the graph
+	for (unsigned int i = 1; i < cycle.size(); i++) {
+		contractedGraph->removeNode(cycle[i]);
+	}
+
+	//run it recursively
+	Graph::WeightedDirectedGraph<T> * recur = edmondsAlgorithm(contractedGraph, rootNode);
+
+	T testObj = recur->nodes[recur->getParent(cycle[0], 0)].obj;
+
+	unsigned int parentNode;
+
+	//the contracted node will have one parent, figure out what this parent is in uncontracted terms
+	for (unsigned int i = 0; i < retGraph->size; i++) {
+		if (retGraph->nodes[i].obj == testObj) {
+			parentNode = i;
+			break;
+		}
+	}
+
+	unsigned int minEdgeVal = -1;
+	unsigned int minNodeNum = -1;
+
+	//find which one of the edges of the node matches the contracted edge
+	for (unsigned int i = 0; i < g->getChildNum(parentNode); i++) {
+		unsigned int tempVal = g->getWeightOfEdgeByPos(parentNode, i) - g->getWeightOfEdgeFromParentByPos(g->getChild(parentNode, i), 0);
+
+		if (tempVal < minEdgeVal && std::find(cycle.begin(), cycle.end(), g->getChild(parentNode, i)) != cycle.end()) {
+			minEdgeVal = tempVal;
+			minNodeNum = g->getChild(parentNode, i);
+		}
+	}
+
+	retGraph->removeEdge(retGraph->getParent(minNodeNum, 0), minNodeNum);
+	retGraph->addEdge(parentNode, minNodeNum, g->getWeightOfEdge(parentNode, minNodeNum));
+
+	return retGraph;
+}
 
 /*PATHFINDING*/
 
@@ -300,7 +313,7 @@ std::string breadthFirstSearch(Graph::Graph<T> * g, int start, int end) {
 	while (ret.size) {
 		int nextCheck = ret.getVal(0)[ret.getVal(0).size() - 1] - '0';//0 is 48 in ascii for some reason
 
-		for (int i = 0; i < g->getEdgeNum(nextCheck); i++) {//loop through nextCheck's children
+		for (unsigned int i = 0; i < g->getEdgeNum(nextCheck); i++) {//loop through nextCheck's children
 
 			if (g->getOtherSideOfEdge(nextCheck, i) == end) {
 
@@ -316,7 +329,7 @@ std::string breadthFirstSearch(Graph::Graph<T> * g, int start, int end) {
 
 				str.reserve(ret.getVal(0).size() + 1);
 
-				for (int i = 0; i < ret.getVal(0).size(); i++) {
+				for (unsigned int i = 0; i < ret.getVal(0).size(); i++) {
 					str += ret.getVal(0)[i];
 				} 
 					
@@ -345,9 +358,9 @@ SinglyLinkedList::LinkedList<int> depthFirstSearch(Graph::Graph<T> * g, int star
 
 	ret.pushBackNode(start);
 
-	while (true) {
+	for(;;) {
 		//for easy lookup, nodes will be added at the end
-		for (int i = 0; i < (*g).getEdgeNum(ret.getVal(0)); i++) {
+		for (unsigned int i = 0; i < (*g).getEdgeNum(ret.getVal(0)); i++) {
 			int temp = (*g).getOtherSideOfEdge(ret.getVal(0), i); //to not have to calculate it so much
 
 			if (!visited[temp]) {
@@ -390,9 +403,9 @@ std::vector<unsigned int> djikstraMinDist(Graph::WeightedGraph<T> * g, unsigned 
 
 		//if the path from current node to its children is smaller than their current path, change their path length
 		for (unsigned int i = 0; i < g->getEdgeNum(index); i++) {
-			int otherSideOfEdge = g->getOtherSideOfEdge(index, i);
+			unsigned int otherSideOfEdge = g->getOtherSideOfEdge(index, i);
 
-			int len = g->getWeightOfEdge(index, otherSideOfEdge) + minDists[index];
+			unsigned int len = g->getWeightOfEdge(index, otherSideOfEdge) + minDists[index];
 
 			if (minDists[otherSideOfEdge] == -1) {
 				minDists[otherSideOfEdge] = len;
@@ -452,7 +465,7 @@ SinglyLinkedList::LinkedList<unsigned int> djikstra(Graph::WeightedGraph<T> * g,
 			//make sure it hasnt been popped yet
 			if (noMoreChecking[otherSideOfEdge]) continue;
 
-			int len = g->getWeightOfEdge(index, otherSideOfEdge) + minDists[index];
+			unsigned int len = g->getWeightOfEdge(index, otherSideOfEdge) + minDists[index];
 
 			//if the node hasnt been visited yet do
 			if (minDists[otherSideOfEdge] == -1) {
@@ -776,8 +789,8 @@ bool depthFirstConnecivityTest(Graph::Graph<T> * g) {
 		bool newNodeFound = false;
 
 		//for easy lookup, nodes will be added at the end
-		for (int i = 0; i < (*g).getEdgeNum(path.getVal(0)); i++) {
-			int temp = (*g).getOtherSideOfEdge(path.getVal(0), i); //to not have to calculate it so much
+		for (unsigned int i = 0; i < (*g).getEdgeNum(path.getVal(0)); i++) {
+			unsigned int temp = (*g).getOtherSideOfEdge(path.getVal(0), i); //to not have to calculate it so much
 
 			if (!visited[temp]) {
 				visited[temp] = true;

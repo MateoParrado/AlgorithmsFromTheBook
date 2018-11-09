@@ -144,13 +144,13 @@ std::pair<unsigned int, unsigned int> closestPair( std::vector<std::pair<T, T>> 
 	//now you have to find which indexes the sorted list corresponds to
 	std::pair<unsigned int, unsigned int> retPair = { 0, 0 };
 
-	for (int i = 0; i < nodes->size(); i++) {
+	for (unsigned int i = 0; i < nodes->size(); i++) {
 		if ((*nodes)[i].first == (*xSort)[min.first.first].first && (*nodes)[i].second == (*xSort)[min.first.first].second) {
 			retPair.first = i;
 			break;
 		}
 	}
-	for (int i = 0; i < nodes->size(); i++) {
+	for (unsigned int i = 0; i < nodes->size(); i++) {
 		if ((*nodes)[i].first == (*xSort)[min.first.second].first && (*nodes)[i].second == (*xSort)[min.first.second].second) {
 			retPair.second = i;
 			break;

@@ -414,6 +414,71 @@ void minimumSpanningTreeTester() {
 	assert(g2.hasChild(6, 7));
 }
 
+void edmondsTester() {
+	Graph::WeightedDirectedGraph<int> g(7);
+
+	for (int i = 0; i < 7; i++) {
+		g.addNode(i);
+	}
+
+	g.addEdge(0, 3, 1);
+	g.addEdge(0, 1, 2);
+	g.addEdge(1, 3, 3);
+	g.addEdge(1, 4, 10);
+	g.addEdge(2, 0, 4);
+	g.addEdge(2, 5, 5);
+	g.addEdge(3, 2, 2);
+	g.addEdge(3, 4, 2);
+	g.addEdge(3, 6, 4);
+	g.addEdge(3, 5, 8);
+	g.addEdge(4, 6, 6);
+	g.addEdge(6, 5, 1);
+
+	Graph::WeightedDirectedGraph<int> * edmonds = edmondsAlgorithm(&g, 3);
+
+	unsigned int totalWeight = 0;
+
+	for (unsigned int i = 0; i < edmonds->size; i++) {
+		for (unsigned int j = 0; j < edmonds->getEdgeNum(i); j++) {
+			totalWeight += edmonds->getWeightOfEdgeByPos(i, j);
+		}
+	}
+
+	assert(totalWeight == 15);
+
+	//Graph::WeightedDirectedGraph<int> g2(6);
+
+	//for (int i = 0; i < 6; i++) {
+	//	g2.addNode(i);
+	//}
+
+	//g2.addEdge(0, 1, 2);
+	//g2.addEdge(0, 2, 10);
+	//g2.addEdge(0, 3, 10);
+	//g2.addEdge(1, 3, 4);
+	//g2.addEdge(2, 1, 1);
+	//g2.addEdge(2, 5, 8);
+	//g2.addEdge(3, 4, 2);
+	//g2.addEdge(3, 5, 4);
+	//g2.addEdge(4, 2, 2);
+
+	//delete edmonds;
+
+	//edmonds = edmondsAlgorithm(&g2, 0);
+
+	//totalWeight = 0;
+
+	//for (unsigned int i = 0; i < edmonds->size; i++) {
+	//	for (unsigned int j = 0; j < edmonds->getEdgeNum(i); j++) {
+	//		totalWeight += edmonds->getWeightOfEdgeByPos(i, j);
+	//	}
+	//}
+
+	//assert(totalWeight == 14);
+
+	//delete edmonds;
+}
+
 void isDAGTester() {
 	Graph::DirectedGraph<int> g;
 
@@ -511,6 +576,41 @@ void inversionCounterTester() {
 }
 
 /*KNAPSACK*/
+
+/*NETWORK FLOW ALGORITHMS*/
+
+void testMaxFlow() {
+	Graph::WeightedDirectedGraph<int> g(4);
+	g.addNode(0);
+	g.addNode(1);
+	g.addNode(2);
+	g.addNode(3);
+
+	g.addEdge(0, 1, 20);
+	g.addEdge(0, 2, 10);
+	g.addEdge(1, 2, 30);
+	g.addEdge(1, 3, 10);
+	g.addEdge(2, 3, 20);
+
+	assert(fordFulkersonMaxFlow(g, 0, 3) == 30);
+
+	Graph::WeightedDirectedGraph<int> k(6);
+	for (int i = 0; i < 6; i++) {
+		k.addNode(i);
+	}
+	k.addEdge(0, 1, 10);
+	k.addEdge(0, 2, 10);
+	k.addEdge(1, 2, 2);
+	k.addEdge(1, 3, 4);
+	k.addEdge(1, 4, 8);
+	k.addEdge(2, 4, 9);
+	k.addEdge(3, 5, 10);
+	k.addEdge(4, 3, 6);
+	k.addEdge(4, 5, 10);
+	
+	assert(fordFulkersonMaxFlow(k, 0, 5) == 19);
+}
+
 /*RNA*/
 
 void rnaStructureTester() {
@@ -574,7 +674,7 @@ void stableMatchingTester() {
 
 	assert(match.size() == menList.size);
 
-	for (int i = 0; i < match.size(); i++) {
+	for (unsigned int i = 0; i < match.size(); i++) {
 		//make sure that every element in the matching is one of the correct elements of the answer, but not necessarily in any order
 		assert((match[i].first == 0 && match[i].second == 1) ||
 			(match[i].first == 1 && match[i].second == 2) ||
@@ -750,6 +850,8 @@ void runAllTests() {
 	rectIntersectsEllipseTester();
 	schedulingTester();
 	pointInPolygonTester();
+	testMaxFlow();
+	edmondsTester();
 }
 
 #pragma deprecated (testDeriv, testInt, testingOnlyCostFunc)

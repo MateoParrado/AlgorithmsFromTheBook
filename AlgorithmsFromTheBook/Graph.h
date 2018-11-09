@@ -147,6 +147,27 @@ namespace Graph {
 			}
 		}
 
+		//return true if the graph contains that edge
+		virtual bool hasEdge(unsigned int node1, unsigned int node2) {
+			if (edges[node1]->size() < edges[node2]->size()) {
+				for (unsigned int i = 0; i < edges[node1]->size(); i++) {
+					if ((*edges[node1])[i] == node2) {
+						return true;
+					}
+				}
+
+				return false;
+			}
+
+			for (unsigned int i = 0; i < edges[node2]->size(); i++) {
+				if ((*edges[node2])[i] == node1) {
+					return true;
+				}
+			}
+
+			return false;
+		}
+
 		/*RULE OF THREE*/
 		Graph(const Graph& g) {
 			for (unsigned int i = 0; i < g.nodes.size(); i++) {
@@ -264,6 +285,17 @@ namespace Graph {
 					break;
 				}
 			}
+		}
+
+		//return true if the graph contains that edge
+		virtual bool hasEdge(unsigned int node1, unsigned int node2) {
+			for (unsigned int i = 0; i < edges[node1]->size(); i += 2) {
+				if ((*edges[node1])[i] == node2) {
+					return true;
+				}
+			}
+
+			return false;
 		}
 
 		virtual void display() {
@@ -508,7 +540,12 @@ namespace Graph {
 
 		//get weight of posth edges of node n
 		virtual unsigned int getWeightOfEdgeByPos(unsigned int n, unsigned int pos) {
-			return (*edges[n])[pos + 1];
+			return (*edges[n])[2*pos + 1];
+		}
+
+		//get weight of edge by pos from the parent vector, performance improvement
+		virtual unsigned int getWeightOfEdgeFromParentByPos(unsigned int child, unsigned int parentNum) {
+			return (*parents[child])[2 * parentNum + 1];
 		}
 
 		//get the endpoints of the ith edge of the graph in the order (parent, child)
@@ -578,6 +615,10 @@ namespace Graph {
 					break;
 				}
 			}
+		}
+
+		virtual bool hasEdge(unsigned int node1, unsigned int node2) {
+			return WeightedGraph::hasEdge(node1, node2);
 		}
 
 		virtual void displayParents() {
@@ -665,14 +706,17 @@ namespace Graph {
 				this->addNode(g.nodes[i].obj);
 
 				for (unsigned int j = 0; j < const_cast<WeightedDirectedGraph&>(g).edges[i]->size(); j++) {
-
+					//make sure we only add a flow for each node, not each weight
+					if (!(j % 2)) {
+						(*flows[i]).push_back(0);
+					}
+	
 					(*edges[i]).push_back((*const_cast<WeightedDirectedGraph&>(g).edges[i])[j]);
 				}
 
 				for (unsigned int j = 0; j < const_cast<WeightedDirectedGraph&>(g).parents[i]->size(); j++) {
 
 					(*parents[i]).push_back((*const_cast<WeightedDirectedGraph&>(g).parents[i])[j]);
-					(*flows[i]).push_back(0);
 				}
 			}
 		}
@@ -713,17 +757,21 @@ namespace Graph {
 
 		//get residual capacity between the two nodes
 		unsigned int getResidualCapacityBetweenNodes(unsigned int n, unsigned int m) {
-			if (edges[n]->size() < edges[m]->size()) {
-				for (unsigned int i = 0; i < edges[n]->size(); i += 2) {
-					if ((*edges[n])[i] == m) return (*edges[n])[i + 1] - getFlow(n, i / 2);
-				}
-			}
-
-			for (unsigned int i = 0; i < edges[m]->size(); i += 2) {
-				if ((*edges[m])[i] == n) return (*edges[m])[i + 1] - getFlow(m, i / 2);
+			for (unsigned int i = 0; i < edges[n]->size(); i += 2) {
+				if ((*edges[n])[i] == m) return (*edges[n])[i + 1] - getFlow(n, i / 2);
 			}
 
 			return -1;
+		}
+
+		//add flow to an edge from n to m
+		void addFlow(unsigned int n, unsigned int m, int flow) {
+			for (unsigned int i = 0; i < edges[n]->size(); i += 2) {
+				if ((*edges[n])[i] == m) {
+					(*flows[n])[i/2] += flow;
+					return;
+				}
+			}
 		}
 
 		//copy constructor
@@ -736,14 +784,17 @@ namespace Graph {
 				this->addNode(g.nodes[i].obj);
 
 				for (unsigned int j = 0; j < const_cast<ResidualGraph&>(g).edges[i]->size(); j++) {
-
+					//only want to push back a flow for every node name, not the weights
+					if (!(j % 2)) {
+						(*flows[i]).push_back(0);
+					}
+					
 					(*edges[i]).push_back((*const_cast<ResidualGraph&>(g).edges[i])[j]);
 				}
 
 				for (unsigned int j = 0; j < const_cast<ResidualGraph&>(g).parents[i]->size(); j++) {
 
 					(*parents[i]).push_back((*const_cast<ResidualGraph&>(g).parents[i])[j]);
-					(*flows[i]).push_back(0);
 				}
 			}
 		}

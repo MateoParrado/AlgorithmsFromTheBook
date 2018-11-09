@@ -259,7 +259,7 @@ namespace Heap {
 
 		void reheapify(int pos = -1) {
 			if (pos == -1) {//if no index is given, find the first one that is too big for its position and go from there
-				for (int i = 1; i < nodes->size(); i++) {
+				for (unsigned int i = 1; i < nodes->size(); i++) {
 					if ((*nodes)[i] > (*nodes)[i / 2]) {
 						heapifyUp(pos);
 					}
