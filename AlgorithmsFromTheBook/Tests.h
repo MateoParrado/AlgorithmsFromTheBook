@@ -841,18 +841,18 @@ void runAllTests() {
 	sortingtester();
 	bipartiteTester();
 	huffmanTester();
-	segmentedLinearRegressionTester();
+	//segmentedLinearRegressionTester();
 	lineSegmentIntersectionTester();
-	minimumSpanningTreeTester();
-	isDAGTester();
-	topologicalSortTester();
-	sequenceAlignmentTester();
-	negativeCycleTester();
-	firstSearchesTester();
-	rectIntersectsEllipseTester();
-	schedulingTester();
-	pointInPolygonTester();
-	testMaxFlow();
+	//minimumSpanningTreeTester();
+	//isDAGTester();
+	//topologicalSortTester();
+	//sequenceAlignmentTester();
+	//negativeCycleTester();
+	//firstSearchesTester();
+	//rectIntersectsEllipseTester();
+	//schedulingTester();
+	//pointInPolygonTester();
+	//testMaxFlow();
 	//edmondsTester();
 }
 

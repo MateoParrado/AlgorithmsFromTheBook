@@ -2,6 +2,7 @@
 
 #include <string>
 #include <vector>
+#include <memory>
 
 #include "Graph.h"
 
@@ -9,9 +10,13 @@
 //frequencies must add up to 1, do not put in a value for the second or third parameters
 //must be in the form (freq, charachter) for heap sort reasons
 //even though frequencies is a pointer it will still get modified
-Graph::BinaryTree<char> * generateHoffmanCodes(std::vector<std::pair<float, char>> * frequencies, Heap::Heap<std::pair<float, char>> * minWeights = nullptr, Graph::BinaryTree<char> * retHeap = nullptr) {
+std::shared_ptr<Graph::BinaryTree<char>> generateHoffmanCodes(std::vector<std::pair<float, char>> * frequencies, Heap::Heap<std::pair<float, char>> * minWeights = nullptr, std::shared_ptr<Graph::BinaryTree<char>> retHeap = nullptr) {
+	//check if we need to delete the weights array
+	bool deleteWeights = false;
 
 	if (!minWeights) {//if this is the first time being run
+		deleteWeights = true;
+
 		minWeights = new Heap::Heap<std::pair<float, char>>(frequencies->size());
 		
 		//set up a heap with lowest frequencies at the bottom
@@ -22,7 +27,7 @@ Graph::BinaryTree<char> * generateHoffmanCodes(std::vector<std::pair<float, char
 
 	if (minWeights->size() == 2) {
 		//initialize retHeap
-		retHeap = new Graph::BinaryTree<char>(frequencies->size());
+		std::shared_ptr<Graph::BinaryTree<char>> retHeap = std::shared_ptr<Graph::BinaryTree<char>>(new Graph::BinaryTree<char>(frequencies->size()));
 
 		retHeap->addNode(0, -1);//insert some random holder value because the bottom node doesn't matter
 
@@ -30,31 +35,37 @@ Graph::BinaryTree<char> * generateHoffmanCodes(std::vector<std::pair<float, char
 		retHeap->addNode(minWeights->popMin().second, 0);
 		retHeap->addNode(minWeights->popMin().second, 0);
 
-		return retHeap;
-	}
-	else {//add the two  least used nodes together and combine them
-
-		std::pair<float, char> charOne = minWeights->popMin();
-		std::pair<float, char> charTwo = minWeights->popMin();
-
-		//add their frequencies
-		float newFreq = charOne.first;
-		newFreq += charTwo.first;
-
-		minWeights->insert({ newFreq, charOne.second });
-
-		retHeap = generateHoffmanCodes(frequencies, minWeights);
-
-		retHeap->addNodeOnParent(charTwo.second, charOne.second);
-		retHeap->addNodeOnParent(charOne.second, charOne.second);
+		if (deleteWeights) {
+			delete minWeights;
+		}
 
 		return retHeap;
 	}
+	//add the two  least used nodes together and combine them
 
+	std::pair<float, char> charOne = minWeights->popMin();
+	std::pair<float, char> charTwo = minWeights->popMin();
+
+	//add their frequencies
+	float newFreq = charOne.first;
+	newFreq += charTwo.first;
+
+	minWeights->insert({ newFreq, charOne.second });
+
+	retHeap = generateHoffmanCodes(frequencies, minWeights);
+
+	retHeap->addNodeOnParent(charTwo.second, charOne.second);
+	retHeap->addNodeOnParent(charOne.second, charOne.second);
+
+	if (deleteWeights) {
+		delete minWeights;
+	}
+
+	return retHeap;
 }
 
 //adds the huffman encoding of char str to the vector of booleans vec 
-void retraceThroughTree(char str, std::vector<bool> * vec, Graph::BinaryTree<char> * codes) {
+void retraceThroughTree(char str, std::vector<bool> * vec, std::shared_ptr<Graph::BinaryTree<char>> codes) {
 	SinglyLinkedList::LinkedList<bool> addToVec;
 
 	unsigned int i = codes->getPosByValue(str);
@@ -72,7 +83,7 @@ void retraceThroughTree(char str, std::vector<bool> * vec, Graph::BinaryTree<cha
 }
 
 //return a bitstream (in the form of a bool vector) of a huffman encoding of a string
-std::pair<std::vector<bool>, Graph::BinaryTree<char> *> huffmanEncoder(std::string str) {
+std::pair<std::vector<bool>, std::shared_ptr<Graph::BinaryTree<char>>> huffmanEncoder(std::string str) {
 	str += " ";//because the last letter always gets cut off
 
 	//get the frequency list for all the chars in the string
@@ -90,7 +101,7 @@ std::pair<std::vector<bool>, Graph::BinaryTree<char> *> huffmanEncoder(std::stri
 		}
 	}
 
-	Graph::BinaryTree<char> * codes = generateHoffmanCodes(&freq);
+	std::shared_ptr<Graph::BinaryTree<char>> codes = generateHoffmanCodes(&freq);
 
 	std::vector<bool> ret;
 	ret.reserve(str.size() * 4);
@@ -103,7 +114,7 @@ std::pair<std::vector<bool>, Graph::BinaryTree<char> *> huffmanEncoder(std::stri
 }
 
 //returns the string that a huffman code was used to encode
-std::string huffmanDecoder(std::pair<std::vector<bool>, Graph::BinaryTree<char> *> bitStream) {
+std::string huffmanDecoder(std::pair<std::vector<bool>, std::shared_ptr<Graph::BinaryTree<char>>> bitStream) {
 	std::string ret;
 	
 	unsigned int nodeNum = 0;//the number of the current node whos children are being checked

@@ -60,9 +60,9 @@ int main() {
 //	Graph::ResidualGraph<std::pair<int, int>> y(x);
 
 	//std::cout << dijkstraGcd(468, 24);
-//	for (int i = 0; i < 100000; i++) {
+	for (int i = 0; i < 100000; i++) {
 		runAllTests();
-//	}
+	}
 
 	std::getchar();
 }
