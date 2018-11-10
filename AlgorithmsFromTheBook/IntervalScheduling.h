@@ -3,6 +3,7 @@
 #include <vector>
 #include <algorithm>
 #include <string>
+#include <memory>
 
 //returns the vector containing the tasks that should be executed st the largest number of tasks can be executed
 //input in the form (startTime, finishTime)
@@ -139,28 +140,9 @@ unsigned int getMaxPossibleWeight(std::vector<weightedTask> * x, unsigned int si
 	return temp;
 }
 
-//returns a ptr to an array of the values of the intervals given by each thing used below, hard to explain
-//must be sorted by end time
-unsigned int * getWeightsArray(std::vector<weightedTask> * x, unsigned int size = -1, unsigned int * ptr = nullptr) {
-
-	if (!ptr) {
-		ptr = new unsigned int[x->size()];
-		size = x->size();
-
-		for (unsigned int i = 0; i < x->size(); i++) {
-			ptr[i] = 0;
-		}
-	}
-
-	unsigned int temp = std::max((*x)[size - 1].weight + getMaxPossibleWeight(x, getP(x, size - 1), ptr), getMaxPossibleWeight(x, size - 1, ptr));
-	ptr[size - 1] = temp;
-
-	return ptr;
-}
-
 //same as above but better memory wise
-unsigned int * iterativeGetWeightsArray(std::vector<weightedTask> * x) {
-	unsigned int * ptr = new unsigned int[x->size()];
+std::unique_ptr<unsigned int[]> iterativeGetWeightsArray(std::vector<weightedTask> * x) {
+	std::unique_ptr<unsigned int[]> ptr(new unsigned int [x->size()]);
 	ptr[0] = (*x)[0].weight;
 
 	for (unsigned int i = 1; i < x->size(); i++) {
@@ -175,7 +157,7 @@ unsigned int * iterativeGetWeightsArray(std::vector<weightedTask> * x) {
 
 //returns the schedules that create the highest possible weight value
 //must be sorted by end time
-std::string weightedIntervalScheduler(std::vector<weightedTask> * x, unsigned int j = -1, unsigned int * ptr = nullptr) {
+std::string weightedIntervalScheduler(std::vector<weightedTask> * x, unsigned int j = -1, std::unique_ptr<unsigned int[]> ptr = nullptr) {
 	if (!ptr) {
 		ptr = iterativeGetWeightsArray(x);
 		j = x->size() - 1;
@@ -184,16 +166,19 @@ std::string weightedIntervalScheduler(std::vector<weightedTask> * x, unsigned in
 	unsigned int p = getP(x, j);
 
 	if (!p) {
-		if (!j) return std::to_string(j);
+		if (!j) {
+			return std::to_string(j);
+		}
 
 		if ((*x)[j].weight > ptr[j - 1]) {
 			return std::to_string(j);
 		}
 	}
 	else if ((*x)[j].weight + ptr[p - 1] > ptr[j - 1]) {
-		return std::to_string(j) + weightedIntervalScheduler(x, p - 1, ptr);
+		return std::to_string(j) + weightedIntervalScheduler(x, p - 1, std::move(ptr));
 	}
-	return weightedIntervalScheduler(x, j - 1, ptr);
+
+	return weightedIntervalScheduler(x, j - 1, std::move(ptr));
 }
 
 #pragma deprecated (getP, getMaxPossibleWeight, getWeightsArray, getIterativeWeightsArray)

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 template<class T>
 //find path between node start and end node end using DFS
 SinglyLinkedList::LinkedList<unsigned int> * findAugmentingPath(Graph::ResidualGraph<T> * g) {
@@ -67,7 +69,7 @@ SinglyLinkedList::LinkedList<unsigned int> * findAugmentingPath(Graph::ResidualG
 
 template<class T>
 //get the value of the minimum possible capacity to increase the flow in a path
-int getBottleneck(Graph::ResidualGraph<T> * g, SinglyLinkedList::LinkedList<unsigned int> * path) {
+int getBottleneck(Graph::ResidualGraph<T> * g, std::shared_ptr<SinglyLinkedList::LinkedList<unsigned int>> path) {
 	SinglyLinkedList::Node<unsigned int> * head = path->head;
 	
 	unsigned int minVal = INT_MAX;//this is too low, but still lower than all edge weights, and also std::numeric_Limits::infinity for some reason returns zero for unsigned ints
@@ -94,7 +96,7 @@ unsigned int fordFulkersonMaxFlow(const Graph::WeightedDirectedGraph<T> & graph,
 	int curFlow = 0;
 
 	for (;;) {
-		SinglyLinkedList::LinkedList<unsigned int> * augPath = findAugmentingPath(&g);
+		std::shared_ptr<SinglyLinkedList::LinkedList<unsigned int>> augPath(findAugmentingPath(&g));
 
 		//if there are no more paths then end
 		if (!augPath)
@@ -104,8 +106,9 @@ unsigned int fordFulkersonMaxFlow(const Graph::WeightedDirectedGraph<T> & graph,
 		int bottleneck = getBottleneck(&g, augPath);
 
 		//if the flow cannot be changed at all then return, could also include a tracker to make sure every path includes at least one forwards node but this is better
-		if (!bottleneck)
+		if (!bottleneck) {
 			return curFlow;
+		}
 
 		//follow along the path and add that flow to every node in the graph
 		SinglyLinkedList::Node<unsigned int> * head = augPath->head;
@@ -130,7 +133,5 @@ unsigned int fordFulkersonMaxFlow(const Graph::WeightedDirectedGraph<T> & graph,
 		}
 
 		curFlow += bottleneck;
-
-		delete augPath;
 	}
 }

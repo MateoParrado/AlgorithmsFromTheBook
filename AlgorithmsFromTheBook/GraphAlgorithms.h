@@ -1111,7 +1111,7 @@ bool isDAG(Graph::DirectedGraph<T> g) {//object pointed to is destroyed by delet
 		for (unsigned int i = g.size - 1; i < g.size; i--) {
 			if (!g.getParentNum(i)) {
 				g.removeNode(i);
-				batman = true; 
+				batman = true;
 			}
 		}
 		if (!batman) {

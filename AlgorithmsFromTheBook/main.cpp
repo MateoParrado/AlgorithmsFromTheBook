@@ -29,8 +29,7 @@
 #include "Tests.h"
 
 //TODO
-//edmonds algorithm memory leaks
-//MEMORY LEAKS IN OTHER ALGORITHMS
+//memory leak in residua graph contructor
 ///optimizaitons in segmented linear regression (266/284), calculate errors in constant time
 //implement tests for A*, kmeans, kruskal cluster, knapsack packer, FFT
 //bug in parallel scheduler
@@ -39,23 +38,6 @@
 using namespace std;
 
 int main() {
-	Graph::WeightedDirectedGraph<std::pair<int, int>> x(6);
-	
-	x.addNode({ 0, 5 });
-	x.addNode({ -1, 0 });
-	x.addNode({ 0, 1 });
-	x.addNode({ 1, 0 });
-	x.addNode({ 0, -1 });
-	x.addNode({ 0, -5 });
-
-	x.addEdge(0, 1, 10);
-	x.addEdge(0, 3, 10);
-	x.addEdge(1, 2, 1);
-	x.addEdge(2, 3, 4);
-	x.addEdge(3, 4, 2);
-	x.addEdge(4, 2, 2);
-	x.addEdge(3, 5, 4);
-	x.addEdge(5, 1, 8);
 
 //	Graph::ResidualGraph<std::pair<int, int>> y(x);
 

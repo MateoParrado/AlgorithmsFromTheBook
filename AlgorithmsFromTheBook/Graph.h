@@ -112,6 +112,8 @@ namespace Graph {
 		}
 
 		virtual void removeNode(unsigned int num) {
+			delete edges[num];
+
 			edges.erase(begin(edges) + num);
 			nodes.erase(begin(nodes) + num);
 
@@ -253,6 +255,8 @@ namespace Graph {
 		}
 
 		void removeNode(unsigned int num) {
+			delete edges[num];
+
 			edges.erase(begin(edges) + num);
 			nodes.erase(begin(nodes) + num);
 
@@ -385,6 +389,9 @@ namespace Graph {
 		virtual void removeNode(unsigned int num) {
 			//remove all links to it in its dependencies, as well as reduce the number of each one by one (beacuse it now has one less node)
 			Graph::removeNode(num);
+
+			delete parents[num];
+
 			parents.erase(begin(parents) + num);
 
 			for (unsigned int i = 0; i < parents.size(); i++) {
@@ -586,6 +593,8 @@ namespace Graph {
 
 		void removeNode(unsigned int num) {
 			WeightedGraph::removeNode(num);
+
+			delete parents[num];
 
 			parents.erase(begin(parents) + num);
 
