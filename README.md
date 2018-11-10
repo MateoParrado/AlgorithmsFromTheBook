@@ -1,11 +1,16 @@
 # AlgorithmsFromTheBook
-This is a project that takes all of the theoretical concepts from Algorithm Design by Jon Kleinberg and Eva Tardos and puts them into practice. The goal was to improve my C++ skills, as well as to be able to write and understand more complex algorithms. It is written as a header only library because many of the functions and data structures are templated, and templates don't play well with .cpp files.
+This is a library of algorithms taken from the book Algorithm Design by Jon Kleinberg and Eva Tardos. The goal of the profect was to help me learn C++, as well as to be able to understand more complex data structures and algorithms.
+
+### Organization
+This is  a headers only library, because all of the data structures are templated. Every data structure has its own header file, that it shares with its derived classes. These classes are all under the same namespace as well. For example, Graph, DirectedGraph, WeightedDirectedGraph, BinaryTree, and ResidualGraph are all under the same namespace, Graph.
+
+The algorithms are grouped in header files based on either what they do, or the data structure they deal with. For example, there is a header for algorithms that have to do with graphs, and another for algorithms that have to do with network flows. There is also a header for data compression algorithms, or clustering algorithms.
 
 ## Getting Started
 Either clone or download the zip of the repository. Take the header files you need and put them into your working directory. 
 
 ### Prerequisites
-Some of the header files require boost::multiarray for thier algorithms. If you are using an algorithm from those headers but don't need that algorithm, simply delete it. Otherwise, you can download it at www.boost.org.
+The knapsack packer algorithm, the RNA structure finder algorithm, and the sequence alignment algorithm all use boost::multiarray. If you need to use any of those algorithms, simply download the header at www.boost.org. If you don;t want to use those specific algorithms, but still want to use something in their header, simply delete the algorithms and remove the include from the top, and your program will run as intended.
 
 ## How to use?
 ### Code Examples
