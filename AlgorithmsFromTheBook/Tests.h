@@ -850,7 +850,7 @@ void runAllTests() {
 	rectIntersectsEllipseTester();
 	schedulingTester();
 	pointInPolygonTester();
-	//testMaxFlow();
+	testMaxFlow();
 	edmondsTester();
 }
 

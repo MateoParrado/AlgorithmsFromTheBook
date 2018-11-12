@@ -807,6 +807,12 @@ namespace Graph {
 				}
 			}
 		}
+
+		~ResidualGraph() {
+			for (auto i : flows) {
+				delete i;
+			}
+		}
 	};
 
 	template<class T>
