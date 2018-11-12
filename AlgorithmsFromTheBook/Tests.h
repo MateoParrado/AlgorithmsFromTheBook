@@ -593,6 +593,7 @@ void testMaxFlow() {
 	g.addEdge(2, 3, 20);
 
 	assert(fordFulkersonMaxFlow(g, 0, 3) == 30);
+	assert(scalingMaxFlow(g, 0, 3) == 30);
 
 	Graph::WeightedDirectedGraph<int> k(6);
 	for (int i = 0; i < 6; i++) {
@@ -609,6 +610,7 @@ void testMaxFlow() {
 	k.addEdge(4, 5, 10);
 
 	assert(fordFulkersonMaxFlow(k, 0, 5) == 19);
+	assert(scalingMaxFlow(k, 0, 5) == 19);
 }
 
 void testMinCut() {
