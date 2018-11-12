@@ -607,8 +607,46 @@ void testMaxFlow() {
 	k.addEdge(3, 5, 10);
 	k.addEdge(4, 3, 6);
 	k.addEdge(4, 5, 10);
-	
+
 	assert(fordFulkersonMaxFlow(k, 0, 5) == 19);
+}
+
+void testMinCut() {
+	Graph::WeightedDirectedGraph<int> g(4);
+	g.addNode(0);
+	g.addNode(1);
+	g.addNode(2);
+	g.addNode(3);
+
+	g.addEdge(0, 1, 20);
+	g.addEdge(0, 2, 10);
+	g.addEdge(1, 2, 30);
+	g.addEdge(1, 3, 10);
+	g.addEdge(2, 3, 20);
+
+	assert(fordFulkersonMinCut(g, 0, 3).size == 1);
+	assert(fordFulkersonMinCut(g, 0, 3).head->obj == 0);
+
+
+	Graph::WeightedDirectedGraph<int> k(6);
+	for (int i = 0; i < 6; i++) {
+		k.addNode(i);
+	}
+	k.addEdge(0, 1, 10);
+	k.addEdge(0, 2, 10);
+	k.addEdge(1, 2, 2);
+	k.addEdge(1, 3, 4);
+	k.addEdge(1, 4, 8);
+	k.addEdge(2, 4, 9);
+	k.addEdge(3, 5, 10);
+	k.addEdge(4, 3, 6);
+	k.addEdge(4, 5, 10);
+
+	SinglyLinkedList::LinkedList<unsigned int> e = fordFulkersonMinCut(k, 0, 5);
+
+	assert(e.size == 2);
+	assert(e.head->obj == 0);
+	assert(e.tail->obj == 2);
 }
 
 /*RNA*/
@@ -851,6 +889,7 @@ void runAllTests() {
 	schedulingTester();
 	pointInPolygonTester();
 	testMaxFlow();
+	testMinCut();
 	edmondsTester();
 }
 

@@ -29,6 +29,7 @@
 #include "Tests.h"
 
 //TODO
+//write move constructor for linked list
 ///optimizaitons in segmented linear regression (266/284), calculate errors in constant time
 //implement tests for A*, kmeans, kruskal cluster, knapsack packer, FFT
 //bug in parallel scheduler
