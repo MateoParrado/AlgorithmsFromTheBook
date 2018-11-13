@@ -542,7 +542,7 @@ void topologicalSortTester() {
 void schedulingTester() {
 	std::vector<std::pair<int, int>> tasks = { { 0, 80 },{ 0, 10 },{ 0, 20 },{ 15, 30 },{ 28, 32 },{ 40, 50 },{ 45, 60 },{ 80, 90 },{ 85, 95 } };
 	assert(intervalScheduler(tasks).size() == 4);//the only thing that matters is the number of tasks scheduled, as there are many optimums
-	//assert(parallelScheduler(tasks).size() == 3);
+	assert(parallelScheduler(tasks).size() == 3);
 	
 	std::vector<std::pair<int, int>> tasks1 = { { 10, 20 },{ 10, 10 },{ 5, 2 },{ 15, 30 },{ 28, 32 },{ 40, 50 },{ 45, 60 },{ 80, 90 },{ 85, 95 } };
 
@@ -561,7 +561,7 @@ void schedulingTester() {
 
 	std::string sched = weightedIntervalScheduler(&x);
 	
-	//assert(sched == "420");
+	assert(sched == "420");
 }
 
 /*INVERSION COUNTER*/

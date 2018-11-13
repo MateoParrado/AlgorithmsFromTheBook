@@ -51,13 +51,13 @@ std::vector < std::vector<std::pair<int, int>>> parallelScheduler(std::vector<st
 		}
 
 		//adding the object to its identified vector
-		for (unsigned int j = 0; j > -1; j++) {//infinite loop but for in loop purposes cant just be "for(;;)"
+		for (unsigned int j = 0; true; j++) {//infinite loop but for in loop purposes cant just be "for(;;)"
 			if (std::find(opts.begin(), opts.end(), j) == opts.end()) {
 				nums.push_back(j);
 
 				if (j > numVecs) { 
 					numVecs = j; 
-					if (numInVec.size() < j) numInVec.push_back(0);
+					if (numInVec.size() < j) numInVec.push_back(1);
 				}
 
 				numInVec[j]++;

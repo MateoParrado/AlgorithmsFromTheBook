@@ -30,10 +30,9 @@
 
 //TODO
 //write move constructor for linked list
+//edmonds karp algorithm
 ///optimizaitons in segmented linear regression (266/284), calculate errors in constant time
 //implement tests for A*, kmeans, kruskal cluster, knapsack packer, FFT
-//bug in parallel scheduler
-///write reverse delete min tree in nlogn
 
 using namespace std;
 
