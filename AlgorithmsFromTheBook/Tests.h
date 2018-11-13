@@ -579,7 +579,7 @@ void inversionCounterTester() {
 
 /*NETWORK FLOW ALGORITHMS*/
 
-void testMaxFlow() {
+void maxFlowTester() {
 	Graph::WeightedDirectedGraph<int> g(4);
 	g.addNode(0);
 	g.addNode(1);
@@ -613,7 +613,7 @@ void testMaxFlow() {
 	assert(scalingMaxFlow(k, 0, 5) == 19);
 }
 
-void testMinCut() {
+void minCutTester() {
 	Graph::WeightedDirectedGraph<int> g(4);
 	g.addNode(0);
 	g.addNode(1);
@@ -782,6 +782,19 @@ void sequenceAlignmentTester() {
 }
 
 /*UTILS*/
+void getPrimesTester() {
+	assert(getPrimes(0) == 2);
+	assert(getPrimes(3) == 7);
+	assert(getPrimes(5) == 13);
+}
+
+void isEvenTester (){
+	//this works, I ran the whole loop, but it makes the testAll function run forever, so I'm commenting it out
+	/*for (int i = INT_MAX - 1; i != INT_MAX; i--) {
+		assert(isEven(i) == !(i % 2));
+	}*/
+}
+
 void factorialTester() {
 	assert(factorial(4) == 24);
 	assert(factorial(0) == 1);
@@ -890,9 +903,11 @@ void runAllTests() {
 	rectIntersectsEllipseTester();
 	schedulingTester();
 	pointInPolygonTester();
-	testMaxFlow();
-	testMinCut();
+	maxFlowTester();
+	maxFlowTester();
+	isEvenTester();
 	edmondsTester();
+	getPrimesTester();
 }
 
 #pragma deprecated (testDeriv, testInt, testingOnlyCostFunc)

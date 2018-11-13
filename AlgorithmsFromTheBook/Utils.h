@@ -1,6 +1,15 @@
 #pragma once
 #include <utility>
 
+bool isEven(int x) {
+	for (;;) {
+		if (!x) return true;
+		if (x == 1) return false;
+
+		x *= x;
+	}
+}
+
 template<class T>
 //returns the distance between two coord pair points
 double dist(std::pair<T, T> * p1, std::pair<T, T> * p2) {
@@ -144,4 +153,33 @@ double squaredError(std::pair<T, T> * x, unsigned int size) {
 	}
 
 	return ret;
+}
+
+//returns the ith prime
+unsigned int getPrimes(unsigned int i) {
+	if (!i) return 2;
+	if (i == 1) return 3;
+	if (i == 2) return 5;
+
+	std::vector<unsigned int> primes(2);
+	primes.reserve(i + 1);
+
+	primes[0] = 3;
+	primes[1] = 5;
+
+	for (unsigned int j = 7; true; j += 2) {
+		for (unsigned int k = 0; k < primes.size(); k++) {
+			if (!(j % primes[k])) {
+				goto notPrime;
+			}
+		}
+
+		if (primes.size() + 1 == i) {
+			return j;
+		}
+
+		primes.push_back(j);
+
+	notPrime:;
+	}
 }
