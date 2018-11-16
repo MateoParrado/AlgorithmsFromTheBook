@@ -774,7 +774,7 @@ namespace Graph {
 		}
 
 		//add flow to an edge from n to m
-		void addFlow(unsigned int n, unsigned int m, int flow) {
+		virtual void addFlow(unsigned int n, unsigned int m, int flow) {
 			for (unsigned int i = 0; i < edges[n]->size(); i += 2) {
 				if ((*edges[n])[i] == m) {
 					(*flows[n])[i/2] += flow;
@@ -813,6 +813,47 @@ namespace Graph {
 				delete i;
 			}
 		}
+	};
+
+	template<class T>
+	struct PreflowPush : ResidualGraph<T> {
+
+		std::vector<unsigned int> labels;
+		std::vector<unsigned int> excess;
+
+		//construct if from a weighted directed graph
+		PreflowPush(WeightedDirectedGraph& g, unsigned int start, unsigned int end) : ResidualGraph(g, start, end) {
+			labels(g.size);
+			labels[start] = g.size;
+			excess(g.size);
+		}
+
+		//push flow along an edge e
+		void push(unsigned int node, unsigned int edge, bool isForwards = true) {
+			if (isForwards) {
+				//take away either the excess of the edge of the capacity of the edge
+				unsigned int delta = std::min(excess[node], ResidualGraph::getResidualCapacity(node, edge));
+				excess[node] -= delta;
+				(*flows[node])[edge] += delta;
+				return;
+			}
+			unsigned int delta = std::min(excess[node], ResidualGraph::getFlow(node, edge));
+			excess[node] -= delta;
+			(*flow[node])[edge] += delta;
+		}
+
+		//raise the height of n by one
+		void relabel(unsigned int n) {
+			labels[n]++;
+		}
+
+		//make sure you cant construct it from scratch
+		PreflowPush(unsigned int i = 10) {
+			throw 40;
+		}
+
+		//make sure you can;t accidentally add flow using the residual graph method
+		virtual void addFlow(unsigned int m, unsigned int n, unsigned int flow) = delete;
 	};
 
 	template<class T>
