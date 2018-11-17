@@ -731,9 +731,7 @@ namespace Graph {
 		}
 
 		//make sure it doesnt use its parent constructor
-		ResidualGraph(unsigned int size = 10) {
-			throw 40;
-		}
+		ResidualGraph(unsigned int size = 10) = delete;
 
 		unsigned int getFlow(unsigned int node, unsigned int edge) {
 			return (*flows[node])[edge];
@@ -741,14 +739,8 @@ namespace Graph {
 
 		//get flow between the two nodes
 		unsigned int getFlowBetweenNodes(unsigned int n, unsigned int m) {
-			if (edges[n]->size() < edges[m]->size()) {
-				for (unsigned int i = 0; i < edges[n]->size(); i += 2) {
-					if ((*edges[n])[i] == m) return getFlow(n, i / 2);
-				}
-			}
-
-			for (unsigned int i = 0; i < edges[m]->size(); i += 2) {
-				if ((*edges[m])[i] == n) return getFlow(m, i / 2);
+			for (unsigned int i = 0; i < edges[n]->size(); i += 2) {
+				if ((*edges[n])[i] == m) return getFlow(n, i / 2);
 			}
 
 			return -1;
@@ -819,27 +811,32 @@ namespace Graph {
 	struct PreflowPush : ResidualGraph<T> {
 
 		std::vector<unsigned int> labels;
-		std::vector<unsigned int> excess;
 
 		//construct if from a weighted directed graph
-		PreflowPush(WeightedDirectedGraph& g, unsigned int start, unsigned int end) : ResidualGraph(g, start, end) {
-			labels(g.size);
+		PreflowPush(const WeightedDirectedGraph& g, unsigned int start, unsigned int end) : ResidualGraph(g, start, end) {
+			labels.resize(g.size);
 			labels[start] = g.size;
-			excess(g.size);
+
+			//initialize all edges leaving the start node to maximum flow
+			for (unsigned int i = 0; i < const_cast<WeightedDirectedGraph&>(g).getChildNum(start); i++) {
+				(*flows[start])[i] += const_cast<WeightedDirectedGraph&>(g).getWeightOfEdgeByPos(start, i);
+			}
 		}
 
 		//push flow along an edge e
-		void push(unsigned int node, unsigned int edge, bool isForwards = true) {
+		unsigned int push(unsigned int node, unsigned int edge, unsigned int excess, bool isForwards = true) {
 			if (isForwards) {
 				//take away either the excess of the edge of the capacity of the edge
-				unsigned int delta = std::min(excess[node], ResidualGraph::getResidualCapacity(node, edge));
-				excess[node] -= delta;
+				unsigned int delta = std::min(excess, ResidualGraph::getResidualCapacity(node, edge));
 				(*flows[node])[edge] += delta;
-				return;
+				
+				return delta;
 			}
-			unsigned int delta = std::min(excess[node], ResidualGraph::getFlow(node, edge));
-			excess[node] -= delta;
-			(*flow[node])[edge] += delta;
+			
+			unsigned int delta = std::min(excess, ResidualGraph::getFlow(node, edge));
+			(*flows[node])[edge] -= delta;
+
+			return delta;
 		}
 
 		//raise the height of n by one
@@ -848,9 +845,7 @@ namespace Graph {
 		}
 
 		//make sure you cant construct it from scratch
-		PreflowPush(unsigned int i = 10) {
-			throw 40;
-		}
+		PreflowPush(unsigned int i = 10) = delete;
 
 		//make sure you can;t accidentally add flow using the residual graph method
 		virtual void addFlow(unsigned int m, unsigned int n, unsigned int flow) = delete;

@@ -197,7 +197,7 @@ int getBottleneck(Graph::ResidualGraph<T> * g, std::shared_ptr<SinglyLinkedList:
 			minVal = std::min(minVal, g->getResidualCapacityBetweenNodes(head->next->obj, head->obj));
 		}
 		else {
-			minVal = std::min(minVal, g->getFlowBetweenNodes(head->next->obj, head->obj));
+			minVal = std::min(minVal, g->getFlowBetweenNodes(head->obj, head->next->obj));
 		}
 		head = head->next;
 	}
@@ -303,19 +303,19 @@ SinglyLinkedList::LinkedList<unsigned int> fordFulkersonMinCut(const Graph::Weig
 	}
 
 	SinglyLinkedList::LinkedList<unsigned int> ret;
-	ret.pushBackNode(start);
+ret.pushBackNode(start);
 
-	for (unsigned int i = 0; i < g.size; i++) {
-		if (i == start || i == end) {
-			continue;
-		}
-
-		if (isPath(&g, i)) {
-			ret.pushBackNode(i);
-		}
+for (unsigned int i = 0; i < g.size; i++) {
+	if (i == start || i == end) {
+		continue;
 	}
 
-	return ret;
+	if (isPath(&g, i)) {
+		ret.pushBackNode(i);
+	}
+}
+
+return ret;
 }
 
 template<class T>
@@ -385,4 +385,136 @@ unsigned int scalingMaxFlow(const Graph::WeightedDirectedGraph<T> & graph, unsig
 	}
 
 	return curFlow;
+}
+
+template<class T>
+unsigned int preflowPush(const Graph::WeightedDirectedGraph<T> & graph, unsigned int start, unsigned int end) {
+
+	Graph::PreflowPush<T> g(graph, start, end);
+
+	//vector holding which nodes have excess flow, {node, excess}
+	std::vector<std::pair<unsigned int, unsigned int>> excess;
+
+	//tracks the next edge that needs to be traversed for each node
+	std::vector<int> current(graph.size);
+
+	excess.reserve(graph.size - 1);//because the start and end nodes can have no excess
+
+	for (unsigned int i = 0; i < g.getChildNum(start); i++) {
+		excess.push_back(std::make_pair(g.getChild(start, i), g.getWeightOfEdgeByPos(start, i)));
+	}
+
+	//while there is a node with excess, choose one and try and push flow to all edges
+	while (excess.size()) {
+		//we choose node excess.size() - 1, for cheap deletions
+		unsigned int chosenNode = excess[excess.size() - 1].first;
+
+		//first check all forwards edges, but only if there are still forwards nodes to be ckecked(aka current is positive)
+		if (current[chosenNode] >= 0) {
+			for (; current[chosenNode] < g.getChildNum(chosenNode); current[chosenNode]++) {
+				if (g.getResidualCapacity(chosenNode, current[chosenNode]) && g.labels[g.getChild(chosenNode, current[chosenNode])] <= g.labels[chosenNode]) {
+					unsigned int pushedFlow = g.push(chosenNode, current[chosenNode], excess[excess.size() - 1].second);
+
+					//add the excess to the node being pushed to, unless its the end node
+					unsigned int childNode = g.getChild(chosenNode, current[chosenNode]);
+
+					if (childNode != end) {
+						auto posInExcess = std::find_if(excess.begin(), excess.end(),
+							[childNode](std::pair<unsigned int, unsigned int> & p)->bool {return p.first == childNode;});
+
+						if (posInExcess == excess.end()) {
+							excess.insert(excess.end() - 1, std::make_pair(childNode, pushedFlow));
+						}
+						else {
+							posInExcess->second += pushedFlow;
+						}
+					}
+
+					//subtract the excess from node being checked, and delete it from the vector if the excess is too low
+					excess[excess.size() - 1].second -= pushedFlow;
+					if (excess[excess.size() - 1].second < 1) {
+						excess.erase(excess.end() - 1, excess.end());
+
+						//because we were able to remove all excess from the node, we just want to do it over with a different node
+						current[chosenNode]++;
+
+						goto checkNextNode;
+					}
+				}
+			}
+		}
+
+		//if the forwards counter hasnt found anything, reset current
+		if (current[chosenNode] > 0) {
+			current[chosenNode] = 0;
+		}
+		//otherwise, put it into the right space
+		else if (current[chosenNode] < 0) {
+			current[chosenNode] *= -1;
+		}
+
+		//then, all the backwards ones
+		for (; current[chosenNode] < g.getParentNum(chosenNode); current[chosenNode]++) {
+			unsigned int parentNode = g.getParent(chosenNode, current[chosenNode]);
+
+			//find the index of the chosen node in the parents adjacency list
+			unsigned int index = 0;
+			for (unsigned int j = 0; j < g.edges[parentNode]->size(); j += 2) {
+				if ((*g.edges[parentNode])[j] == chosenNode) {
+					index = j / 2;
+
+					break;
+				}
+			}
+
+			if (g.getFlow(parentNode, index) && g.labels[g.getParent(chosenNode, current[chosenNode])] <= g.labels[chosenNode]) {
+				unsigned int pushedFlow = g.push(parentNode, index, excess[excess.size() - 1].second, false);
+
+				//add the excess to the parent
+				auto posInExcess = std::find_if(excess.begin(), excess.end(),
+					[parentNode](std::pair<unsigned int, unsigned int> & p)->bool {return p.first == parentNode;});
+
+				if (posInExcess == excess.end()) {
+					excess.insert(excess.end() - 1, std::make_pair(parentNode, pushedFlow));		
+				}
+				else {
+					posInExcess->second += pushedFlow;
+				}
+
+				//remove the excess fromt the chosen node, and remove it from the vector if it is too low
+				excess[excess.size() - 1].second -= pushedFlow;
+				if (excess[excess.size() - 1].second < 1) {
+					excess.erase(excess.end() - 1, excess.end());
+
+					//because we were able to remove all excess from the node, we just want to do it over with a different node
+					current[chosenNode] *= -1;
+					current[chosenNode]--;
+
+					goto checkNextNode;
+				}
+			}
+		}
+
+		//if flow can't be pushed, raise the height, unless its start, which you just delete from the excess graph
+		if (chosenNode != start) {
+			current[chosenNode] = 0;
+			g.relabel(chosenNode);
+		}
+		else {
+			current[start] = 0;
+
+			excess.erase(excess.end() - 1, excess.end());
+		}
+
+	checkNextNode:;
+	}
+
+	unsigned int flow = 0;
+
+	//calculate the flow of every edge going into the end node
+	for (unsigned int i = 0; i < g.getParentNum(end); i++) {
+		flow += g.getFlowBetweenNodes(g.getParent(end, i), end);
+	}
+
+	return flow;
 }
