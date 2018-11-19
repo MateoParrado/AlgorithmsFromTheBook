@@ -2,6 +2,8 @@
 
 #include <memory>
 
+/*HELPER FUNCTIONS*/
+
 template<class T>
 //find path between node start and end node end using DFS
 SinglyLinkedList::LinkedList<unsigned int> * findAugmentingPath(Graph::ResidualGraph<T> * g) {
@@ -206,6 +208,8 @@ int getBottleneck(Graph::ResidualGraph<T> * g, std::shared_ptr<SinglyLinkedList:
 	return (int)minVal;
 }
 
+/*MAXIMUM FLOW*/
+
 template<class T>
 //find the maximum flow that can be put through a weighted directed graph
 //start is the node the flow originates at, and end is the sink node tht absorbs all flow
@@ -254,68 +258,6 @@ unsigned int fordFulkersonMaxFlow(const Graph::WeightedDirectedGraph<T> & graph,
 
 		curFlow += bottleneck;
 	}
-}
-
-template<class T>
-SinglyLinkedList::LinkedList<unsigned int> fordFulkersonMinCut(const Graph::WeightedDirectedGraph<T> & graph, unsigned int start, unsigned int end) {
-	Graph::ResidualGraph<T> g(graph, start, end);
-
-	int curFlow = 0;
-
-	for (;;) {
-		std::shared_ptr<SinglyLinkedList::LinkedList<unsigned int>> augPath(findAugmentingPath(&g));
-
-		//if there are no more paths then break
-		if (!augPath)
-			break;
-
-		//find the bottleneck
-		int bottleneck = getBottleneck(&g, augPath);
-
-		//if the flow cannot be changed at all then break
-		if (!bottleneck) {
-			break;
-		}
-
-		//follow along the path and add that flow to every node in the graph
-		SinglyLinkedList::Node<unsigned int> * head = augPath->head;
-
-		//safe from segfaults because if head is a nullptr it would end at the if !augPath
-		for (;;) {
-			//check if its a fowrards node or a backwards node
-			if (g.hasEdge(head->obj, head->next->obj)) {
-				g.addFlow(head->obj, head->next->obj, -bottleneck);
-			}
-			else {
-				g.addFlow(head->next->obj, head->obj, bottleneck);
-			}
-
-			head = head->next;
-			//make sure that the flow gets added into the starting node
-			if (!head->next->next) {
-				g.addFlow(g.start, head->obj, bottleneck);
-				break;
-			}
-
-		}
-
-		curFlow += bottleneck;
-	}
-
-	SinglyLinkedList::LinkedList<unsigned int> ret;
-ret.pushBackNode(start);
-
-for (unsigned int i = 0; i < g.size; i++) {
-	if (i == start || i == end) {
-		continue;
-	}
-
-	if (isPath(&g, i)) {
-		ret.pushBackNode(i);
-	}
-}
-
-return ret;
 }
 
 template<class T>
@@ -390,7 +332,7 @@ unsigned int scalingMaxFlow(const Graph::WeightedDirectedGraph<T> & graph, unsig
 template<class T>
 unsigned int preflowPush(const Graph::WeightedDirectedGraph<T> & graph, unsigned int start, unsigned int end) {
 
-	Graph::PreflowPush<T> g(graph, start, end);
+	Graph::Preflow<T> g(graph, start, end);
 
 	//vector holding which nodes have excess flow, {node, excess}
 	std::vector<std::pair<unsigned int, unsigned int>> excess;
@@ -517,4 +459,68 @@ unsigned int preflowPush(const Graph::WeightedDirectedGraph<T> & graph, unsigned
 	}
 
 	return flow;
+}
+
+/*MINIMUM CUT*/
+
+template<class T>
+SinglyLinkedList::LinkedList<unsigned int> fordFulkersonMinCut(const Graph::WeightedDirectedGraph<T> & graph, unsigned int start, unsigned int end) {
+	Graph::ResidualGraph<T> g(graph, start, end);
+
+	int curFlow = 0;
+
+	for (;;) {
+		std::shared_ptr<SinglyLinkedList::LinkedList<unsigned int>> augPath(findAugmentingPath(&g));
+
+		//if there are no more paths then break
+		if (!augPath)
+			break;
+
+		//find the bottleneck
+		int bottleneck = getBottleneck(&g, augPath);
+
+		//if the flow cannot be changed at all then break
+		if (!bottleneck) {
+			break;
+		}
+
+		//follow along the path and add that flow to every node in the graph
+		SinglyLinkedList::Node<unsigned int> * head = augPath->head;
+
+		//safe from segfaults because if head is a nullptr it would end at the if !augPath
+		for (;;) {
+			//check if its a fowrards node or a backwards node
+			if (g.hasEdge(head->obj, head->next->obj)) {
+				g.addFlow(head->obj, head->next->obj, -bottleneck);
+			}
+			else {
+				g.addFlow(head->next->obj, head->obj, bottleneck);
+			}
+
+			head = head->next;
+			//make sure that the flow gets added into the starting node
+			if (!head->next->next) {
+				g.addFlow(g.start, head->obj, bottleneck);
+				break;
+			}
+
+		}
+
+		curFlow += bottleneck;
+	}
+
+	SinglyLinkedList::LinkedList<unsigned int> ret;
+	ret.pushBackNode(start);
+
+	for (unsigned int i = 0; i < g.size; i++) {
+		if (i == start || i == end) {
+			continue;
+		}
+
+		if (isPath(&g, i)) {
+			ret.pushBackNode(i);
+		}
+	}
+
+	return ret;
 }

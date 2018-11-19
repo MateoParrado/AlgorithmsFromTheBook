@@ -31,6 +31,8 @@
 //TODO
 //write move constructor for linked list
 //edmonds karp algorithm
+//size of maximum bipartite matching
+//maximum bipartite matching
 ///optimizaitons in segmented linear regression (266/284), calculate errors in constant time
 //implement tests for A*, kmeans, kruskal cluster, knapsack packer, FFT
 

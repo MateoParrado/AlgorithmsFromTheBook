@@ -730,6 +730,47 @@ namespace Graph {
 			}
 		}
 
+		//construct a network flow from a bipartite graph, such that each edge in the graph g points from partition A to B (that is, make them all directed the same way)
+		//and add an s node that connects to the nodes in the first partition, and a t node that is led to by all nodes in the second partition
+		//MUST BE A BIPARTITE GRAPH, OR THIS WILL NOT WORK
+		ResidualGraph(const Graph& g, unsigned int nodesInX) : start(g.size - 2), end(g.size - 1){
+			nodes.reserve(g.size);
+			edges.reserve(g.size);
+			flows.reserve(g.size);
+
+			//only do this for the ones in the 
+			for (unsigned int i = 0; i < nodesInX; i++) {
+				this->addNode(g.nodes[i].obj);
+
+				for (unsigned int j = 0; j < const_cast<Graph&>(g).edges[i]->size(); j++) {
+					(*flows[i]).push_back(0);
+
+					(*edges[i]).push_back((*const_cast<Graph&>(g).edges[i])[j]);
+
+					//add a weight of one to an edge
+					(*edges[i]).push_back(1);
+				}
+			}
+
+			//start node, value doesnt matter
+			this->addNode(nodes[0].obj);
+
+			for (unsigned int i = 0; i < nodexInX; i++) {
+				//connect it to all nodes in first partition
+				(edges.end() - 1)->push_back(i);
+				(edges.end() - 1).push_back(1);
+			}
+
+			//sink node
+			this->addNode(nodes[0].obj);
+
+			for (unsigned int i = nodexInX; i < g.nodes.size; i++) {
+				//connect all nodes to it
+				edges[i]->push_back(nodes.size - 1);
+				edges[i].push_back(1);
+			}
+		}
+
 		//make sure it doesnt use its parent constructor
 		ResidualGraph(unsigned int size = 10) = delete;
 
@@ -808,12 +849,12 @@ namespace Graph {
 	};
 
 	template<class T>
-	struct PreflowPush : ResidualGraph<T> {
+	struct Preflow : ResidualGraph<T> {
 
 		std::vector<unsigned int> labels;
 
 		//construct if from a weighted directed graph
-		PreflowPush(const WeightedDirectedGraph& g, unsigned int start, unsigned int end) : ResidualGraph(g, start, end) {
+		Preflow(const WeightedDirectedGraph& g, unsigned int start, unsigned int end) : ResidualGraph(g, start, end) {
 			labels.resize(g.size);
 			labels[start] = g.size;
 
@@ -845,7 +886,7 @@ namespace Graph {
 		}
 
 		//make sure you cant construct it from scratch
-		PreflowPush(unsigned int i = 10) = delete;
+		Preflow(unsigned int i = 10) = delete;
 
 		//make sure you can;t accidentally add flow using the residual graph method
 		virtual void addFlow(unsigned int m, unsigned int n, unsigned int flow) = delete;
