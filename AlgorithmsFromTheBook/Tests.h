@@ -694,6 +694,27 @@ void bipartiteMatchingTester() {
 	assert(!bipartiteHasPerfectMatching(g, 4));
 }
 
+void disjointPathsTester() {
+	Graph::DirectedGraph<char> g(7);
+
+	for (int i = 0; i < 7; i++) {
+		g.addNode(i);
+	}
+
+	g.addEdge(0, 1);
+	g.addEdge(0, 2);
+	g.addEdge(0, 3);
+	g.addEdge(1, 4);
+	g.addEdge(1, 5);
+	g.addEdge(2, 5);
+	g.addEdge(3, 2);
+	g.addEdge(3, 6);
+	g.addEdge(4, 6);
+	g.addEdge(5, 6);
+	g.addEdge(5, 3);
+
+	assert(disjointPaths(g, 0, 6) == 3);
+}
 /*RNA*/
 
 void rnaStructureTester() {
@@ -952,6 +973,7 @@ void runAllTests() {
 	edmondsTester();
 	getPrimesTester();
 	bipartiteMatchingTester();
+	disjointPathsTester();
 }
 
 #pragma deprecated (testDeriv, testInt, testingOnlyCostFunc)

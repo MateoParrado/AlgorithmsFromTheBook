@@ -542,14 +542,6 @@ unsigned int maximumBipartiteMatchingNum(const Graph::Graph<T> & graph, unsigned
 		if (!augPath)
 			return curFlow;
 
-		//find the bottleneck
-		int bottleneck = getBottleneck(&g, augPath);
-
-		//if the flow cannot be changed at all then return, could also include a tracker to make sure every path includes at least one forwards node but this is better
-		if (!bottleneck) {
-			return curFlow;
-		}
-
 		//follow along the path and add that flow to every node in the graph
 		SinglyLinkedList::Node<unsigned int> * head = augPath->head;
 
@@ -557,22 +549,22 @@ unsigned int maximumBipartiteMatchingNum(const Graph::Graph<T> & graph, unsigned
 		for (;;) {
 			//check if its a fowrards node or a backwards node
 			if (g.hasEdge(head->obj, head->next->obj)) {
-				g.addFlow(head->obj, head->next->obj, -bottleneck);
+				g.addFlow(head->obj, head->next->obj, -1);
 			}
 			else {
-				g.addFlow(head->next->obj, head->obj, bottleneck);
+				g.addFlow(head->next->obj, head->obj, 1);
 			}
 
 			head = head->next;
 			//make sure that the flow gets added into the starting node
 			if (!head->next->next) {
-				g.addFlow(g.start, head->obj, bottleneck);
+				g.addFlow(g.start, head->obj, 1);
 				break;
 			}
 
 		}
 
-		curFlow += bottleneck;
+		curFlow++;
 	}
 }
 
@@ -589,14 +581,6 @@ std::unique_ptr<std::vector<std::pair<unsigned int, unsigned int>>> maximumBipar
 		if (!augPath)
 			goto done;
 
-		//find the bottleneck
-		int bottleneck = getBottleneck(&g, augPath);
-
-		//if the flow cannot be changed at all then return, could also include a tracker to make sure every path includes at least one forwards node but this is better
-		if (!bottleneck) {
-			goto done;
-		}
-
 		//follow along the path and add that flow to every node in the graph
 		SinglyLinkedList::Node<unsigned int> * head = augPath->head;
 
@@ -604,16 +588,16 @@ std::unique_ptr<std::vector<std::pair<unsigned int, unsigned int>>> maximumBipar
 		for (;;) {
 			//check if its a fowrards node or a backwards node
 			if (g.hasEdge(head->obj, head->next->obj)) {
-				g.addFlow(head->obj, head->next->obj, -bottleneck);
+				g.addFlow(head->obj, head->next->obj, -1);
 			}
 			else {
-				g.addFlow(head->next->obj, head->obj, bottleneck);
+				g.addFlow(head->next->obj, head->obj, 1);
 			}
 
 			head = head->next;
 			//make sure that the flow gets added into the starting node
 			if (!head->next->next) {
-				g.addFlow(g.start, head->obj, bottleneck);
+				g.addFlow(g.start, head->obj, 1);
 				break;
 			}
 
@@ -655,14 +639,6 @@ bool bipartiteHasPerfectMatching(const Graph::Graph<T> & graph, unsigned int num
 		if (!augPath)
 			goto done;
 
-		//find the bottleneck
-		int bottleneck = getBottleneck(&g, augPath);
-
-		//if the flow cannot be changed at all then return, could also include a tracker to make sure every path includes at least one forwards node but this is better
-		if (!bottleneck) {
-			goto done;
-		}
-
 		//follow along the path and add that flow to every node in the graph
 		SinglyLinkedList::Node<unsigned int> * head = augPath->head;
 
@@ -670,16 +646,16 @@ bool bipartiteHasPerfectMatching(const Graph::Graph<T> & graph, unsigned int num
 		for (;;) {
 			//check if its a fowrards node or a backwards node
 			if (g.hasEdge(head->obj, head->next->obj)) {
-				g.addFlow(head->obj, head->next->obj, -bottleneck);
+				g.addFlow(head->obj, head->next->obj, -1);
 			}
 			else {
-				g.addFlow(head->next->obj, head->obj, bottleneck);
+				g.addFlow(head->next->obj, head->obj, 1);
 			}
 
 			head = head->next;
 			//make sure that the flow gets added into the starting node
 			if (!head->next->next) {
-				g.addFlow(g.start, head->obj, bottleneck);
+				g.addFlow(g.start, head->obj, 1);
 				break;
 			}
 
@@ -697,4 +673,46 @@ done:
 	}
 
 	return true;
+}
+
+/*DISJOINT PATHS PROBLEM*/
+
+template<class T>
+//find the maximum numebr of edge disjoint paths in a directed graph from a start node to an end node
+unsigned int disjointPaths(const Graph::DirectedGraph<T> & graph, unsigned int start, unsigned int end) {
+	Graph::ResidualGraph<T> g(graph, start, end);
+
+	int curFlow = 0;
+
+	for (;;) {
+		std::shared_ptr<SinglyLinkedList::LinkedList<unsigned int>> augPath(findAugmentingPath(&g));
+
+		//if there are no more paths then end
+		if (!augPath)
+			return curFlow;
+
+		//follow along the path and add that flow to every node in the graph
+		SinglyLinkedList::Node<unsigned int> * head = augPath->head;
+
+		//safe from segfaults because if head is a nullptr it would end at the if !augPath
+		for (;;) {
+			//check if its a fowrards node or a backwards node
+			if (g.hasEdge(head->obj, head->next->obj)) {
+				g.addFlow(head->obj, head->next->obj, -1);
+			}
+			else {
+				g.addFlow(head->next->obj, head->obj, 1);
+			}
+
+			head = head->next;
+			//make sure that the flow gets added into the starting node
+			if (!head->next->next) {
+				g.addFlow(g.start, head->obj, 1);
+				break;
+			}
+
+		}
+
+		curFlow++;
+	}
 }

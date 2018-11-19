@@ -705,7 +705,7 @@ namespace Graph {
 			(*(flows.end() - 1))->reserve(10);
 		}
 
-		//construct it from a weighted directed graph (only way to construct it)
+		//construct it from a weighted directed graph
 		ResidualGraph(const WeightedDirectedGraph& g, unsigned int start, unsigned int end) : start(start), end(end){
 			nodes.reserve(g.size);
 			edges.reserve(g.size);
@@ -726,6 +726,31 @@ namespace Graph {
 				for (unsigned int j = 0; j < const_cast<WeightedDirectedGraph&>(g).parents[i]->size(); j++) {
 
 					(*parents[i]).push_back((*const_cast<WeightedDirectedGraph&>(g).parents[i])[j]);
+				}
+			}
+		}
+
+		//construct it from a directed graph
+		ResidualGraph(const DirectedGraph& g, unsigned int start, unsigned int end) : start(start), end(end) {
+			nodes.reserve(g.size);
+			edges.reserve(g.size);
+			flows.reserve(g.size);
+
+			for (unsigned int i = 0; i < g.nodes.size(); i++) {
+				this->addNode(g.nodes[i].obj);
+
+				for (unsigned int j = 0; j < const_cast<DirectedGraph&>(g).edges[i]->size(); j++) {
+					(*flows[i]).push_back(0);
+
+					(*edges[i]).push_back((*const_cast<DirectedGraph&>(g).edges[i])[j]);
+
+					//all edges should have capacity one
+					(*edges[i]).push_back(1);
+				}
+
+				for (unsigned int j = 0; j < const_cast<DirectedGraph&>(g).parents[i]->size(); j++) {
+
+					(*parents[i]).push_back((*const_cast<DirectedGraph&>(g).parents[i])[j]);
 				}
 			}
 		}
