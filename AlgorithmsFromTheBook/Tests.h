@@ -672,6 +672,17 @@ void bipartiteMatchingTester() {
 	g.addEdge(4, 9);
 
 	assert(maximumBipartiteMatchingNum(g, 5) == 4);
+
+	auto p = maximumBipartiteMatching(g, 5);
+
+	assert(p->size() == 4);
+	
+	//this is one of many valid matchings
+	//just happens to be the one the program picks out
+	assert((*p)[0].first == 0 && (*p)[0].second == 5);
+	assert((*p)[1].first == 1 && (*p)[1].second == 6);
+	assert((*p)[2].first == 2 && (*p)[2].second == 8);
+	assert((*p)[3].first == 4 && (*p)[3].second == 9);
 }
 
 /*RNA*/

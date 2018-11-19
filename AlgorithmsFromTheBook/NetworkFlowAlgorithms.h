@@ -525,6 +525,8 @@ SinglyLinkedList::LinkedList<unsigned int> fordFulkersonMinCut(const Graph::Weig
 	return ret;
 }
 
+/*BIPARTITE MATCHING*/
+
 template<class T>
 //returns the number of pairs in the maximum matching of a bupartite graph
 //note: graph MUST BE BIPARTITE
@@ -572,4 +574,69 @@ unsigned int maximumBipartiteMatchingNum(const Graph::Graph<T> & graph, unsigned
 
 		curFlow += bottleneck;
 	}
+}
+
+template<class T>
+//returns the number of pairs in the maximum matching of a bupartite graph
+//note: graph MUST BE BIPARTITE
+std::unique_ptr<std::vector<std::pair<unsigned int, unsigned int>>> maximumBipartiteMatching(const Graph::Graph<T> & graph, unsigned int numInX) {
+	Graph::ResidualGraph<T> g(graph, numInX);
+
+	int curFlow = 0;
+
+	for (;;) {
+		std::shared_ptr<SinglyLinkedList::LinkedList<unsigned int>> augPath(findAugmentingPath(&g));
+
+		//if there are no more paths then end
+		if (!augPath)
+			goto done;
+
+		//find the bottleneck
+		int bottleneck = getBottleneck(&g, augPath);
+
+		//if the flow cannot be changed at all then return, could also include a tracker to make sure every path includes at least one forwards node but this is better
+		if (!bottleneck) {
+			goto done;
+		}
+
+		//follow along the path and add that flow to every node in the graph
+		SinglyLinkedList::Node<unsigned int> * head = augPath->head;
+
+		//safe from segfaults because if head is a nullptr it would end at the if !augPath
+		for (;;) {
+			//check if its a fowrards node or a backwards node
+			if (g.hasEdge(head->obj, head->next->obj)) {
+				g.addFlow(head->obj, head->next->obj, -bottleneck);
+			}
+			else {
+				g.addFlow(head->next->obj, head->obj, bottleneck);
+			}
+
+			head = head->next;
+			//make sure that the flow gets added into the starting node
+			if (!head->next->next) {
+				g.addFlow(g.start, head->obj, bottleneck);
+				break;
+			}
+
+		}
+
+		curFlow += bottleneck;
+	}
+
+done:
+	std::unique_ptr<std::vector<std::pair<unsigned int, unsigned int>>> retVec(new std::vector<std::pair<unsigned int, unsigned int>>());
+	retVec->reserve(g.size - 2);
+
+	for (unsigned int i = 0; i < numInX; i++) {
+
+		for (unsigned int j = 0; j < g.getChildNum(i); j++) {
+			if (g.getFlow(i, j)) {
+				retVec->push_back(std::make_pair(i, g.getChild(i, j)));
+				break;
+			}
+		}
+	}
+
+	return retVec;
 }
