@@ -733,12 +733,12 @@ namespace Graph {
 		//construct a network flow from a bipartite graph, such that each edge in the graph g points from partition A to B (that is, make them all directed the same way)
 		//and add an s node that connects to the nodes in the first partition, and a t node that is led to by all nodes in the second partition
 		//MUST BE A BIPARTITE GRAPH, OR THIS WILL NOT WORK
-		ResidualGraph(const Graph& g, unsigned int nodesInX) : start(g.size - 2), end(g.size - 1){
+		ResidualGraph(const Graph& g, unsigned int nodesInX) : start(g.size), end(g.size + 1){
 			nodes.reserve(g.size);
 			edges.reserve(g.size);
 			flows.reserve(g.size);
 
-			//only do this for the ones in the 
+			//only do this for the ones in the first partition
 			for (unsigned int i = 0; i < nodesInX; i++) {
 				this->addNode(g.nodes[i].obj);
 
@@ -752,22 +752,31 @@ namespace Graph {
 				}
 			}
 
+			//for the others, just add them without edges
+			for (unsigned int i = nodesInX; i < g.nodes.size(); i++) {
+				this->addNode(g.nodes[i].obj);
+			}
+
 			//start node, value doesnt matter
 			this->addNode(nodes[0].obj);
 
-			for (unsigned int i = 0; i < nodexInX; i++) {
+			for (unsigned int i = 0; i < nodesInX; i++) {
 				//connect it to all nodes in first partition
-				(edges.end() - 1)->push_back(i);
-				(edges.end() - 1).push_back(1);
+				(*(edges.end() - 1))->push_back(i);
+				(*(edges.end() - 1))->push_back(1);
+
+				(*(flows.end() - 1))->push_back(0);
 			}
 
 			//sink node
 			this->addNode(nodes[0].obj);
 
-			for (unsigned int i = nodexInX; i < g.nodes.size; i++) {
+			for (unsigned int i = nodesInX; i < g.nodes.size(); i++) {
 				//connect all nodes to it
-				edges[i]->push_back(nodes.size - 1);
-				edges[i].push_back(1);
+				edges[i]->push_back(nodes.size() - 1);
+				edges[i]->push_back(1);
+
+				flows[i]->push_back(0);
 			}
 		}
 

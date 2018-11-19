@@ -653,6 +653,27 @@ void minCutTester() {
 	assert(e.tail->obj == 2);
 }
 
+void bipartiteMatchingTester() {
+	Graph::Graph<char> g;
+
+	for (int i = 0; i < 10; i++) {
+		g.addNode(i);
+	}
+
+	g.addEdge(0, 5);
+	g.addEdge(0, 7);
+	g.addEdge(1, 5);
+	g.addEdge(1, 6);
+	g.addEdge(1, 7);
+	g.addEdge(1, 8);
+	g.addEdge(2, 8);
+	g.addEdge(3, 8);
+	g.addEdge(4, 8);
+	g.addEdge(4, 9);
+
+	assert(maximumBipartiteMatchingNum(g, 5) == 4);
+}
+
 /*RNA*/
 
 void rnaStructureTester() {
@@ -910,6 +931,7 @@ void runAllTests() {
 	isEvenTester();
 	edmondsTester();
 	getPrimesTester();
+	bipartiteMatchingTester();
 }
 
 #pragma deprecated (testDeriv, testInt, testingOnlyCostFunc)
