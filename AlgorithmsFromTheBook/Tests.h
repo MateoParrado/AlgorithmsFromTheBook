@@ -683,6 +683,15 @@ void bipartiteMatchingTester() {
 	assert((*p)[1].first == 1 && (*p)[1].second == 6);
 	assert((*p)[2].first == 2 && (*p)[2].second == 8);
 	assert((*p)[3].first == 4 && (*p)[3].second == 9);
+
+	assert(!bipartiteHasPerfectMatching(g, 5));
+
+	g.addEdge(3, 7);
+
+	assert(bipartiteHasPerfectMatching(g, 5));
+
+	//make sure that if its partitioned wrong it has no matching
+	assert(!bipartiteHasPerfectMatching(g, 4));
 }
 
 /*RNA*/

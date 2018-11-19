@@ -582,8 +582,6 @@ template<class T>
 std::unique_ptr<std::vector<std::pair<unsigned int, unsigned int>>> maximumBipartiteMatching(const Graph::Graph<T> & graph, unsigned int numInX) {
 	Graph::ResidualGraph<T> g(graph, numInX);
 
-	int curFlow = 0;
-
 	for (;;) {
 		std::shared_ptr<SinglyLinkedList::LinkedList<unsigned int>> augPath(findAugmentingPath(&g));
 
@@ -621,7 +619,6 @@ std::unique_ptr<std::vector<std::pair<unsigned int, unsigned int>>> maximumBipar
 
 		}
 
-		curFlow += bottleneck;
 	}
 
 done:
@@ -639,4 +636,65 @@ done:
 	}
 
 	return retVec;
+}
+
+template<class T>
+//returns true if the BIPARTITE graph has a perfect matching
+bool bipartiteHasPerfectMatching(const Graph::Graph<T> & graph, unsigned int numInX) {
+	Graph::ResidualGraph<T> g(graph, numInX);
+
+	//for a perfect matching, both sides must be the same size
+	if (numInX != graph.size / 2) {
+		return false;
+	}
+
+	for (;;) {
+		std::shared_ptr<SinglyLinkedList::LinkedList<unsigned int>> augPath(findAugmentingPath(&g));
+
+		//if there are no more paths then end
+		if (!augPath)
+			goto done;
+
+		//find the bottleneck
+		int bottleneck = getBottleneck(&g, augPath);
+
+		//if the flow cannot be changed at all then return, could also include a tracker to make sure every path includes at least one forwards node but this is better
+		if (!bottleneck) {
+			goto done;
+		}
+
+		//follow along the path and add that flow to every node in the graph
+		SinglyLinkedList::Node<unsigned int> * head = augPath->head;
+
+		//safe from segfaults because if head is a nullptr it would end at the if !augPath
+		for (;;) {
+			//check if its a fowrards node or a backwards node
+			if (g.hasEdge(head->obj, head->next->obj)) {
+				g.addFlow(head->obj, head->next->obj, -bottleneck);
+			}
+			else {
+				g.addFlow(head->next->obj, head->obj, bottleneck);
+			}
+
+			head = head->next;
+			//make sure that the flow gets added into the starting node
+			if (!head->next->next) {
+				g.addFlow(g.start, head->obj, bottleneck);
+				break;
+			}
+
+		}
+	}
+
+done:
+
+	for (unsigned int i = 0; i < numInX; i++) {
+
+		//if start does not lead to any of the edges, it is not a perfect matching
+		if (!g.getFlow(g.start, i)) {
+			return false;
+		}
+	}
+
+	return true;
 }
