@@ -815,10 +815,10 @@ namespace Graph {
 			for (unsigned int i = 0; i < g.firstPartitionSize; i++) {
 				this->addNode(g.nodes[i].obj);
 
-				for (unsigned int j = 0; j < const_cast<BipartiteGraph&>(g).edges[i]->size(); j++) {
+				for (unsigned int j = 0; j < const_cast<BipartiteGraph<T>&>(g).edges[i]->size(); j++) {
 					(*flows[i]).push_back(0);
 
-					(*edges[i]).push_back((*const_cast<BipartiteGraph&>(g).edges[i])[j]);
+					(*edges[i]).push_back((*const_cast<BipartiteGraph<T>&>(g).edges[i])[j]);
 
 					//add a weight of one to an edge
 					(*edges[i]).push_back(1);
