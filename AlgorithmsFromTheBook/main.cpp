@@ -31,7 +31,7 @@
 //TODO
 //write move constructor for linked list
 //edmonds karp algorithm
-//bipartite graph datastructure
+//figure out whats going on with the template thing in the residual graph from bipartite graph constructor, and get rid of it for speed
 ///optimizaitons in segmented linear regression (266/284), calculate errors in constant time
 //implement tests for A*, kmeans, kruskal cluster, knapsack packer, FFT
 

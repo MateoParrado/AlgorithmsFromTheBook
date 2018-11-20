@@ -528,10 +528,9 @@ SinglyLinkedList::LinkedList<unsigned int> fordFulkersonMinCut(const Graph::Weig
 /*BIPARTITE MATCHING*/
 
 template<class T>
-//returns the number of pairs in the maximum matching of a bupartite graph
-//note: graph MUST BE BIPARTITE
-unsigned int maximumBipartiteMatchingNum(const Graph::Graph<T> & graph, unsigned int numInX) {
-	Graph::ResidualGraph<T> g(graph, numInX);
+//returns the number of pairs in the maximum matching of a bipartite graph
+unsigned int maximumBipartiteMatchingNum(const Graph::BipartiteGraph<T> & graph) {
+	Graph::ResidualGraph<T> g(graph);
 
 	int curFlow = 0;
 
@@ -571,8 +570,8 @@ unsigned int maximumBipartiteMatchingNum(const Graph::Graph<T> & graph, unsigned
 template<class T>
 //returns the number of pairs in the maximum matching of a bupartite graph
 //note: graph MUST BE BIPARTITE
-std::unique_ptr<std::vector<std::pair<unsigned int, unsigned int>>> maximumBipartiteMatching(const Graph::Graph<T> & graph, unsigned int numInX) {
-	Graph::ResidualGraph<T> g(graph, numInX);
+std::unique_ptr<std::vector<std::pair<unsigned int, unsigned int>>> maximumBipartiteMatching(const Graph::BipartiteGraph<T> & graph) {
+	Graph::ResidualGraph<T> g(graph);
 
 	for (;;) {
 		std::shared_ptr<SinglyLinkedList::LinkedList<unsigned int>> augPath(findAugmentingPath(&g));
@@ -609,7 +608,7 @@ done:
 	std::unique_ptr<std::vector<std::pair<unsigned int, unsigned int>>> retVec(new std::vector<std::pair<unsigned int, unsigned int>>());
 	retVec->reserve(g.size - 2);
 
-	for (unsigned int i = 0; i < numInX; i++) {
+	for (unsigned int i = 0; i < graph.firstPartitionSize; i++) {
 
 		for (unsigned int j = 0; j < g.getChildNum(i); j++) {
 			if (g.getFlow(i, j)) {
@@ -624,11 +623,11 @@ done:
 
 template<class T>
 //returns true if the BIPARTITE graph has a perfect matching
-bool bipartiteHasPerfectMatching(const Graph::Graph<T> & graph, unsigned int numInX) {
-	Graph::ResidualGraph<T> g(graph, numInX);
+bool bipartiteHasPerfectMatching(const Graph::BipartiteGraph<T> & graph) {
+	Graph::ResidualGraph<T> g(graph);
 
 	//for a perfect matching, both sides must be the same size
-	if (numInX != graph.size / 2) {
+	if (graph.firstPartitionSize != graph.size / 2) {
 		return false;
 	}
 
@@ -664,7 +663,7 @@ bool bipartiteHasPerfectMatching(const Graph::Graph<T> & graph, unsigned int num
 
 done:
 
-	for (unsigned int i = 0; i < numInX; i++) {
+	for (unsigned int i = 0; i < graph.firstPartitionSize; i++) {
 
 		//if start does not lead to any of the edges, it is not a perfect matching
 		if (!g.getFlow(g.start, i)) {
@@ -720,7 +719,7 @@ unsigned int disjointPaths(const Graph::DirectedGraph<T> & graph, unsigned int s
 template<class T>
 //find the maximum numebr of edge disjoint paths in an undirected graph from a start node to an end node
 unsigned int disjointPaths(const Graph::Graph<T> & graph, unsigned int start, unsigned int end) {
-	Graph::ResidualGraph<T> g(graph, start, end, false);
+	Graph::ResidualGraph<T> g(graph, start, end);
 
 	int curFlow = 0;
 

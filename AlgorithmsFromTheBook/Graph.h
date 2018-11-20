@@ -207,6 +207,24 @@ namespace Graph {
 	};
 
 	template<class T>
+	struct BipartiteGraph : Graph<T> {
+		unsigned int firstPartitionSize;
+
+		BipartiteGraph(unsigned int nodesInFirstPartition, unsigned int size = 10) : Graph(size), firstPartitionSize(nodesInFirstPartition) {   }
+
+		//you can only add edges between two edges that are in different partitions
+		virtual void addEdge(unsigned int index1, unsigned int index2) {
+			if ((index1 < firstPartitionSize && index2 >= firstPartitionSize) || (index1 >= firstPartitionSize && index2 < firstPartitionSize)) {
+				edges[index1]->push_back(index2);
+				edges[index2]->push_back(index1);
+			}
+			else {
+				throw;
+			}
+		}
+	};
+
+	template<class T>
 	struct WeightedGraph : virtual public Graph<T>{
 	public:
 		WeightedGraph(unsigned int size = 10) : Graph(size) {  }
@@ -757,8 +775,7 @@ namespace Graph {
 
 
 		//construct a residual graph from a directed graph where every edge is represented by two edges, one pointing each way
-		//waste of space is just to distinguish this from the bipartite graph constructor
-		ResidualGraph(const Graph& g, unsigned int start, unsigned int end, bool wasteOfSpace) : start(start), end(end) {
+		ResidualGraph(const Graph& g, unsigned int start, unsigned int end) : start(start), end(end) {
 			nodes.reserve(g.size);
 			edges.reserve(g.size);
 			flows.reserve(g.size);
@@ -789,20 +806,19 @@ namespace Graph {
 
 		//construct a network flow from a bipartite graph, such that each edge in the graph g points from partition A to B (that is, make them all directed the same way)
 		//and add an s node that connects to the nodes in the first partition, and a t node that is led to by all nodes in the second partition
-		//MUST BE A BIPARTITE GRAPH, OR THIS WILL NOT WORK
-		ResidualGraph(const Graph& g, unsigned int nodesInX) : start(g.size), end(g.size + 1){
+		ResidualGraph(const BipartiteGraph<T>& g) : start(g.size), end(g.size + 1){
 			nodes.reserve(g.size);
 			edges.reserve(g.size);
 			flows.reserve(g.size);
 
 			//only do this for the ones in the first partition
-			for (unsigned int i = 0; i < nodesInX; i++) {
+			for (unsigned int i = 0; i < g.firstPartitionSize; i++) {
 				this->addNode(g.nodes[i].obj);
 
-				for (unsigned int j = 0; j < const_cast<Graph&>(g).edges[i]->size(); j++) {
+				for (unsigned int j = 0; j < const_cast<BipartiteGraph&>(g).edges[i]->size(); j++) {
 					(*flows[i]).push_back(0);
 
-					(*edges[i]).push_back((*const_cast<Graph&>(g).edges[i])[j]);
+					(*edges[i]).push_back((*const_cast<BipartiteGraph&>(g).edges[i])[j]);
 
 					//add a weight of one to an edge
 					(*edges[i]).push_back(1);
@@ -810,14 +826,14 @@ namespace Graph {
 			}
 
 			//for the others, just add them without edges
-			for (unsigned int i = nodesInX; i < g.nodes.size(); i++) {
+			for (unsigned int i = g.firstPartitionSize; i < g.nodes.size(); i++) {
 				this->addNode(g.nodes[i].obj);
 			}
 
 			//start node, value doesnt matter
 			this->addNode(nodes[0].obj);
 
-			for (unsigned int i = 0; i < nodesInX; i++) {
+			for (unsigned int i = 0; i < g.firstPartitionSize; i++) {
 				//connect it to all nodes in first partition
 				(*(edges.end() - 1))->push_back(i);
 				(*(edges.end() - 1))->push_back(1);
@@ -828,7 +844,7 @@ namespace Graph {
 			//sink node
 			this->addNode(nodes[0].obj);
 
-			for (unsigned int i = nodesInX; i < g.nodes.size(); i++) {
+			for (unsigned int i = g.firstPartitionSize; i < g.nodes.size(); i++) {
 				//connect all nodes to it
 				edges[i]->push_back(nodes.size() - 1);
 				edges[i]->push_back(1);
