@@ -755,6 +755,38 @@ namespace Graph {
 			}
 		}
 
+
+		//construct a residual graph from a directed graph where every edge is represented by two edges, one pointing each way
+		//waste of space is just to distinguish this from the bipartite graph constructor
+		ResidualGraph(const Graph& g, unsigned int start, unsigned int end, bool wasteOfSpace) : start(start), end(end) {
+			nodes.reserve(g.size);
+			edges.reserve(g.size);
+			flows.reserve(g.size);
+			
+			//add the nodes before the second step to prevent access violations
+			for (unsigned int i = 0; i < g.nodes.size(); i++) {
+				this->addNode(g.nodes[i].obj);
+			}
+			
+			for (unsigned int i = 0; i < g.nodes.size(); i++) {
+
+				for (unsigned int j = 0; j < const_cast<Graph&>(g).edges[i]->size(); j++) {
+					(*flows[i]).push_back(0);
+
+					(*edges[i]).push_back((*const_cast<Graph&>(g).edges[i])[j]);
+
+					//all edges should have capacity one
+					(*edges[i]).push_back(1);
+
+					//start has no parents
+					if (!(*const_cast<Graph&>(g).edges[i])[j] == start) {
+						//add the node as a parent of the other
+						(*parents[(*const_cast<Graph&>(g).edges[i])[j]]).push_back(i);
+					}
+				}
+			}
+		}
+
 		//construct a network flow from a bipartite graph, such that each edge in the graph g points from partition A to B (that is, make them all directed the same way)
 		//and add an s node that connects to the nodes in the first partition, and a t node that is led to by all nodes in the second partition
 		//MUST BE A BIPARTITE GRAPH, OR THIS WILL NOT WORK

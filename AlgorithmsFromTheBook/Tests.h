@@ -714,6 +714,26 @@ void disjointPathsTester() {
 	g.addEdge(5, 3);
 
 	assert(disjointPaths(g, 0, 6) == 3);
+
+	Graph::Graph<char> k(7);
+
+	for (int i = 0; i < 7; i++) {
+		k.addNode(i);
+	}
+
+	k.addEdge(0, 1);
+	k.addEdge(0, 2);
+	k.addEdge(0, 3);
+	k.addEdge(1, 4);
+	k.addEdge(1, 5);
+	k.addEdge(2, 5);
+	k.addEdge(3, 2);
+	k.addEdge(3, 6);
+	k.addEdge(4, 6);
+	k.addEdge(5, 6);
+	k.addEdge(5, 3);
+
+	assert(disjointPaths(k, 0, 6) == 3);
 }
 /*RNA*/
 

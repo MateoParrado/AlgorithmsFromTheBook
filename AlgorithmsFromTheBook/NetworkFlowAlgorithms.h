@@ -716,3 +716,43 @@ unsigned int disjointPaths(const Graph::DirectedGraph<T> & graph, unsigned int s
 		curFlow++;
 	}
 }
+
+template<class T>
+//find the maximum numebr of edge disjoint paths in an undirected graph from a start node to an end node
+unsigned int disjointPaths(const Graph::Graph<T> & graph, unsigned int start, unsigned int end) {
+	Graph::ResidualGraph<T> g(graph, start, end, false);
+
+	int curFlow = 0;
+
+	for (;;) {
+		std::shared_ptr<SinglyLinkedList::LinkedList<unsigned int>> augPath(findAugmentingPath(&g));
+
+		//if there are no more paths then end
+		if (!augPath)
+			return curFlow;
+
+		//follow along the path and add that flow to every node in the graph
+		SinglyLinkedList::Node<unsigned int> * head = augPath->head;
+
+		//safe from segfaults because if head is a nullptr it would end at the if !augPath
+		for (;;) {
+			//check if its a fowrards node or a backwards node
+			if (g.hasEdge(head->obj, head->next->obj)) {
+				g.addFlow(head->obj, head->next->obj, -1);
+			}
+			else {
+				g.addFlow(head->next->obj, head->obj, 1);
+			}
+
+			head = head->next;
+			//make sure that the flow gets added into the starting node
+			if (!head->next->next) {
+				g.addFlow(g.start, head->obj, 1);
+				break;
+			}
+
+		}
+
+		curFlow++;
+	}
+}
