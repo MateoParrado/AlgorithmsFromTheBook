@@ -723,6 +723,49 @@ namespace Graph {
 			(*(flows.end() - 1))->reserve(10);
 		}
 
+		virtual void removeNode(unsigned int num) {
+			delete edges[num];
+
+			edges.erase(begin(edges) + num);
+			nodes.erase(begin(nodes) + num);
+
+			//remove all links to it in its dependencies, as well as reduce the number of each one by one (beacuse it now has one less node)
+			for (unsigned int i = 0; i < edges.size(); i++) {
+				for (unsigned int j = edges[i]->size() - 2; j < edges[i]->size(); j -= 2) {
+					if ((*edges[i])[j] == num) {
+						edges[i]->erase(begin(*edges[i]) + j, begin(*edges[i]) + j + 2);//delete edge num and weight
+						flows[i]->erase(begin(*flows[i]) + j / 2, begin(*flows[i]) + j / 2 + 1);
+					}
+					else if ((*edges[i])[j] > num) {
+						(*edges[i])[j]--;
+					}
+				}
+			}
+
+			size--;
+
+			delete parents[num];
+
+			parents.erase(begin(parents) + num);
+
+			delete flows[num];
+
+			flows.erase(begin(flows) + num);
+
+			//remove all links to it in its dependencies, as well as reduce the number of each one by one (beacuse it now has one less node)
+			for (unsigned int i = 0; i < parents.size(); i++) {
+				for (unsigned int j = parents[i]->size() - 2; j < parents[i]->size(); j -= 2) {
+					if ((*parents[i])[j] == num) {
+						parents[i]->erase(begin(*parents[i]) + j, begin(*parents[i]) + j + 2);
+					}
+					else if ((*parents[i])[j] > num) {
+						(*parents[i])[j]--;
+					}
+				}
+			}
+
+		}
+
 		//construct it from a weighted directed graph
 		ResidualGraph(const WeightedDirectedGraph& g, unsigned int start, unsigned int end) : start(start), end(end){
 			nodes.reserve(g.size);

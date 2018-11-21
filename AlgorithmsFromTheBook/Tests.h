@@ -733,6 +733,32 @@ void disjointPathsTester() {
 
 	assert(disjointPaths(k, 0, 6) == 3);
 }
+
+void circulationsTester() {
+	Graph::WeightedDirectedGraph<char> g(4);
+	g.addNode(0);
+	g.addNode(1);
+	g.addNode(2);
+	g.addNode(3);
+
+	int x[] = { -3, -3, 2, 4 };
+
+	g.addEdge(0, 1, 3);
+	g.addEdge(0, 2, 3);
+	g.addEdge(1, 3, 2);
+	g.addEdge(1, 2, 2);
+	g.addEdge(2, 3, 2);
+
+	auto p = maximumCirculation(g, &x[0]);
+	
+	assert((*p->flows[0])[0] == 1);
+	assert((*p->flows[0])[1] == 2);
+	assert((*p->flows[1])[0] == 2);
+	assert((*p->flows[1])[1] == 2);
+	assert((*p->flows[2])[0] == 2);
+
+	delete p;
+}
 /*RNA*/
 
 void rnaStructureTester() {
@@ -987,13 +1013,14 @@ void runAllTests() {
 	rectIntersectsEllipseTester();
 	schedulingTester();
 	pointInPolygonTester();
-	maxFlowTester();
-	minCutTester();
 	isEvenTester();
 	edmondsTester();
 	getPrimesTester();
+	maxFlowTester();
+	minCutTester();
 	bipartiteMatchingTester();
 	disjointPathsTester();
+	circulationsTester();
 
 	std::cout << double(clock() - startTime) / (double)CLOCKS_PER_SEC << " seconds." << std::endl;
 }
