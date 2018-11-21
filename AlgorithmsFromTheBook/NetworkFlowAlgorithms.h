@@ -763,6 +763,7 @@ template<class T>
 //takes in a graph and an array of "demands"
 //positive demands means capacity, and negative demands means supply
 //this is in essence a multi-source, multi-sink flow network, where every node with negative demand supplies those with positive demand
+//returns nullptr when there is no way to neutralize the supply and demand
 Graph::ResidualGraph<T> * maximumCirculation(const Graph::WeightedDirectedGraph<T> & graph, int * demands) {
 	//construct the graph, then modify it later
 	Graph::ResidualGraph<T> * g = new Graph::ResidualGraph<T>(graph, 0, 1);
@@ -773,10 +774,14 @@ Graph::ResidualGraph<T> * maximumCirculation(const Graph::WeightedDirectedGraph<
 	//add a "super" sink node to take all sources flow
 	g->addNode(graph.nodes[0].obj);
 
+	//used to check if there is a feasible circulation later
+	unsigned int checkForFeasibility = 0;
+
 	//for each node, it demands[i] is negative make the source link to it, if not link it to the sink
 	for (unsigned int i = 0; i < graph.nodes.size(); i++) {
 		if (demands[i] < 0) {
 			g->addEdge(g->nodes.size() - 2, i, -demands[i]);
+			checkForFeasibility -= demands[i];
 		}
 		else if (demands[i] > 0) {
 			g->addEdge(i, g->nodes.size() - 1, demands[i]);
@@ -794,6 +799,9 @@ Graph::ResidualGraph<T> * maximumCirculation(const Graph::WeightedDirectedGraph<
 		if (!augPath)
 			goto done;
 
+		//find the bottleneck
+		int bottleneck = getBottleneck(g, augPath);
+
 		//follow along the path and add that flow to every node in the graph
 		SinglyLinkedList::Node<unsigned int> * head = augPath->head;
 
@@ -801,16 +809,16 @@ Graph::ResidualGraph<T> * maximumCirculation(const Graph::WeightedDirectedGraph<
 		for (;;) {
 			//check if its a fowrards node or a backwards node
 			if (g->hasEdge(head->obj, head->next->obj)) {
-				g->addFlow(head->obj, head->next->obj, -1);
+				g->addFlow(head->obj, head->next->obj, -bottleneck);
 			}
 			else {
-				g->addFlow(head->next->obj, head->obj, 1);
+				g->addFlow(head->next->obj, head->obj, bottleneck);
 			}
 
 			head = head->next;
 			//make sure that the flow gets added into the starting node
 			if (!head->next->next) {
-				g->addFlow(g->start, head->obj, 1);
+				g->addFlow(g->start, head->obj, bottleneck);
 				break;
 			}
 
@@ -818,8 +826,127 @@ Graph::ResidualGraph<T> * maximumCirculation(const Graph::WeightedDirectedGraph<
 	}
 
 done:
+
+	unsigned int endTotal = 0;
+
+	for (unsigned int i = 0; i < g->parents[g->end]->size(); i += 2) {
+		endTotal += g->getFlowBetweenNodes((*g->parents[g->end])[i], g->end);
+	}
+
+	if (endTotal != checkForFeasibility) {
+		delete g;
+		return nullptr;
+	}
+
 	g->removeNode(g->end);
 	g->removeNode(g->start);
+
+	return g;
+}
+
+template<class T>
+//finds the maximum circulation for a graph, with minimum requirements for each edge
+//returns nullptr when there is no way to neutralize the supply and demand
+Graph::ResidualGraph<T> * boundedMaximumCirculation(const Graph::WeightedDirectedGraph<T> & graph, int * demands, unsigned int bound) {
+	//construct the graph, then modify it later
+	Graph::ResidualGraph<T> * g = new Graph::ResidualGraph<T>(graph, 0, 1);
+
+	// add a "super" source node to all sources
+	g->addNode(graph.nodes[0].obj);
+
+	//add a "super" sink node to take all sources flow
+	g->addNode(graph.nodes[0].obj);
+
+	//used to check if there is a feasible circulation later
+	unsigned int checkForFeasibility = 0;
+
+	for (unsigned int i = 0; i < graph.size; i++) {
+		if (demands[i] < 0) {
+			checkForFeasibility -= demands[i];
+		}
+	}
+
+	//go through every edge and subtract the lower bound
+	for (unsigned int i = 0; i < g->nodes.size(); i++) {
+		for (unsigned int j = 1; j < g->edges[i]->size(); j += 2) {
+			(*g->edges[i])[j] -= bound;
+			demands[(*g->edges[i])[j - 1]] -= bound;
+			demands[i] += bound;
+		}
+	}
+
+	//for each node, it demands[i] is negative make the source link to it, if not link it to the sink
+	for (unsigned int i = 0; i < graph.nodes.size(); i++) {
+		if (demands[i] < 0) {
+			g->addEdge(g->nodes.size() - 2, i, -demands[i]);
+		}
+		else if (demands[i] > 0) {
+			g->addEdge(i, g->nodes.size() - 1, demands[i]);
+		}
+	}
+
+	//then set the start and end nodes to be the supernodes
+	g->start = g->nodes.size() - 2;
+	g->end = g->nodes.size() - 1;
+
+
+	for (;;) {
+		std::shared_ptr<SinglyLinkedList::LinkedList<unsigned int>> augPath(findAugmentingPath(g));
+
+		//if there are no more paths then end
+		if (!augPath)
+			goto done;
+
+		//find the bottleneck
+		int bottleneck = getBottleneck(g, augPath);
+
+		//follow along the path and add that flow to every node in the graph
+		SinglyLinkedList::Node<unsigned int> * head = augPath->head;
+
+		//safe from segfaults because if head is a nullptr it would end at the if !augPath
+		for (;;) {
+			//check if its a fowrards node or a backwards node
+			if (g->hasEdge(head->obj, head->next->obj)) {
+				g->addFlow(head->obj, head->next->obj, -bottleneck);
+			}
+			else {
+				g->addFlow(head->next->obj, head->obj, bottleneck);
+			}
+
+			head = head->next;
+			//make sure that the flow gets added into the starting node
+			if (!head->next->next) {
+				g->addFlow(g->start, head->obj, bottleneck);
+				break;
+			}
+
+		}
+	}
+
+done:
+
+	//add the weights into the edge, and the flows into the graph
+	for (unsigned int i = 0; i < g->nodes.size(); i++) {
+		for (unsigned int j = 1; j < g->edges[i]->size(); j += 2) {
+			(*g->edges[i])[j] += bound * std::max(1u, g->getParentNum(i) / g->getChildNum(i));
+			(*g->flows[i])[j / 2] += bound * std::max(1u, g->getParentNum(i) / g->getChildNum(i));
+		}
+	}
+
+	unsigned int endTotal = 0;
+
+	for (unsigned int i = 0; i < g->parents[g->end]->size(); i += 2) {
+		endTotal += g->getFlowBetweenNodes((*g->parents[g->end])[i], g->end);
+	}
+
+	if (endTotal != checkForFeasibility) {
+		delete g;
+		return nullptr;
+	}
+
+	g->removeNode(g->end);
+	g->removeNode(g->start);
+
 
 	return g;
 }

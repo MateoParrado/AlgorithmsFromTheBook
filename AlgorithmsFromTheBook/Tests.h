@@ -745,11 +745,16 @@ void circulationsTester() {
 
 	g.addEdge(0, 1, 3);
 	g.addEdge(0, 2, 3);
-	g.addEdge(1, 3, 2);
 	g.addEdge(1, 2, 2);
-	g.addEdge(2, 3, 2);
 
 	auto p = maximumCirculation(g, &x[0]);
+
+	assert(!p);
+
+	g.addEdge(1, 3, 2);
+	g.addEdge(2, 3, 2);
+
+	p = maximumCirculation(g, &x[0]);
 	
 	assert((*p->flows[0])[0] == 1);
 	assert((*p->flows[0])[1] == 2);
@@ -758,6 +763,20 @@ void circulationsTester() {
 	assert((*p->flows[2])[0] == 2);
 
 	delete p;
+
+	p = boundedMaximumCirculation(g, &x[0], 1);
+
+	assert((*p->flows[0])[0] == 1);
+	assert((*p->flows[0])[1] == 2);
+	assert((*p->flows[1])[0] == 2);
+	assert((*p->flows[1])[1] == 2);
+	assert((*p->flows[2])[0] == 2);
+	
+	delete p;
+
+	p = boundedMaximumCirculation(g, &x[0], 1);
+
+	assert(!p);
 }
 /*RNA*/
 
