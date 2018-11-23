@@ -950,3 +950,95 @@ done:
 
 	return g;
 }
+
+//says wether you can create a survey asking a number of customers about a number of products
+//customers can only be asked about a product if they bought it, so customer bought product is a 2d array of wether they bought it
+//customers must be asked at least minproductsasked and at most maxproductsasked
+//customers must be asked about every product at least mintimesasked and at most maxtimesasked, to gather sufficient information
+bool surveyCanBeDesigned(unsigned int customerNum, unsigned int productNum, bool * customerBoughtProduct, unsigned int maxProductsAsked, unsigned int minProductsAsked, unsigned int minTimesAsked, unsigned int maxTimesAsked) {
+	Graph::WeightedDirectedGraph<char> graph(productNum + customerNum + 2);
+	
+	//one supersource, one supersink, one for each customer, and one for each product
+	for (unsigned int i = 0; i < productNum + customerNum + 2; i++) {
+		graph.addNode(i);
+	}
+
+	// add an edge from a customer to a product if they've bought it
+	for (unsigned int i = 0; i < customerNum; i++) {
+		for (unsigned int j = 0; j < productNum; j++) {
+			if (customerBoughtProduct[i*customerNum + j]) {
+				graph.addEdge(i, customerNum + j, 1);
+			}
+		}
+	}
+
+	//create the supersource
+	for (unsigned int i = 0; i < customerNum; i++) {
+		graph.addEdge(productNum + customerNum, i, maxProductsAsked - minProductsAsked);
+	}
+
+	//create the supersink
+	for (unsigned int j = 0; j < productNum; j++) {
+		graph.addEdge(customerNum + j, customerNum + productNum + 1, maxTimesAsked - minTimesAsked);
+	}
+
+	Graph::ResidualGraph<char> * g = new Graph::ResidualGraph<char>(graph, productNum + customerNum, productNum + customerNum + 1);
+
+	for (;;) {
+		std::shared_ptr<SinglyLinkedList::LinkedList<unsigned int>> augPath(findAugmentingPath(g));
+
+		//if there are no more paths then end
+		if (!augPath)
+			goto done;
+
+		//find the bottleneck
+		int bottleneck = getBottleneck(g, augPath);
+
+		//follow along the path and add that flow to every node in the graph
+		SinglyLinkedList::Node<unsigned int> * head = augPath->head;
+
+		//safe from segfaults because if head is a nullptr it would end at the if !augPath
+		for (;;) {
+			//check if its a fowrards node or a backwards node
+			if (g->hasEdge(head->obj, head->next->obj)) {
+				g->addFlow(head->obj, head->next->obj, -bottleneck);
+			}
+			else {
+				g->addFlow(head->next->obj, head->obj, bottleneck);
+			}
+
+			head = head->next;
+			//make sure that the flow gets added into the starting node
+			if (!head->next->next) {
+				g->addFlow(g->start, head->obj, bottleneck);
+				break;
+			}
+
+		}
+	}
+
+done:
+
+	//check if every edge leaving the super source is between the min flow and max flow
+	for (unsigned int i = 0; i < customerNum; i++) {
+		unsigned int temp = g->getFlow(customerNum + productNum, i);
+
+		if (temp < minProductsAsked || temp > maxProductsAsked) {
+			return false;
+		}
+	}
+
+	//check if every edge entering the supersink is between min and max
+	for (unsigned int i = customerNum; i < customerNum + productNum; i++) {
+		//they will only have one edge, and it will lead to the super sink
+		unsigned int temp = g->getFlow(i, 0);
+
+		if (temp < minTimesAsked || temp > maxTimesAsked) {
+			return false;
+		}
+	}
+
+	delete g;
+
+	return true;
+}
