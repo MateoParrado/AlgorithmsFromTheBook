@@ -241,7 +241,7 @@ namespace SinglyLinkedList {
 			}
 		}
 
-		/*RULE OF THREE*/
+		/*RULE OF FIVE*/
 		LinkedList(const LinkedList& old) {
 			Node<T> * temp = old.head;
 
@@ -255,6 +255,19 @@ namespace SinglyLinkedList {
 		}
 
 		LinkedList operator=(const LinkedList&) = delete;
+
+		LinkedList(LinkedList&& other) {
+			head = other.head;
+			tail = other.tail;
+
+			size = other.size;
+
+			other.head = nullptr;
+			other.tail = nullptr;
+			other.size = 0;
+		}
+
+		LinkedList operator=(const LinkedList&&) = delete;
 
 		~LinkedList() {
 			if (head) {

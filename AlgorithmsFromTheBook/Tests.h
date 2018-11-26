@@ -778,6 +778,14 @@ void circulationsTester() {
 
 	assert(!p);
 }
+
+void surveyTester() {
+	//bool x[3][3] = { {1, 1, 0}, {1, 0, 1}, {0, 1, 1} };
+
+	//assert(surveyCanBeDesigned(3, 3, &x[0][0], 2, 3, 2, 3));
+	//assert(!surveyCanBeDesigned(3, 3, &x[0][0], 4, 3, 2, 3));
+}
+
 /*RNA*/
 
 void rnaStructureTester() {
@@ -999,7 +1007,7 @@ void linearRegressionTester() {
 
 /*TESTS*/
 void runAllTests() {
-	clock_t startTime = clock();
+	//clock_t startTime = clock();
 
 	factorialTester();
 	distTester();
@@ -1040,8 +1048,9 @@ void runAllTests() {
 	bipartiteMatchingTester();
 	disjointPathsTester();
 	circulationsTester();
+	surveyTester();
 
-	std::cout << double(clock() - startTime) / (double)CLOCKS_PER_SEC << " seconds." << std::endl;
+	//std::cout << double(clock() - startTime) / (double)CLOCKS_PER_SEC << " seconds." << std::endl;
 }
 
 #pragma deprecated (testDeriv, testInt, testingOnlyCostFunc)

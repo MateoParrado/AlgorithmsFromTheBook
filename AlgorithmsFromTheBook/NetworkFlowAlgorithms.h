@@ -846,6 +846,7 @@ done:
 
 template<class T>
 //finds the maximum circulation for a graph, with minimum requirements for each edge
+//demands is an array with the minimum requirement for each edge
 //returns nullptr when there is no way to neutralize the supply and demand
 Graph::ResidualGraph<T> * boundedMaximumCirculation(const Graph::WeightedDirectedGraph<T> & graph, int * demands, unsigned int bound) {
 	//construct the graph, then modify it later
@@ -955,90 +956,96 @@ done:
 //customers can only be asked about a product if they bought it, so customer bought product is a 2d array of wether they bought it
 //customers must be asked at least minproductsasked and at most maxproductsasked
 //customers must be asked about every product at least mintimesasked and at most maxtimesasked, to gather sufficient information
-bool surveyCanBeDesigned(unsigned int customerNum, unsigned int productNum, bool * customerBoughtProduct, unsigned int maxProductsAsked, unsigned int minProductsAsked, unsigned int minTimesAsked, unsigned int maxTimesAsked) {
-	Graph::WeightedDirectedGraph<char> graph(productNum + customerNum + 2);
-	
-	//one supersource, one supersink, one for each customer, and one for each product
-	for (unsigned int i = 0; i < productNum + customerNum + 2; i++) {
-		graph.addNode(i);
-	}
-
-	// add an edge from a customer to a product if they've bought it
-	for (unsigned int i = 0; i < customerNum; i++) {
-		for (unsigned int j = 0; j < productNum; j++) {
-			if (customerBoughtProduct[i*customerNum + j]) {
-				graph.addEdge(i, customerNum + j, 1);
-			}
-		}
-	}
-
-	//create the supersource
-	for (unsigned int i = 0; i < customerNum; i++) {
-		graph.addEdge(productNum + customerNum, i, maxProductsAsked - minProductsAsked);
-	}
-
-	//create the supersink
-	for (unsigned int j = 0; j < productNum; j++) {
-		graph.addEdge(customerNum + j, customerNum + productNum + 1, maxTimesAsked - minTimesAsked);
-	}
-
-	Graph::ResidualGraph<char> * g = new Graph::ResidualGraph<char>(graph, productNum + customerNum, productNum + customerNum + 1);
-
-	for (;;) {
-		std::shared_ptr<SinglyLinkedList::LinkedList<unsigned int>> augPath(findAugmentingPath(g));
-
-		//if there are no more paths then end
-		if (!augPath)
-			goto done;
-
-		//find the bottleneck
-		int bottleneck = getBottleneck(g, augPath);
-
-		//follow along the path and add that flow to every node in the graph
-		SinglyLinkedList::Node<unsigned int> * head = augPath->head;
-
-		//safe from segfaults because if head is a nullptr it would end at the if !augPath
-		for (;;) {
-			//check if its a fowrards node or a backwards node
-			if (g->hasEdge(head->obj, head->next->obj)) {
-				g->addFlow(head->obj, head->next->obj, -bottleneck);
-			}
-			else {
-				g->addFlow(head->next->obj, head->obj, bottleneck);
-			}
-
-			head = head->next;
-			//make sure that the flow gets added into the starting node
-			if (!head->next->next) {
-				g->addFlow(g->start, head->obj, bottleneck);
-				break;
-			}
-
-		}
-	}
-
-done:
-
-	//check if every edge leaving the super source is between the min flow and max flow
-	for (unsigned int i = 0; i < customerNum; i++) {
-		unsigned int temp = g->getFlow(customerNum + productNum, i);
-
-		if (temp < minProductsAsked || temp > maxProductsAsked) {
-			return false;
-		}
-	}
-
-	//check if every edge entering the supersink is between min and max
-	for (unsigned int i = customerNum; i < customerNum + productNum; i++) {
-		//they will only have one edge, and it will lead to the super sink
-		unsigned int temp = g->getFlow(i, 0);
-
-		if (temp < minTimesAsked || temp > maxTimesAsked) {
-			return false;
-		}
-	}
-
-	delete g;
-
-	return true;
-}
+//bool surveyCanBeDesigned(unsigned int customerNum, unsigned int productNum, bool * customerBoughtProduct, unsigned int minProductsAsked, unsigned int maxProductsAsked, unsigned int minTimesAsked, unsigned int maxTimesAsked) {
+//	//construct the graph, then modify it later
+//	Graph::WeightedDirectedGraph<unsigned int> graph(productNum + customerNum + 4);
+//
+//	for (unsigned int i = 0; i < customerNum + productNum; i++) {
+//		graph.addNode(i);
+//	}
+//
+//	// add a "super" source node to all sources
+//	graph.addNode(graph.nodes[0].obj);
+//
+//	//add a "super" sink node to take all sources flow
+//	graph.addNode(graph.nodes[0].obj);
+//
+//	//go through every customer, connect them with a minimum
+//
+//	//for each node, it demands[i] is negative make the source link to it, if not link it to the sink
+//	for (unsigned int i = 0; i < graph.nodes.size(); i++) {
+//		if (demands[i] < 0) {
+//			g->addEdge(g->nodes.size() - 2, i, -demands[i]);
+//		}
+//		else if (demands[i] > 0) {
+//			g->addEdge(i, g->nodes.size() - 1, demands[i]);
+//		}
+//	}
+//
+//	Graph::ResidualGraph<T> * g = new Graph::ResidualGraph<T>(graph, 0, 1);
+//
+//	//then set the start and end nodes to be the supernodes
+//	g->start = g->nodes.size() - 2;
+//	g->end = g->nodes.size() - 1;
+//
+//
+//	for (;;) {
+//		std::shared_ptr<SinglyLinkedList::LinkedList<unsigned int>> augPath(findAugmentingPath(g));
+//
+//		//if there are no more paths then end
+//		if (!augPath)
+//			goto done;
+//
+//		//find the bottleneck
+//		int bottleneck = getBottleneck(g, augPath);
+//
+//		//follow along the path and add that flow to every node in the graph
+//		SinglyLinkedList::Node<unsigned int> * head = augPath->head;
+//
+//		//safe from segfaults because if head is a nullptr it would end at the if !augPath
+//		for (;;) {
+//			//check if its a fowrards node or a backwards node
+//			if (g->hasEdge(head->obj, head->next->obj)) {
+//				g->addFlow(head->obj, head->next->obj, -bottleneck);
+//			}
+//			else {
+//				g->addFlow(head->next->obj, head->obj, bottleneck);
+//			}
+//
+//			head = head->next;
+//			//make sure that the flow gets added into the starting node
+//			if (!head->next->next) {
+//				g->addFlow(g->start, head->obj, bottleneck);
+//				break;
+//			}
+//
+//		}
+//	}
+//
+//done:
+//
+//	//add the weights into the edge, and the flows into the graph
+//	for (unsigned int i = 0; i < g->nodes.size(); i++) {
+//		for (unsigned int j = 1; j < g->edges[i]->size(); j += 2) {
+//			(*g->edges[i])[j] += bound * std::max(1u, g->getParentNum(i) / g->getChildNum(i));
+//			(*g->flows[i])[j / 2] += bound * std::max(1u, g->getParentNum(i) / g->getChildNum(i));
+//		}
+//	}
+//
+//	unsigned int endTotal = 0;
+//
+//	for (unsigned int i = 0; i < g->parents[g->end]->size(); i += 2) {
+//		endTotal += g->getFlowBetweenNodes((*g->parents[g->end])[i], g->end);
+//	}
+//
+//	if (endTotal != checkForFeasibility) {
+//		delete g;
+//		return nullptr;
+//	}
+//
+//	g->removeNode(g->end);
+//	g->removeNode(g->start);
+//
+//
+//	return g;
+//}
