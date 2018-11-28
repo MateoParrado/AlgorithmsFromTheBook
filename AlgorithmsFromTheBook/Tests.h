@@ -774,9 +774,23 @@ void circulationsTester() {
 	
 	delete p;
 
-	p = boundedMaximumCirculation(g, &x[0], 1);
+	 int q[] = { -3, -3, 2, 4 };
+
+	p = boundedMaximumCirculation(g, &q[0], 2);
 
 	assert(!p);
+
+	 int r[] = { -3, -3, 2, 4 };
+
+	unsigned int y[] = { 2, 0, 0, 0, 0 };
+
+	assert(!differentlyBoundedMaximumCirculation(g, &r[0], &y[0]));
+
+	int s[] = { -3, -3, 2, 4 };
+
+	unsigned int z[] = { 1, 0, 0, 0, 0 };
+
+	assert(differentlyBoundedMaximumCirculation(g, &s[0], &z[0]));
 }
 
 void surveyTester() {

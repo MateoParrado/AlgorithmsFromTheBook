@@ -945,11 +945,115 @@ done:
 		return nullptr;
 	}
 
-	g->removeNode(g->end);
-	g->removeNode(g->start);
+g->removeNode(g->end);
+g->removeNode(g->start);
 
 
-	return g;
+return g;
+}
+
+template<class T>
+//same as above, except the bounds can be different for each edge of the graph
+//it will loop through bounds and take the first value of the first node for the first edge, etc
+//demands will be modified
+bool differentlyBoundedMaximumCirculation(const Graph::WeightedDirectedGraph<T> & graph, int * demands, unsigned int * bounds) {
+	//construct the graph, then modify it later
+	Graph::ResidualGraph<T> * g = new Graph::ResidualGraph<T>(graph, 0, 1);
+
+	// add a "super" source node to all sources
+	g->addNode(graph.nodes[0].obj);
+
+	//add a "super" sink node to take all sources flow
+	g->addNode(graph.nodes[0].obj);
+
+	//used to check if there is a feasible circulation later
+	unsigned int checkForFeasibility = 0;
+
+	for (unsigned int i = 0; i < graph.size; i++) {
+		if (demands[i] < 0) {
+			checkForFeasibility -= demands[i];
+		}
+	}
+
+	//because the nodes have variable length edges, this keeps track of which index of bounds we are in
+	unsigned int boundNumOn = 0;
+
+	//go through every edge and subtract the lower bound, and update its demands
+	for (unsigned int i = 0; i < g->nodes.size(); i++) {
+		for (unsigned int j = 1; j < g->edges[i]->size(); j += 2) {
+			(*g->edges[i])[j] -= bounds[boundNumOn];
+			demands[(*g->edges[i])[j - 1]] -= bounds[boundNumOn];
+			demands[i] += bounds[boundNumOn];
+
+			boundNumOn++;
+		}
+	}
+
+	for (int i = 0; i < 4; i++) {
+		std::cout << demands[i] << " ";
+	}
+
+	//for each node, it demands[i] is negative make the source link to it, if not link it to the sink
+	for (unsigned int i = 0; i < graph.nodes.size(); i++) {
+		if (demands[i] < 0) {
+			g->addEdge(g->nodes.size() - 2, i, -demands[i]);
+		}
+		else if (demands[i] > 0) {
+			g->addEdge(i, g->nodes.size() - 1, demands[i]);
+		}
+	}
+
+	//then set the start and end nodes to be the supernodes
+	g->start = g->nodes.size() - 2;
+	g->end = g->nodes.size() - 1;
+
+
+	for (;;) {
+		std::shared_ptr<SinglyLinkedList::LinkedList<unsigned int>> augPath(findAugmentingPath(g));
+
+		//if there are no more paths then end
+		if (!augPath)
+			goto done;
+
+		//find the bottleneck
+		int bottleneck = getBottleneck(g, augPath);
+
+		//follow along the path and add that flow to every node in the graph
+		SinglyLinkedList::Node<unsigned int> * head = augPath->head;
+
+		//safe from segfaults because if head is a nullptr it would end at the if !augPath
+		for (;;) {
+			//check if its a fowrards node or a backwards node
+			if (g->hasEdge(head->obj, head->next->obj)) {
+				g->addFlow(head->obj, head->next->obj, -bottleneck);
+			}
+			else {
+				g->addFlow(head->next->obj, head->obj, bottleneck);
+			}
+
+			head = head->next;
+			//make sure that the flow gets added into the starting node
+			if (!head->next->next) {
+				g->addFlow(g->start, head->obj, bottleneck);
+				break;
+			}
+
+		}
+	}
+
+done:
+
+	unsigned int flowOutOfStart = 0;
+
+	boundNumOn = 0;
+
+	for (unsigned int i = 0; i < g->getChildNum(g->start); i++){
+		flowOutOfStart += g->getFlow(g->start, i);
+	}
+
+	delete g;
+
+	return flowOutOfStart == checkForFeasibility;
 }
 
 //says wether you can create a survey asking a number of customers about a number of products

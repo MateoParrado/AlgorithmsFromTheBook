@@ -39,11 +39,14 @@ using namespace std;
 int main() {
 
 //	Graph::ResidualGraph<std::pair<int, int>> y(x);
-	//clock_t startTime = clock();
 	//std::cout << dijkstraGcd(468, 24);
-	//for (int i = 0; i < 500; i++) {
+
+	int x = 0;
+
+	for (int i = 0; i < 10; i++) {
+	//clock_t startTime = clock();
 	runAllTests();
-	//}
 	//std::cout << double(clock() - startTime) / (double)CLOCKS_PER_SEC << " seconds." << std::endl;
+	}
 	std::getchar();
 }
