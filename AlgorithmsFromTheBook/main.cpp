@@ -43,7 +43,7 @@ int main() {
 
 	int x = 0;
 
-	for (int i = 0; i < 10; i++) {
+	for (int i = 0; i < 1; i++) {
 	//clock_t startTime = clock();
 	runAllTests();
 	//std::cout << double(clock() - startTime) / (double)CLOCKS_PER_SEC << " seconds." << std::endl;
