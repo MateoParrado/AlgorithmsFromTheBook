@@ -118,7 +118,7 @@ unsigned int getMaxPossibleWeight(std::vector<weightedTask> * x, unsigned int si
 	bool delAtEnd = false;
 
 	if (!ptr) {
-		ptr = new unsigned int[x->size()];
+		ptr = DBG_NEW unsigned int[x->size()];
 		size = x->size();
 
 		for (unsigned int i = 0; i < x->size(); i++) {

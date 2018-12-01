@@ -88,7 +88,7 @@ namespace Heap {
 		}
 	public:
 
-		std::vector<T> * nodes = new std::vector<T>(0);
+		std::vector<T> * nodes = DBG_NEW std::vector<T>(0);
 		
 		//heapsize to try and avoid resizing vector
 		Heap(int heapSize = 256) {

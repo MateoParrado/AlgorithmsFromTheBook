@@ -1,5 +1,7 @@
 #pragma once
 
+#include "FlightStruct.h"
+
 #include <memory>
 
 /*HELPER FUNCTIONS*/
@@ -10,7 +12,7 @@ SinglyLinkedList::LinkedList<unsigned int> * findAugmentingPath(Graph::ResidualG
 	std::vector<bool> visited((*g).size);//to not double count nodes
 	visited[g->start] = true;
 
-	SinglyLinkedList::LinkedList<unsigned int> * ret = new SinglyLinkedList::LinkedList<unsigned int>();
+	SinglyLinkedList::LinkedList<unsigned int> * ret = DBG_NEW SinglyLinkedList::LinkedList<unsigned int>();
 
 	ret->pushBackNode(g->start);
 
@@ -75,7 +77,7 @@ SinglyLinkedList::LinkedList<unsigned int> * findAugmentingPath(Graph::ResidualG
 	std::vector<bool> visited((*g).size);//to not double count nodes
 	visited[g->start] = true;
 
-	SinglyLinkedList::LinkedList<unsigned int> * ret = new SinglyLinkedList::LinkedList<unsigned int>();
+	SinglyLinkedList::LinkedList<unsigned int> * ret = DBG_NEW SinglyLinkedList::LinkedList<unsigned int>();
 
 	ret->pushBackNode(g->start);
 
@@ -140,7 +142,7 @@ bool isPath(Graph::ResidualGraph<T> * g, unsigned int target) {
 	std::vector<bool> visited((*g).size);//to not double count nodes
 	visited[g->start] = true;
 
-	SinglyLinkedList::LinkedList<unsigned int> * ret = new SinglyLinkedList::LinkedList<unsigned int>();
+	SinglyLinkedList::LinkedList<unsigned int> * ret = DBG_NEW SinglyLinkedList::LinkedList<unsigned int>();
 
 	ret->pushBackNode(g->start);
 
@@ -169,6 +171,7 @@ bool isPath(Graph::ResidualGraph<T> * g, unsigned int target) {
 		//prevents segfaults
 		if (ret->head) {
 			if (ret->getVal(0) == target) {
+				delete ret;
 				return true;
 			}
 
@@ -182,6 +185,8 @@ bool isPath(Graph::ResidualGraph<T> * g, unsigned int target) {
 			return false;
 		}
 	}
+
+	delete ret;
 
 	return true;
 }
@@ -766,7 +771,7 @@ template<class T>
 //returns nullptr when there is no way to neutralize the supply and demand
 Graph::ResidualGraph<T> * maximumCirculation(const Graph::WeightedDirectedGraph<T> & graph, int * demands) {
 	//construct the graph, then modify it later
-	Graph::ResidualGraph<T> * g = new Graph::ResidualGraph<T>(graph, 0, 1);
+	Graph::ResidualGraph<T> * g = DBG_NEW Graph::ResidualGraph<T>(graph, 0, 1);
 
 	// add a "super" source node to all sources
 	g->addNode(graph.nodes[0].obj);
@@ -850,7 +855,7 @@ template<class T>
 //returns nullptr when there is no way to neutralize the supply and demand
 Graph::ResidualGraph<T> * boundedMaximumCirculation(const Graph::WeightedDirectedGraph<T> & graph, int * demands, unsigned int bound) {
 	//construct the graph, then modify it later
-	Graph::ResidualGraph<T> * g = new Graph::ResidualGraph<T>(graph, 0, 1);
+	Graph::ResidualGraph<T> * g = DBG_NEW Graph::ResidualGraph<T>(graph, 0, 1);
 
 	// add a "super" source node to all sources
 	g->addNode(graph.nodes[0].obj);
@@ -958,7 +963,7 @@ template<class T>
 //demands will be modified
 bool differentlyBoundedMaximumCirculation(const Graph::WeightedDirectedGraph<T> & graph, int * demands, unsigned int * bounds) {
 	//construct the graph, then modify it later
-	Graph::ResidualGraph<T> * g = new Graph::ResidualGraph<T>(graph, 0, 1);
+	Graph::ResidualGraph<T> * g = DBG_NEW Graph::ResidualGraph<T>(graph, 0, 1);
 
 	// add a "super" source node to all sources
 	g->addNode(graph.nodes[0].obj);
@@ -1093,7 +1098,7 @@ bool surveyCanBeDesigned(unsigned int customerNum, unsigned int productNum, bool
 	g.addEdge(1, 0, INT_MAX);
 
 	//all demands start to zero
-	int * demands = new int[customerNum + productNum + 2]{ 0 };
+	int * demands = DBG_NEW int[customerNum + productNum + 2]{ 0 };
 
 	//intitialize bounds array
 	unsigned int totalEdges = 0;
@@ -1109,7 +1114,7 @@ bool surveyCanBeDesigned(unsigned int customerNum, unsigned int productNum, bool
 		totalEdges += g.getChildNum(i);
 	}
 
-	unsigned int * bounds = new unsigned int[totalEdges] {0};
+	unsigned int * bounds = DBG_NEW unsigned int[totalEdges] {0};
 
 	//minimum bounds of edges leaving source is minproductsasked
 	for (unsigned int i = 0; i < g.getChildNum(0); i++) {
@@ -1121,7 +1126,84 @@ bool surveyCanBeDesigned(unsigned int customerNum, unsigned int productNum, bool
 		bounds[i] = minTimesAsked;
 	}
 
-	for (int i = 0; i < totalEdges; i++) {
+	bool retVal = differentlyBoundedMaximumCirculation(g, demands, bounds);
+
+	delete[] demands;
+	delete[] bounds;
+
+	return retVal;
+}
+
+//FLIGHTS MUST BE SORTED BY START TIME
+bool planesCanBeScheduled(FlightStruct * flights, unsigned int numberOfFlights, float * flightCost, unsigned int cityNum, unsigned int numberOfPlanes, unsigned int maintenanceTime) {
+	Graph::WeightedDirectedGraph<char> g(cityNum + 2);
+
+	for (unsigned int i = 0; i < numberOfFlights * 2 + 2; i++) {
+		g.addNode(i);
+	}
+
+	//keep track of number of edges
+	unsigned int edgeNum = 1;
+
+	//for every flight, add an edge between the two nodes
+	for (unsigned int i = 0; i < numberOfFlights; i++) {
+		//edge between two nodes
+		g.addEdge(i * 2, i * 2 + 1, 1);
+
+		//edge between start and start city
+		g.addEdge(2 * numberOfFlights, i * 2, 1);
+
+		//edge between end city and sink
+		g.addEdge(i * 2 + 1, 2 * numberOfFlights + 1, 1);
+
+		edgeNum += 3;
+	}
+
+	g.addEdge(2 * numberOfFlights, 2 * numberOfFlights + 1, numberOfPlanes);
+
+	//for each destination add potential edges if there is a potential flight between them, even though it isnt required
+	for (unsigned int i = 0; i < numberOfFlights; i++) {
+		//the earliest a plane can be reused after this flight
+		float reusableTime = flights[i].startTime + flightCost[flights[i].startCity * cityNum + flights[i].endCity] + maintenanceTime;
+		
+		//check if it can do both flight i and flight j for all js ahead of i
+		for (unsigned int j = i + 1; j < numberOfFlights; j++) {
+			//if they start and end in the same city, no doble maintenance time
+			if (flights[j].startCity == flights[i].endCity) {
+				if (reusableTime + flightCost[flights[i].endCity * cityNum + flights[j].startCity] <= flights[j].startTime) {
+					g.addEdge(i * 2 + 1, j * 2, 1);
+
+					edgeNum++;
+				}
+			}
+			else if (reusableTime + flightCost[flights[i].endCity * cityNum + flights[j].startCity] + maintenanceTime <= flights[j].startTime) {
+				edgeNum++;
+
+				g.addEdge(i * 2 + 1, j * 2, 1);
+			}
+		}
+		
+	}
+
+	int * demands = DBG_NEW int[cityNum + 2]{ 0 };
+
+	demands[numberOfFlights * 2] = numberOfPlanes;
+	demands[numberOfFlights * 2 + 1] = -(int)numberOfPlanes;
+
+	unsigned int * bounds = DBG_NEW unsigned int[edgeNum] {0};
+
+	unsigned int numOn = 0;
+
+	//set the minimum of each required flight to one
+	for (unsigned int i = 0; i < cityNum; i++) {
+		if (!(i % 2)) {
+			bounds[numOn] = 1;
+		}
+
+		numOn += g.getChildNum(i);
+	}
+
+	for (unsigned int i = 0; i < edgeNum; i++) {
 		std::cout << bounds[i] << " ";
 	}
 

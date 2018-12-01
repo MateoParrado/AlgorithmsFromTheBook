@@ -5,7 +5,7 @@
 
 //divide array of complex nums into even and odd parts
 void separate(std::complex<double> * x, unsigned int size) {
-	std::complex<double> * temp = new std::complex<double>[size / 2];
+	std::complex<double> * temp = DBG_NEW std::complex<double>[size / 2];
 
 	for (unsigned int i = 0; i < size/2; i++) {
 		temp[i] = x[2 * i + 1];

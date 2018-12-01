@@ -94,7 +94,7 @@ std::pair<unsigned int, unsigned int> closestPair( std::vector<std::pair<T, T>> 
 	}
 
 	//sort every coordinate by their x value
-	std::vector<std::pair<T, T>> * xSort = new std::vector<std::pair<T, T>>;
+	std::vector<std::pair<T, T>> * xSort = DBG_NEW std::vector<std::pair<T, T>>;
 	xSort->reserve(nodes->size());
 	for (unsigned int i = 0; i < nodes->size(); i++) {
 		xSort->push_back((*nodes)[i]);

@@ -1,6 +1,21 @@
 //identifier poisoning so things cant be used outside of their namespaces
 #pragma warning (error : 4995)
 
+//for memory leak detection
+#define _CRTDBG_MAP_ALLOC  
+
+//if its debug mode, take more info about memory leak line numbers, if its release then we dont care about it
+#ifdef _DEBUG
+	#define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
+	// Replace _NORMAL_BLOCK with _CLIENT_BLOCK if you want the
+	// allocations to be of _CLIENT_BLOCK type
+#else
+	#define DBG_NEW new
+#endif
+
+#include <stdlib.h>  
+#include <crtdbg.h> 
+
 #include <stdio.h>
 
 #include <iostream>
@@ -27,6 +42,8 @@
 #include "SegmentedRegression.h"
 #include "Geometry.h"
 #include "NetworkFlowAlgorithms.h"
+#include "FlightStruct.h"
+#include "Knapsack.h"
 #include "Tests.h"
 
 //TODO
@@ -37,7 +54,7 @@
 using namespace std;
 
 int main() {
-
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 //	Graph::ResidualGraph<std::pair<int, int>> y(x);
 	//std::cout << dijkstraGcd(468, 24);
 
@@ -48,5 +65,7 @@ int main() {
 	runAllTests();
 	//std::cout << double(clock() - startTime) / (double)CLOCKS_PER_SEC << " seconds." << std::endl;
 	}
-	std::getchar();
+
+
+	//std::getchar();
 }

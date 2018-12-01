@@ -4,7 +4,7 @@
 
 template<class T>
 //an algorithm that performs linear regresion where more than one line would fit the data better than a single one
-//cost is the cost of creating a new line (to prevent having it just connect every consecutive pair of points)
+//cost is the cost of creating a DBG_NEW line (to prevent having it just connect every consecutive pair of points)
 std::vector<std::pair<unsigned int, unsigned int>> * segmentedLinearRegression(std::pair<T, T> * x, const unsigned int size, unsigned int cost) {
 	//the cost of the optimal solution at every point
 	std::vector<double> opt(size);
@@ -35,7 +35,7 @@ std::vector<std::pair<unsigned int, unsigned int>> * segmentedLinearRegression(s
 		opt[i] = minVal;
 	}
 
-	std::vector<std::pair<unsigned int, unsigned int>> * retVec = new std::vector<std::pair<unsigned int, unsigned int>>;
+	std::vector<std::pair<unsigned int, unsigned int>> * retVec = DBG_NEW std::vector<std::pair<unsigned int, unsigned int>>;
 
 	//number we are currently finding the minimum for
 	unsigned int checkNum = size - 1;

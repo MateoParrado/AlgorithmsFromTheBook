@@ -23,7 +23,7 @@ namespace SinglyLinkedList {
 
 		//add node at end of list by value
 		virtual void pushBackNode(T val) {
-			Node<T> * temp = new Node<T>(val);
+			Node<T> * temp = DBG_NEW Node<T>(val);
 
 			if (head == nullptr) {
 				head = temp;
@@ -40,7 +40,7 @@ namespace SinglyLinkedList {
 
 		//add to the front by value
 		virtual void pushForwardsNode(T val) {
-			Node<T> * temp = new Node<T>(val);
+			Node<T> * temp = DBG_NEW Node<T>(val);
 
 			temp->next = head;
 			head = temp;
@@ -50,7 +50,7 @@ namespace SinglyLinkedList {
 
 		//insert a node by value
 		virtual void insertNode(T val, unsigned int pos) {			
-			Node<T> * temp = new Node<T>(val);
+			Node<T> * temp = DBG_NEW Node<T>(val);
 			if (!size) {
 				head = temp;
 				tail = temp;
@@ -246,7 +246,7 @@ namespace SinglyLinkedList {
 			Node<T> * temp = old.head;
 
 			while (temp) {
-				Node<T> * tempNode = new Node<T>(temp);
+				Node<T> * tempNode = DBG_NEW Node<T>(temp);
 
 				this->pushBackNode(tempNode);
 
@@ -303,7 +303,7 @@ namespace DoublyLinkedList {
 
 		//add node at end of list by value
 		void pushBackNode(T val) {
-			Node<T> * temp = new Node<T>(val);
+			Node<T> * temp = DBG_NEW Node<T>(val);
 
 			if (head == nullptr) {
 				head = temp;
@@ -321,7 +321,7 @@ namespace DoublyLinkedList {
 
 		//add to the front by value
 		void pushForwardsNode(T val) {
-			Node<T> * temp = new Node<T>(val);
+			Node<T> * temp = DBG_NEW Node<T>(val);
 
 			temp->next = head;
 			head->prev = temp;
@@ -333,7 +333,7 @@ namespace DoublyLinkedList {
 
 		//insert a node by value
 		void insertNode(T val, int pos) {
-			Node<T> * temp = new Node<T>(val);
+			Node<T> * temp = DBG_NEW Node<T>(val);
 
 			if (!size) {
 				head = temp;

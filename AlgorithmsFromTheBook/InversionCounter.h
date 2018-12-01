@@ -78,7 +78,7 @@ unsigned int inversionCounter(std::vector<T> vec) {
 		return 1;
 	}
 
-	unsigned int * counter = new unsigned int(0);
+	unsigned int * counter = DBG_NEW unsigned int(0);
 
 	std::vector<T> firstHalf = inversionCounter(std::vector<T>(vec.begin(), vec.begin() + vec.size() / 2), counter);
 	std::vector<T> secondHalf = inversionCounter(std::vector<T>(vec.begin() + vec.size() / 2, vec.end()), counter);

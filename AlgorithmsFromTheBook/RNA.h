@@ -11,21 +11,21 @@ struct RNA {
 
 	//construct from array
 	RNA(RnaBase * b, unsigned int size) : size(size){
-		bases = new RnaBase[size];
+		bases = DBG_NEW RnaBase[size];
 		for (unsigned int i = 0; i < size; i++) {  
 			bases[i] = b[i];
 		}
 	}
 	//construct from initializer list
 	RNA(std::initializer_list<RnaBase> list) : size(list.size()){
-		bases = new RnaBase[list.size()];
+		bases = DBG_NEW RnaBase[list.size()];
 		for (unsigned int i = 0; i < list.size(); i++) {
 			bases[i] = list.begin()[i];
 		}
 	}
 	//construct from string of uppercase letters
 	RNA(std::string str) : size(str.size()){
-		bases = new RnaBase[size];
+		bases = DBG_NEW RnaBase[size];
 
 		for (unsigned int i = 0; i < size; i++) {
 			RnaBase tempBase;
@@ -148,7 +148,7 @@ std::vector<std::pair<unsigned int, unsigned int>> * rnaStructure(RNA * rna) {
 		}
 	}
 
-	std::vector<std::pair<unsigned int, unsigned int>> * retVec = new std::vector<std::pair<unsigned int, unsigned int>>;
+	std::vector<std::pair<unsigned int, unsigned int>> * retVec = DBG_NEW std::vector<std::pair<unsigned int, unsigned int>>;
 
 	//traceback through opt and find the maximum
 	tracebackNussinov(0, rna->size - 1, &opt, retVec, rna);

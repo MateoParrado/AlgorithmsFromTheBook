@@ -49,7 +49,7 @@ std::string greatestCommonSubstring(std::string str1, std::string str2) {
 std::vector<std::pair<unsigned int, unsigned int>> * sequenceAlignment(std::string x, std::string y, unsigned int delta, unsigned int(*costFunc)(char, char)) {
 	
 	if (x.size() == 1 && y.size() == 1) {
-		std::vector<std::pair<unsigned int, unsigned int>> * retVec = new std::vector<std::pair<unsigned int, unsigned int>>();
+		std::vector<std::pair<unsigned int, unsigned int>> * retVec = DBG_NEW std::vector<std::pair<unsigned int, unsigned int>>();
 		if (costFunc(x[0], y[0]) < delta) {
 			retVec->push_back({ 0, 0 });
 		}
@@ -77,7 +77,7 @@ std::vector<std::pair<unsigned int, unsigned int>> * sequenceAlignment(std::stri
 		}
 	}
 	
-	std::vector<std::pair<unsigned int, unsigned int>> * retVec = new std::vector<std::pair<unsigned int, unsigned int>>;
+	std::vector<std::pair<unsigned int, unsigned int>> * retVec = DBG_NEW std::vector<std::pair<unsigned int, unsigned int>>;
 
 	unsigned int i = x.size();
 	unsigned int j = y.size();
@@ -136,7 +136,7 @@ std::vector<std::pair<unsigned int, unsigned int>> * backwardsSequenceAlignment(
 		}
 	}
 
-	std::vector<std::pair<unsigned int, unsigned int>> * retVec = new std::vector<std::pair<unsigned int, unsigned int>>;
+	std::vector<std::pair<unsigned int, unsigned int>> * retVec = DBG_NEW std::vector<std::pair<unsigned int, unsigned int>>;
 
 	unsigned int i = 0;
 	unsigned int j = 0;
@@ -204,7 +204,7 @@ doItAgain:
 	}
 	
 	//return an array slice of the row we need
-	unsigned int * ret = new unsigned int[x.size() + 1];
+	unsigned int * ret = DBG_NEW unsigned int[x.size() + 1];
 	for (unsigned int i = 0; i < x.size() + 1; i++) {
 		ret[i] = opt[i][ind];
 	}
@@ -247,7 +247,7 @@ doItAgain:
 	}
 
 	//return an array slice of the row we need
-	std::pair<unsigned int, bool> * ret = new std::pair<unsigned int, bool>[x.size() + 1];
+	std::pair<unsigned int, bool> * ret = DBG_NEW std::pair<unsigned int, bool>[x.size() + 1];
 	for (unsigned int i = 0; i < x.size() + 1; i++) {
 		ret[i].first = opt[i][ind];
 
@@ -259,7 +259,7 @@ doItAgain:
 
 std::vector<std::pair<unsigned int, unsigned int>> * spaceEfficientSequenceAlignment(std::string x, std::string y, unsigned int delta, unsigned int(*costFunc)(char, char), std::vector<std::pair<unsigned int, unsigned int>> * ptr = nullptr, unsigned int incVal = 0, unsigned int yIncVal = 0) {
 	if (!ptr) {
-		ptr = new std::vector<std::pair<unsigned int, unsigned int>>;
+		ptr = DBG_NEW std::vector<std::pair<unsigned int, unsigned int>>;
 
 		//maximum size of a corner to corner path, therefore maximum space needed
 		ptr->reserve(x.size() + y.size());

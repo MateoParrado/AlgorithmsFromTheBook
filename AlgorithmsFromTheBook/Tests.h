@@ -17,6 +17,7 @@
 #include "StringAlgos.h"
 #include "SegmentedRegression.h"
 #include "Geometry.h"
+#include "FlightStruct.h"
 
 #include <vector>
 #include <algorithm>
@@ -800,11 +801,30 @@ void surveyTester() {
 	assert(!surveyCanBeDesigned(3, 3, &x[0][0], 4, 3, 2, 3));
 }
 
+void airlinesTester() {
+	FlightStruct x[6] = { FlightStruct(0, 1, 6), FlightStruct(2, 3, 7),
+						 FlightStruct(1, 4, 8), FlightStruct(2, 5, 11),
+						 FlightStruct(5, 6, 14.25), FlightStruct(7, 6, 17) };
+
+	float costs[8][8] = { {0, 1, 10000, 10000, 10000, 10000, 10000, 10000 },
+						 { 1, 0, 10000, 10000, 3, 10000, 10000, 10000 },
+						 { 10000, 10000, 0, 1, 10000, 3, 10000, 10000 },
+						 { 10000, 10000, 1, 0, 10000, 10000, 10000, 10000 },
+						 { 10000, 3, 10000, 10000, 0, 1, 10000, 1 },
+						 { 10000, 10000, 3, 10000, 10000, 0, 1, 1 },
+						 { 10000, 10000, 10000, 10000, 10000, 1, 0, 1 },
+						 { 10000, 10000, 10000, 10000, 1, 1, 1, 0 } };
+
+	//assert(planesCanBeScheduled(&x[0], 6, &costs[0][0], 8, 3, 1));
+	//assert(!planesCanBeScheduled(&x[0], 6, &costs[0][0], 8, 1, 1));
+	//assert(!planesCanBeScheduled(&x[0], 6, &costs[0][0], 8, 2, 3));
+}
+
 /*RNA*/
 
 void rnaStructureTester() {
 	//all that matters is the optimal size, it can pick whichever pairs it wants
-	RNA * rna = new RNA("UGUACCGGUAGUACA");
+	RNA * rna = DBG_NEW RNA("UGUACCGGUAGUACA");
 
 	std::vector<std::pair<unsigned int, unsigned int>> * vec = rnaStructure(rna);
 	assert(vec->size() == 5);
@@ -812,7 +832,7 @@ void rnaStructureTester() {
 	delete rna;
 	delete vec;
 
-	rna = new RNA("CAGAUCGGCGAUACGAGCAUAGCAAUGCUAAGCGAGCUUAGCUGCA");
+	rna = DBG_NEW RNA("CAGAUCGGCGAUACGAGCAUAGCAAUGCUAAGCGAGCUUAGCUGCA");
 	vec = rnaStructure(rna);
 
 	assert(vec->size() == 14);
@@ -1003,7 +1023,7 @@ void gcdTester() {
 }
 
 void linearRegressionTester() {
-	std::pair<int, int> * x = new std::pair<int, int>[5];
+	std::pair<int, int> * x = DBG_NEW std::pair<int, int>[5];
 	x[0] = { 0, 1 };
 	x[1] = { 1, 3 }; 
 	x[2] = { 2, 5 }; 
@@ -1063,6 +1083,7 @@ void runAllTests() {
 	disjointPathsTester();
 	circulationsTester();
 	surveyTester();
+	airlinesTester();
 
 	//std::cout << double(clock() - startTime) / (double)CLOCKS_PER_SEC << " seconds." << std::endl;
 }

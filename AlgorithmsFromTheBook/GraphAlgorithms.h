@@ -13,7 +13,7 @@
 //useful for constuctive algorithms
 template<class T>
 T * copyWithoutEdges(T * g) {
-	T * ret = new T(g->size);
+	T * ret = DBG_NEW T(g->size);
 	for (unsigned int i = 0; i < g->size; i++) {
 		ret->addNode(g->nodes[i].obj);
 	}
@@ -111,7 +111,7 @@ Graph::WeightedGraph<T> * kruskalMinTree(Graph::WeightedGraph<T> * g) {
 		if (firstPtr != secondPtr) {
 			ret->addEdge(weightHeap.getMin().second.first, weightHeap.getMin().second.second, weightHeap.getMin().first);
 
-			//make the original root node of one point to the new root
+			//make the original root node of one point to the DBG_NEW root
 			firstPtr->ptr = secondPtr;
 		}
 
@@ -234,7 +234,7 @@ Graph::WeightedDirectedGraph<T> * edmondsAlgorithm(Graph::WeightedDirectedGraph<
 	//if yes, contract the cycle and then run the algorithm on the contracted graph
 
 	//first create a graph that is the same as retgraph
-	Graph::WeightedDirectedGraph<T> * contractedGraph = new Graph::WeightedDirectedGraph<T>(*retGraph);
+	Graph::WeightedDirectedGraph<T> * contractedGraph = DBG_NEW Graph::WeightedDirectedGraph<T>(*retGraph);
 
 	//then for every node in the cycle
 	for (unsigned int i = 0; i < cycle.size(); i++) {
@@ -461,7 +461,7 @@ SinglyLinkedList::LinkedList<unsigned int> djikstra(Graph::WeightedGraph<T> * g,
 	heap.insert({ &minDists[startNode], startNode });
 
 	//used to make sure that nodes dont get checked after theyve been popped off the heap
-	bool * noMoreChecking = new bool[g->size];
+	bool * noMoreChecking = DBG_NEW bool[g->size];
 	for (unsigned int i = 0; i < g->size; i++) {
 		noMoreChecking[i] = false;
 	}
@@ -510,6 +510,8 @@ SinglyLinkedList::LinkedList<unsigned int> djikstra(Graph::WeightedGraph<T> * g,
 	while (parents[ret.getVal(0)] != -1) {
 		ret.pushForwardsNode(parents[ret.getVal(0)]);
 	}
+
+	delete[] noMoreChecking;
 
 	return ret;
 }
@@ -586,9 +588,9 @@ template<class T>
 //graph cannot contain negative cycles
 std::vector<unsigned int> * bellmanFord(Graph::WeightedDirectedGraph<T> * g, unsigned int start, unsigned int end) {
 	//array of the minimum cost of getting to every node
-	int * opt = new int[g->size];
+	int * opt = DBG_NEW int[g->size];
 	//array of the node leading to every node(in the path 1->2->3 prev[3] is 2 and prev[2] is one)
-	unsigned int * prev = new unsigned int[g->size];
+	unsigned int * prev = DBG_NEW unsigned int[g->size];
 
 	//initialize infinite initial costs for each node
 	for (unsigned int i = 0; i < g->size; i++) {
@@ -619,7 +621,7 @@ std::vector<unsigned int> * bellmanFord(Graph::WeightedDirectedGraph<T> * g, uns
 		}
 	}
 
-	std::vector<unsigned int> * retPath = new std::vector<unsigned int>;
+	std::vector<unsigned int> * retPath = DBG_NEW std::vector<unsigned int>;
 	retPath->reserve(g->size);
 
 	//trace back through the optimal array
@@ -640,11 +642,11 @@ template<class T>
 //must be a graph without any negative cycles
 //improved version of bellman ford
 std::vector<unsigned int> * bellmanFordVectorProtocol(Graph::WeightedDirectedGraph<T> * g, unsigned int start, unsigned int end) {
-	int * opt = new int[g->size];
-	unsigned int * prev = new unsigned int[g->size];
+	int * opt = DBG_NEW int[g->size];
+	unsigned int * prev = DBG_NEW unsigned int[g->size];
 
 	//tracks wether its value has been changed, and therefore wether it needs to be recalculated
-	bool * changed = new bool[g->size];
+	bool * changed = DBG_NEW bool[g->size];
 
 	for (unsigned int i = 0; i < g->size; i++) {
 		opt[i] = INT_MAX / 2;
@@ -684,7 +686,7 @@ std::vector<unsigned int> * bellmanFordVectorProtocol(Graph::WeightedDirectedGra
 		if (!somethingChanged) break;
 	}
 
-	std::vector<unsigned int> * retPath = new std::vector<unsigned int>;
+	std::vector<unsigned int> * retPath = DBG_NEW std::vector<unsigned int>;
 	retPath->reserve(g->size);
 
 	while (end != start) {
@@ -705,11 +707,11 @@ template<class T>
 //must be a graph without any negative cycles
 //improved version of bellman ford
 std::vector<unsigned int> * bellmanFordAsynchronous(Graph::WeightedDirectedGraph<T> * g, unsigned int start, unsigned int end) {
-	int * opt = new int[g->size];
-	unsigned int * prev = new unsigned int[g->size];
+	int * opt = DBG_NEW int[g->size];
+	unsigned int * prev = DBG_NEW unsigned int[g->size];
 
 	//tracks wether its value has been changed, and therefore wether it needs to be recalculated
-	bool * active = new bool[g->size];
+	bool * active = DBG_NEW bool[g->size];
 
 	for (unsigned int i = 0; i < g->size; i++) {
 		opt[i] = INT_MAX / 2;
@@ -749,7 +751,7 @@ std::vector<unsigned int> * bellmanFordAsynchronous(Graph::WeightedDirectedGraph
 		if (!oneActive) break;
 	}
 
-	std::vector<unsigned int> * retPath = new std::vector<unsigned int>;
+	std::vector<unsigned int> * retPath = DBG_NEW std::vector<unsigned int>;
 	retPath->reserve(g->size);
 
 	while (end != start) {
@@ -944,7 +946,7 @@ tryTheRest://to check every connected component for loops
 template<class T>
 //returns wether there is a negative cycle in the graph or not
 bool negativeCycleDetector(Graph::WeightedDirectedGraph<T> * g) {
-	int * opt = new int[g->size];
+	int * opt = DBG_NEW int[g->size];
 
 	for (unsigned int i = 0; i < g->size; i++) {
 		opt[i] = INT_MAX / 2;
@@ -984,8 +986,8 @@ bool negativeCycleDetector(Graph::WeightedDirectedGraph<T> * g) {
 template<class T>
 //returns a negative cycle of g
 std::vector<unsigned int> * negativeCycleGetter(Graph::WeightedDirectedGraph<T> * g) {
-	int * opt = new int[g->size];
-	unsigned int * prev = new unsigned int[g->size];
+	int * opt = DBG_NEW int[g->size];
+	unsigned int * prev = DBG_NEW unsigned int[g->size];
 
 	for (unsigned int i = 0; i < g->size; i++) {
 		opt[i] = INT_MAX / 2;
@@ -1032,7 +1034,7 @@ std::vector<unsigned int> * negativeCycleGetter(Graph::WeightedDirectedGraph<T> 
 
 cycleFound:
 
-	std::vector<unsigned int> * retVec = new std::vector<unsigned int>;
+	std::vector<unsigned int> * retVec = DBG_NEW std::vector<unsigned int>;
 	retVec->reserve(g->size / 2);
 
 	unsigned int loopVal = prev[negLoop];
@@ -1125,7 +1127,7 @@ bool isDAG(Graph::DirectedGraph<T> g) {//object pointed to is destroyed by delet
 template<class T>
 //returns a sorted vector where every element of the vector has no parents in the graph that come before it
 std::vector<unsigned int> * topologicalSort(Graph::DirectedGraph<T> g) {
-	std::vector<unsigned int> * retVec = new std::vector<unsigned int>;
+	std::vector<unsigned int> * retVec = DBG_NEW std::vector<unsigned int>;
 	retVec->reserve(g.size);
 
 	while(g.size) {

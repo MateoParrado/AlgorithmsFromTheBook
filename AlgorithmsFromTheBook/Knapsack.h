@@ -23,7 +23,7 @@ std::vector<int> * knapsackPacker(std::pair<unsigned int, unsigned int> * x, uns
 		}
 	}
 
-	std::vector<int> * retVec = new std::vector<int>;
+	std::vector<int> * retVec = DBG_NEW std::vector<int>;
 
 	//backtrack through the memoization
 	int checkNum = size;

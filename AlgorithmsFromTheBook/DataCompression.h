@@ -17,7 +17,7 @@ std::shared_ptr<Graph::BinaryTree<char>> generateHoffmanCodes(std::vector<std::p
 	if (!minWeights) {//if this is the first time being run
 		deleteWeights = true;
 
-		minWeights = new Heap::Heap<std::pair<float, char>>(frequencies->size());
+		minWeights = DBG_NEW Heap::Heap<std::pair<float, char>>(frequencies->size());
 		
 		//set up a heap with lowest frequencies at the bottom
 		for (unsigned int i = 0; i < frequencies->size(); i++) {
