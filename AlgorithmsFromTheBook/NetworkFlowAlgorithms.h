@@ -343,7 +343,7 @@ unsigned int preflowPush(const Graph::WeightedDirectedGraph<T> & graph, unsigned
 	std::vector<std::pair<unsigned int, unsigned int>> excess;
 
 	//tracks the next edge that needs to be traversed for each node
-	std::vector<int> current(graph.size);
+	std::vector<unsigned int> current(graph.size);
 
 	excess.reserve(graph.size - 1);//because the start and end nodes can have no excess
 
@@ -1134,7 +1134,15 @@ bool surveyCanBeDesigned(unsigned int customerNum, unsigned int productNum, bool
 	return retVal;
 }
 
+//tells you if a certain number of planes can complete a certain number of flights between some cities
+//flights is a pointer to an array of flight structs, which hold the starting city, the ending city, and the starting time of each flight, these flighs are requirements
+//flight cost is a two dimensional array, where flightCost[i][j] = flightCost[j][i] = cost of going from city i to j
+//city num is the number of distinct cities
+//maintenance time is the downtime that a plane needs to spend at each airport before it is ready to take off again
+//flights may be added in, the change the airport a plane is at
 //FLIGHTS MUST BE SORTED BY START TIME
+//START TIMES MUST BE IN MILITARY TIME
+//IF THIS ALGORITHM IS USED OVER A SPAN OF MORE THAN ONE DAY, THE TIMES OF DAY J MUST HAVE 24 * J ADDED TO THEM
 bool planesCanBeScheduled(FlightStruct * flights, unsigned int numberOfFlights, float * flightCost, unsigned int cityNum, unsigned int numberOfPlanes, unsigned int maintenanceTime) {
 	Graph::WeightedDirectedGraph<char> g(cityNum + 2);
 
@@ -1185,10 +1193,10 @@ bool planesCanBeScheduled(FlightStruct * flights, unsigned int numberOfFlights, 
 		
 	}
 
-	int * demands = DBG_NEW int[cityNum + 2]{ 0 };
+	int * demands = DBG_NEW int[numberOfFlights * 2 + 2]{ 0 };
 
-	demands[numberOfFlights * 2] = numberOfPlanes;
-	demands[numberOfFlights * 2 + 1] = -(int)numberOfPlanes;
+	demands[numberOfFlights * 2 + 1] = numberOfPlanes;
+	demands[numberOfFlights * 2] = -(int)numberOfPlanes;
 
 	unsigned int * bounds = DBG_NEW unsigned int[edgeNum] {0};
 
@@ -1206,6 +1214,9 @@ bool planesCanBeScheduled(FlightStruct * flights, unsigned int numberOfFlights, 
 	for (unsigned int i = 0; i < edgeNum; i++) {
 		std::cout << bounds[i] << " ";
 	}
+	std::cout << edgeNum << " ";
+
+	//for(unsigned int i = 0; i < cityNum )
 
 	bool retVal = differentlyBoundedMaximumCirculation(g, demands, bounds);
 

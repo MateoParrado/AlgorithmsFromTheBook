@@ -11,6 +11,8 @@ std::vector<int> * knapsackPacker(std::pair<unsigned int, unsigned int> * x, uns
 
 	//make a two dimensional memoization, one dim is with the different items being included or excluded
 	//and the other is how much weight we have left
+#pragma warning(disable : 4018)
+
 	for (index i = 0; i < size; i++) {
 		for (index w = 1; w < capacity + 1; w++) {
 			//would the current item overflow the knapsack?
@@ -23,11 +25,13 @@ std::vector<int> * knapsackPacker(std::pair<unsigned int, unsigned int> * x, uns
 		}
 	}
 
+#pragma warning(default : 4018)
+
 	std::vector<int> * retVec = DBG_NEW std::vector<int>;
 
 	//backtrack through the memoization
-	int checkNum = size;
-	int checkCap = capacity;
+	unsigned int checkNum = size;
+	unsigned int checkCap = capacity;
 
 	while (opt[checkNum][checkCap]) {
 		if (x[checkNum - 1].second > checkCap) {

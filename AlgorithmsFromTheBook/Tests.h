@@ -815,9 +815,10 @@ void airlinesTester() {
 						 { 10000, 10000, 10000, 10000, 10000, 1, 0, 1 },
 						 { 10000, 10000, 10000, 10000, 1, 1, 1, 0 } };
 
-	//assert(planesCanBeScheduled(&x[0], 6, &costs[0][0], 8, 3, 1));
-	//assert(!planesCanBeScheduled(&x[0], 6, &costs[0][0], 8, 1, 1));
-	//assert(!planesCanBeScheduled(&x[0], 6, &costs[0][0], 8, 2, 3));
+	assert(planesCanBeScheduled(&x[0], 6, &costs[0][0], 8, 3, 1));
+	assert(planesCanBeScheduled(&x[0], 6, &costs[0][0], 8, 2, 1));
+	assert(!planesCanBeScheduled(&x[0], 6, &costs[0][0], 8, 1, 1));
+	assert(!planesCanBeScheduled(&x[0], 6, &costs[0][0], 8, 2, 3));
 }
 
 /*RNA*/
