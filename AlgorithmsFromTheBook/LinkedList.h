@@ -22,7 +22,7 @@ namespace SinglyLinkedList {
 		LinkedList() {  }
 
 		//add node at end of list by value
-		virtual void pushBackNode(T val) {
+		void pushBackNode(T val) {
 			Node<T> * temp = DBG_NEW Node<T>(val);
 
 			if (head == nullptr) {
@@ -39,7 +39,7 @@ namespace SinglyLinkedList {
 		}
 
 		//add to the front by value
-		virtual void pushForwardsNode(T val) {
+		void pushForwardsNode(T val) {
 			Node<T> * temp = DBG_NEW Node<T>(val);
 
 			temp->next = head;
@@ -49,7 +49,7 @@ namespace SinglyLinkedList {
 		}
 
 		//insert a node by value
-		virtual void insertNode(T val, unsigned int pos) {			
+		void insertNode(T val, unsigned int pos) {
 			Node<T> * temp = DBG_NEW Node<T>(val);
 			if (!size) {
 				head = temp;
@@ -88,7 +88,7 @@ namespace SinglyLinkedList {
 		}
 
 		//add node at end of list by pointer
-		virtual void pushBackNode(Node<T> * temp) {
+		void pushBackNode(Node<T> * temp) {
 			if (head == nullptr) {
 				head = temp;
 				tail = temp;
@@ -103,7 +103,7 @@ namespace SinglyLinkedList {
 		}
 
 		//add to the front by pointer
-		virtual void pushForwardsNode(Node<T> * temp) {
+		void pushForwardsNode(Node<T> * temp) {
 			temp->next = head;
 			head = temp;
 
@@ -111,7 +111,7 @@ namespace SinglyLinkedList {
 		}
 
 		//insert a node by pointer
-		virtual void insertNode(Node<T> * temp, unsigned int pos) {
+		void insertNode(Node<T> * temp, unsigned int pos) {
 			if (!pos) {//first?
 				temp->next = head;
 				head = temp;
@@ -146,7 +146,7 @@ namespace SinglyLinkedList {
 		//delete front node
 		T popFrontNode() {
 			if (size == 0) throw true;
-			
+
 			Node<T> * temp = head;
 
 			head = head->next;
@@ -161,7 +161,7 @@ namespace SinglyLinkedList {
 		}
 
 		//deleting a node at any position, no specific one for popping from back because it has no performance change
-		virtual T popNode(unsigned int pos) {
+		T popNode(unsigned int pos) {
 			if (pos >= size) throw false;
 
 			Node<T> * prev = nullptr;
@@ -195,7 +195,7 @@ namespace SinglyLinkedList {
 		}
 
 		//remove a node at any position without deleting, no specific one for popping from back because it has no performance change
-		virtual void unlinkNode(unsigned int pos) {
+		void unlinkNode(unsigned int pos) {
 			if (pos >= size) throw false;
 
 			Node<T> * prev = nullptr;
@@ -211,7 +211,7 @@ namespace SinglyLinkedList {
 			size--;
 		}
 
-		virtual T getVal(unsigned int _i) {
+		T getVal(unsigned int _i) {
 			Node<T> * temp = head;
 
 			for (unsigned int i = 0; i < _i; i++) {
@@ -221,7 +221,7 @@ namespace SinglyLinkedList {
 			return (*temp).obj;
 		}
 
-		virtual T operator[](unsigned int _i) {
+		T operator[](unsigned int _i) {
 			Node<T> * temp = head;
 
 			for (unsigned int i = 0; i < _i; i++) {
@@ -279,18 +279,29 @@ namespace SinglyLinkedList {
 			}
 		}
 	};
+}
+
+namespace XORLinkedList{
+	template <class T>
+	struct Node {
+		T obj;
+		Node<T> * next;
+
+		Node(T _obj) : obj(_obj), next(nullptr) {};
+		Node(Node<T> * _node) : obj(_node->obj), next(nullptr) {};
+	};
 
 	template<class T>
-	struct XORLinkedList{
+	struct LinkedList{
 		Node<T> * head = nullptr;
 		Node<T> * tail = nullptr;
 
 		unsigned int size = 0;
 
-		XORLinkedList() {};
+		LinkedList() {};
 
 		//add node at end of list by value
-		virtual void pushBackNode(T val) {
+		void pushBackNode(T val) {
 			Node<T> * temp = DBG_NEW Node<T>(val);
 
 			if (head == nullptr) {
@@ -328,7 +339,7 @@ namespace SinglyLinkedList {
 			size++;
 		}
 
-		virtual void insertNode(T val, unsigned int pos) {
+		void insertNode(T val, unsigned int pos) {
 			if (pos > size) {
 				throw 1;
 			}
@@ -362,7 +373,7 @@ namespace SinglyLinkedList {
 		}
 
 		//add node at end of list by pointer
-		virtual void pushBackNode(Node<T> * temp) {
+		void pushBackNode(Node<T> * temp) {
 			if (head == nullptr) {
 				head = temp;
 				tail = temp;
@@ -377,7 +388,7 @@ namespace SinglyLinkedList {
 			size++;
 		}
 
-		virtual void pushForwardsNode(Node<T> * temp) {
+		void pushForwardsNode(Node<T> * temp) {
 			if (head == nullptr) {
 				head = temp;
 				tail = temp;
@@ -392,7 +403,7 @@ namespace SinglyLinkedList {
 			size++;
 		}
 
-		virtual void insertNode(Node<T> * temp, unsigned int pos) {
+		void insertNode(Node<T> * temp, unsigned int pos) {
 			if (pos > size) {
 				throw 3;
 			}
@@ -507,7 +518,7 @@ namespace SinglyLinkedList {
 			return t;
 		}
 
-		virtual T getVal(unsigned int _i) {
+		T getVal(unsigned int _i) {
 			if (_i >= size) {
 				throw 4;
 			}
@@ -529,7 +540,7 @@ namespace SinglyLinkedList {
 			return cur->obj;
 		}
 
-		virtual T operator[](unsigned int _i) {
+		T operator[](unsigned int _i) {
 			if (_i >= size) {
 				throw 4;
 			}
@@ -569,7 +580,7 @@ namespace SinglyLinkedList {
 		}
 
 		/*RULE OF FIVE*/
-		XORLinkedList(const XORLinkedList& old) {
+		LinkedList(const LinkedList& old) {
 			Node<T> * cur = old.head;
 			Node<T> * prev = nullptr;
 			Node<T> * next; //dummy variable
@@ -584,9 +595,9 @@ namespace SinglyLinkedList {
 			}
 		}
 
-		XORLinkedList operator=(const XORLinkedList&) = delete;
+		LinkedList operator=(const LinkedList&) = delete;
 
-		XORLinkedList(XORLinkedList&& other) {
+		LinkedList(LinkedList&& other) {
 			head = other.head;
 			tail = other.tail;
 
@@ -597,10 +608,10 @@ namespace SinglyLinkedList {
 			other.size = 0;
 		}
 
-		XORLinkedList operator=(const XORLinkedList&&) = delete;
+		LinkedList operator=(const LinkedList&&) = delete;
 
 		//this is janky and ugly, but doesnt throw a segfault because the parent gets passed a null head ptr in the destructor
-		~XORLinkedList() {
+		~LinkedList() {
 			if (head) {
 				Node<T> * cur = head;
 				Node<T> * prev = nullptr;

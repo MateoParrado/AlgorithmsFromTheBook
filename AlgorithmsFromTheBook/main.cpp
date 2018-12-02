@@ -59,10 +59,10 @@ int main() {
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif
 
-	for (int i = 0; i < 100; i++) {
-		clock_t startTime = clock();
-		runAllTests();
-		std::cout << double(clock() - startTime) / (double)CLOCKS_PER_SEC << " seconds." << std::endl;
-	}
+	//for (int i = 0; i < 100; i++) {
+	clock_t startTime = clock();
+	runAllTests();
+	std::cout << double(clock() - startTime) / (double)CLOCKS_PER_SEC << " seconds." << std::endl;
+	//}
 	std::getchar();
 }

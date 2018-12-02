@@ -325,7 +325,7 @@ std::string breadthFirstSearch(Graph::Graph<T> * g, int start, int end) {
 	std::vector<bool> visited(g->size);//to not double count nodes
 	visited[start] = true;
 
-	SinglyLinkedList::XORLinkedList<std::string> ret;
+	XORLinkedList::LinkedList<std::string> ret;
 
 	ret.pushBackNode(std::to_string(start));
 
@@ -369,11 +369,11 @@ endLoop:
 
 template<class T>
 //find path between node start and node end using DFS
-SinglyLinkedList::XORLinkedList<int> depthFirstSearch(Graph::Graph<T> * g, int start, int end) {
+XORLinkedList::LinkedList<int> depthFirstSearch(Graph::Graph<T> * g, int start, int end) {
 	std::vector<bool> visited((*g).size);//to not double count nodes
 	visited[start] = true;
 
-	SinglyLinkedList::XORLinkedList<int> ret;
+	XORLinkedList::LinkedList<int> ret;
 
 	ret.pushBackNode(start);
 
@@ -442,10 +442,10 @@ std::vector<unsigned int> djikstraMinDist(Graph::WeightedGraph<T> * g, unsigned 
 
 template<class T>
 //Djikstras pathfinding algorithm
-SinglyLinkedList::XORLinkedList<unsigned int> djikstra(Graph::WeightedGraph<T> * g, unsigned int startNode, unsigned int endNode) {
+XORLinkedList::LinkedList<unsigned int> djikstra(Graph::WeightedGraph<T> * g, unsigned int startNode, unsigned int endNode) {
 	//edge case
 	if (startNode == endNode) {
-		SinglyLinkedList::XORLinkedList<unsigned int> l;
+		XORLinkedList::LinkedList<unsigned int> l;
 		l.pushBackNode((unsigned int)0);
 		return l;
 	}
@@ -502,7 +502,7 @@ SinglyLinkedList::XORLinkedList<unsigned int> djikstra(Graph::WeightedGraph<T> *
 		}
 	}
 
-	SinglyLinkedList::XORLinkedList<unsigned int> ret;
+	XORLinkedList::LinkedList<unsigned int> ret;
 
 	ret.pushBackNode(endNode);
 
@@ -519,7 +519,7 @@ SinglyLinkedList::XORLinkedList<unsigned int> djikstra(Graph::WeightedGraph<T> *
 template<class T>
 //A* informed search algorithm
 //only works for pairs of integer types that represet coordinates, might change that later
-SinglyLinkedList::XORLinkedList<unsigned int> aStar(Graph::Graph<std::pair<T, T>> * g, unsigned int start, unsigned int end) {
+XORLinkedList::LinkedList<unsigned int> aStar(Graph::Graph<std::pair<T, T>> * g, unsigned int start, unsigned int end) {
 	struct heuristicScore {
 		double f = 0;
 		double g = 0;
@@ -773,7 +773,7 @@ template<class T>
 bool breadthFirstConnectivityTest(Graph::Graph<T> * g) {
 	std::vector<bool> visited(g->size);
 
-	SinglyLinkedList::XORLinkedList<int> nextToCheck;//zero init
+	XORLinkedList::LinkedList<int> nextToCheck;//zero init
 
 	nextToCheck.pushBackNode(0);
 
@@ -802,7 +802,7 @@ bool depthFirstConnecivityTest(Graph::Graph<T> * g) {
 	std::vector<bool> visited((*g).size);//to not double count nodes
 	visited[0] = true;
 
-	SinglyLinkedList::XORLinkedList<int> path;
+	XORLinkedList::LinkedList<int> path;
 
 	path.pushBackNode(0);
 
@@ -839,7 +839,7 @@ bool depthFirstCycleTest(Graph::Graph<T> * g) {
 
 	std::vector<unsigned int> nextCheck(g->size);//so that when a parents child gets popped it restarts its search where it should
 
-	SinglyLinkedList::XORLinkedList<int> path;
+	XORLinkedList::LinkedList<int> path;
 
 	path.pushBackNode(0);
 
@@ -887,7 +887,7 @@ std::vector<unsigned int> depthFirstCycleGetter(Graph::Graph<T> * g) {
 
 	std::vector<unsigned int> nextCheck(g->size);//so that when a parents child gets popped it restarts its search where it should
 
-	SinglyLinkedList::XORLinkedList<int> path;
+	XORLinkedList::LinkedList<int> path;
 
 	path.pushBackNode(0);
 
@@ -908,14 +908,14 @@ tryTheRest://to check every connected component for loops
 				std::vector<unsigned int> ret;
 				ret.reserve(path.size);
 
-				SinglyLinkedList::Node<T> * cur = path.head;
-				SinglyLinkedList::Node<T> * prev = nullptr;
-				SinglyLinkedList::Node<T> * next; //dummy variable
+				XORLinkedList::Node<T> * cur = path.head;
+				XORLinkedList::Node<T> * prev = nullptr;
+				XORLinkedList::Node<T> * next; //dummy variable
 
 				while (cur) {
 					ret.push_back(cur->obj);
 
-					next = (SinglyLinkedList::Node<T> *)((uintptr_t)(prev) ^ (uintptr_t)(cur->next));
+					next = (XORLinkedList::Node<T> *)((uintptr_t)(prev) ^ (uintptr_t)(cur->next));
 
 					prev = cur;
 					cur = next;
@@ -1066,7 +1066,7 @@ bool isBipartite(Graph::Graph<T> * g) {
 
 	std::vector<unsigned int> nextCheck(g->size);//so that when a parents child gets popped it restarts its search where it should
 
-	SinglyLinkedList::XORLinkedList<int> path;
+	XORLinkedList::LinkedList<int> path;
 
 	path.pushBackNode(0);
 
