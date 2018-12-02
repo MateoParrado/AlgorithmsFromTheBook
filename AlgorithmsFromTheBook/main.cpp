@@ -2,13 +2,13 @@
 #pragma warning (error : 4995)
 
 //for memory leak detection
-#define _CRTDBG_MAP_ALLOC  
+#ifdef _DEBUG
+	#define _CRTDBG_MAP_ALLOC  
+#endif
 
 //if its debug mode, take more info about memory leak line numbers, if its release then we dont care about it
 #ifdef _DEBUG
 	#define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
-	// Replace _NORMAL_BLOCK with _CLIENT_BLOCK if you want the
-	// allocations to be of _CLIENT_BLOCK type
 #else
 	#define DBG_NEW new
 #endif
@@ -54,23 +54,15 @@
 using namespace std;
 
 int main() {
+#ifdef _DEBUG
+	//to track memory leaks
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-//	Graph::ResidualGraph<std::pair<int, int>> y(x);
-	//std::cout << dijkstraGcd(468, 24);
+#endif
 
-	int x = 0;
-
-	for (int i = 0; i < 1; i++) {
-		//clock_t startTime = clock();
+	for (int i = 0; i < 100; i++) {
+		clock_t startTime = clock();
 		runAllTests();
-		//std::cout << double(clock() - startTime) / (double)CLOCKS_PER_SEC << " seconds." << std::endl;
-	}
-	{
-		DoublyLinkedList::LinkedList<char> t;
-
-		t.pushBackNode(1);
-		t.pushForwardsNode(2);
-		t.insertNode(3, 1);
+		std::cout << double(clock() - startTime) / (double)CLOCKS_PER_SEC << " seconds." << std::endl;
 	}
 	std::getchar();
 }

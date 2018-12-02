@@ -66,7 +66,7 @@ std::shared_ptr<Graph::BinaryTree<char>> generateHoffmanCodes(std::vector<std::p
 
 //adds the huffman encoding of char str to the vector of booleans vec 
 void retraceThroughTree(char str, std::vector<bool> * vec, std::shared_ptr<Graph::BinaryTree<char>> codes) {
-	SinglyLinkedList::LinkedList<bool> addToVec;
+	SinglyLinkedList::XORLinkedList<bool> addToVec;
 
 	unsigned int i = codes->getPosByValue(str);
 

@@ -181,7 +181,7 @@ void firstSearchesTester() {
 	g.addEdge(4, 5);
 
 	//this path can really be anything, so it needs to be checked by hand
-	SinglyLinkedList::LinkedList<int> list = depthFirstSearch(&g, 4, 3);
+	SinglyLinkedList::XORLinkedList<int> list = depthFirstSearch(&g, 4, 3);
 
 	std::string str = breadthFirstSearch(&g, 4, 3);
 	assert(str == "403");//can only be one thing because it always finds optimal path
@@ -189,7 +189,7 @@ void firstSearchesTester() {
 	g.removeEdge(4, 0);
 	g.removeEdge(5, 4);
 
-	SinglyLinkedList::LinkedList<int> x = depthFirstSearch(&g, 4, 3);
+	SinglyLinkedList::XORLinkedList<int> x = depthFirstSearch(&g, 4, 3);
 	assert(!x.size);
 
 	str = breadthFirstSearch(&g, 4, 3);
@@ -235,12 +235,12 @@ void dijkstraTester() {
 	g.addEdge(0, 5, 3);
 	g.addEdge(4, 5, 1);
 
-	SinglyLinkedList::LinkedList<unsigned int> path = djikstra(&g, 0, 0);
+	SinglyLinkedList::XORLinkedList<unsigned int> path = djikstra(&g, 0, 0);
 
 	assert(path.size == 1);
 	assert(path.popFrontNode() == 0);
 
-	SinglyLinkedList::LinkedList<unsigned int> path1 = djikstra(&g, 0, 3);
+	SinglyLinkedList::XORLinkedList<unsigned int> path1 = djikstra(&g, 0, 3);
 
 	assert(path1.size == 3);
 	assert(path1.popFrontNode() == 0);
@@ -874,7 +874,7 @@ void stableMatchingTester() {
 	unsigned int men[4][4] = { { 0, 1, 2, 3 },{ 2, 1, 3, 0 },{ 0, 2, 3, 1 },{ 3, 2, 0, 1 } };
 	unsigned int women[4][4] = { { 3, 2, 0, 1 },{ 0, 2, 3, 1 },{ 0, 1, 2, 3 },{ 2, 1, 3, 0 } };
 
-	SinglyLinkedList::LinkedList<unsigned int> menList;
+	SinglyLinkedList::XORLinkedList<unsigned int> menList;
 	menList.pushBackNode((unsigned int)0);
 	menList.pushBackNode(1);
 	menList.pushBackNode(2);
@@ -882,7 +882,7 @@ void stableMatchingTester() {
 
 	std::vector<std::pair<unsigned int, unsigned int>> match = stableMatch(menList, &men[0][0], &women[0][0]);
 
-	assert(match.size() == menList.size);
+	assert(match.size() == 4);
 
 	for (unsigned int i = 0; i < match.size(); i++) {
 		//make sure that every element in the matching is one of the correct elements of the answer, but not necessarily in any order

@@ -4,7 +4,7 @@
 
 //finds a stable matching between two sets of "men" and "women"
 //the second two parameters should be pointers to the 0th index of two dimensional arrays
-std::vector<std::pair<unsigned int, unsigned int>> stableMatch(SinglyLinkedList::LinkedList<unsigned int> men, const unsigned int * firstManFirstPick, const unsigned int * firstWomanFirstPick) {
+std::vector<std::pair<unsigned int, unsigned int>> stableMatch(SinglyLinkedList::XORLinkedList<unsigned int>& men, const unsigned int * firstManFirstPick, const unsigned int * firstWomanFirstPick) {
 	const unsigned int originalSize = men.size;
 
 	std::vector<std::pair<unsigned int, unsigned int>> ret;
