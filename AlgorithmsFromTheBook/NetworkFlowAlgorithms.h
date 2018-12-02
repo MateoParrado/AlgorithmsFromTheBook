@@ -1211,13 +1211,6 @@ bool planesCanBeScheduled(FlightStruct * flights, unsigned int numberOfFlights, 
 		numOn += g.getChildNum(i);
 	}
 
-	for (unsigned int i = 0; i < edgeNum; i++) {
-		std::cout << bounds[i] << " ";
-	}
-	std::cout << edgeNum << " ";
-
-	//for(unsigned int i = 0; i < cityNum )
-
 	bool retVal = differentlyBoundedMaximumCirculation(g, demands, bounds);
 
 	delete[] demands;
