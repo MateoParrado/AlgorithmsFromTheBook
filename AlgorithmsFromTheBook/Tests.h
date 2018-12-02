@@ -538,6 +538,28 @@ void topologicalSortTester() {
 	assert(!isDAG(g));
 }
 
+void vertexCoverTester() {
+	for (unsigned int i = 0; i < 5; i++) {
+		Graph::Graph<int> g(7);
+
+		for (int i = 0; i < 7; i++) {
+			g.addNode(i);
+		}
+
+		g.addEdge(0, 1);
+		g.addEdge(0, 2);
+		g.addEdge(1, 2);
+		g.addEdge(1, 3);
+		g.addEdge(1, 4);
+		g.addEdge(2, 5);
+		g.addEdge(2, 6);
+		g.addEdge(3, 6);
+		g.addEdge(4, 6);
+		g.addEdge(5, 6);
+
+		assert(hasKVertexCover(&g, i) == (i > 2));
+	}
+}
 
 /*INTERVAL SCHEDULING*/
 
@@ -1085,7 +1107,7 @@ void runAllTests() {
 	circulationsTester();
 	surveyTester();
 	airlinesTester();
-
+	vertexCoverTester();
 	//std::cout << double(clock() - startTime) / (double)CLOCKS_PER_SEC << " seconds." << std::endl;
 }
 

@@ -1156,3 +1156,72 @@ std::vector<unsigned int> * topologicalSort(Graph::DirectedGraph<T> g) {
 
 	return retVec;
 }
+
+/*VERTEX COVER*/
+
+template<class T>
+//computes wether or not there is a k vertex cover of a graph
+//will destroy the graph
+bool hasKVertexCover(Graph::Graph<T> * g, unsigned int k) {
+	//first check if the number of edges is greater than kn, because if it is there is no cover and no computation necessary
+	unsigned int edgeNum = 0;
+
+	for (unsigned int i = 0; i < g->size; i++) {
+		edgeNum += g->getEdgeNum(i);
+	}
+
+	if (edgeNum > k * g->size * 2) {
+		return false;
+	}
+
+	//otherwise take one arbitrary edge, and "include" one side of it, check if true, and then include the other
+	
+	//first get the lowest node with an edge
+	unsigned int node = -1;
+
+	for (unsigned int i = 0; i < g->size; i++) {
+		if (g->getEdgeNum(i)) {
+			node = i;
+			break;
+		}
+	}
+
+	//if there are no edges, the empty set is a vertex cover
+	if (node == -1) {
+		return true;
+	}
+
+	//to add it back in in case the first run turns out to be false
+	T nodeObj = g->nodes[node].obj;
+
+	std::vector<unsigned int> copiedVec(g->getEdgeNum(node));
+
+	for (unsigned int i = 0; i < copiedVec.size(); i++) {
+		copiedVec[i] = g->getOtherSideOfEdge(node, i);
+		if (copiedVec[i] > node) {
+			copiedVec[i]--;
+		}
+	}
+
+	g->removeNode(node);
+
+	if (hasKVertexCover(g, k - 1)) {
+		g->addNode(nodeObj);
+
+		for (unsigned int i = 0; i < copiedVec.size(); i++) {
+			g->addEdge(g->size - 1, copiedVec[i]);
+		}
+
+		return true;
+	}
+
+	g->addNode(nodeObj);
+
+	for (unsigned int i = 0; i < copiedVec.size(); i++) {
+		g->addEdge(g->size - 1, copiedVec[i]);
+	}
+
+	g->removeNode(g->getOtherSideOfEdge(g->size - 1, 0));
+
+	return hasKVertexCover(g, k - 1);
+}

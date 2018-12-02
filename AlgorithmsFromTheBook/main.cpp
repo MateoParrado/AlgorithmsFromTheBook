@@ -47,6 +47,7 @@
 #include "Tests.h"
 
 //TODO
+//write three network flow algorithms, they just got too tedius and boring (start on page 414/396)
 //figure out whats going on with the template thing in the residual graph from bipartite graph constructor, and get rid of it for speed
 ///optimizaitons in segmented linear regression (266/284), calculate errors in constant time
 //implement tests for A*, kmeans, kruskal cluster, knapsack packer, FFT
