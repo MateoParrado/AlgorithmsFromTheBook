@@ -6,9 +6,9 @@ This is  a headers only library, because all of the data structures are template
 
 Many algorithms are in headers based on the data structure they deal with. For example, there is a header for algorithms that have to do with graphs, and another for algorithms that have to do with network flows. These headers are subdivided into categories based on the purpose of the algorithm, like minimum spanning tree algorithms, or maximum flow algorithms. Algorithms that are less connected to specific data structures (though they still may use them) are in headers based off of their purpose, such as data compression or clustering. 
 
-One thing to note is the FlightStruct header. This header defines a small struct used in an algorithm defined in NetworkFlowAlgorithms.h. It is included in its own header so it doesn't clutter the already very large header, even though other small data structures are typically defined in the header with their appropriate algorithms.
+One apparent exception to this rule is found in the linked list header. SinglyLinkedList and DoublyLinkedList are in different namespaces. This is because they rely on different node objects to connect their list, and therefore can;t inherit form each other, as they share no members. One actual exception to the rule is that XORLinkedList is in the SinglyLinkedList header, even though it is a doubly linked list. This is because even though it is doubly linked, it has only one pointer, and therefore relies on the same node object and inherits from the singly linked list.
 
-Another important exception to the rules listed above is the LinkedList header. Every type of linked list is in its own namespace. This is because they all have differently defined node structs, and so Node * should point to a different type of object for each one. 
+Another thing to note is the FlightStruct header. This header defines a small struct used in an algorithm defined in NetworkFlowAlgorithms.h. It is included in its own header so it doesn't clutter the already very large header, even though other small data structures are typically defined in the header with their appropriate algorithms.
 
 ## Getting Started
 Either clone or download the zip of the repository. Then simply take the header files you need and place them in your working directorhy, deleting all algorithms you don't need.
