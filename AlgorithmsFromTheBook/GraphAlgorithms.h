@@ -1157,7 +1157,7 @@ std::vector<unsigned int> * topologicalSort(Graph::DirectedGraph<T> g) {
 	return retVec;
 }
 
-/*VERTEX COVER*/
+/*VERTEX COVER / INDEPENDENT SET*/
 
 template<class T>
 //computes wether or not there is a k vertex cover of a graph
@@ -1224,4 +1224,36 @@ bool hasKVertexCover(Graph::Graph<T> * g, unsigned int k) {
 	g->removeNode(g->getOtherSideOfEdge(g->size - 1, 0));
 
 	return hasKVertexCover(g, k - 1);
+}
+
+template<class T>
+unsigned int independentSetOnTree(Graph::Graph<T> g) {
+	unsigned int retVal = 0;
+
+	//take all leaves, add them to the set and delete them and their parent
+	while (g.size) {
+		for (unsigned int i = 0; i < g.size; i++) {
+			//if it has no children it can clearly be in the set
+			if (!g.getEdgeNum(i)) {
+				retVal++;
+				g.removeNode(i);
+			}
+
+			else if (g.getEdgeNum(i) == 1) {
+				retVal++;
+
+				unsigned int temp = g.getOtherSideOfEdge(i, 0);
+
+				if (temp < i) {
+					g.removeNode(i);
+					g.removeNode(temp);
+				}
+				else {
+					g.removeNode(temp);
+					g.removeNode(i);
+				}
+			}
+		}
+	}
+	return retVal;
 }

@@ -561,6 +561,27 @@ void vertexCoverTester() {
 	}
 }
 
+void independentSetTester() {
+	Graph::Graph<int> g(10);
+
+	for (int i = 0; i < 5; g.addNode(i++));
+
+	g.addEdge(0, 1);
+	g.addEdge(0, 2);
+	g.addEdge(2, 3);
+	g.addEdge(2, 4);
+
+	assert(independentSetOnTree(g) == 3);
+
+	g.addNode(5);
+
+	assert(independentSetOnTree(g) == 4);
+
+	g.addEdge(1, 5);
+
+	assert(independentSetOnTree(g) == 4);
+}
+
 /*INTERVAL SCHEDULING*/
 
 void schedulingTester() {
@@ -1108,6 +1129,7 @@ void runAllTests() {
 	surveyTester();
 	airlinesTester();
 	vertexCoverTester();
+	independentSetTester();
 	//std::cout << double(clock() - startTime) / (double)CLOCKS_PER_SEC << " seconds." << std::endl;
 }
 
