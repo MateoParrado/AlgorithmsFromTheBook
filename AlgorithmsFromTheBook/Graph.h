@@ -62,7 +62,7 @@ namespace Graph {
 		}
 
 		//get is the node n1 is connected to n by position, not object value
-		bool hasChild(unsigned int n, unsigned int n1) {
+		virtual bool hasChild(unsigned int n, unsigned int n1) {
 			for (unsigned int i = 0; i < edges[n]->size()/2; i++) {
 				if (getOtherSideOfEdge(n, i) == n1) return true;
 			}
@@ -343,6 +343,190 @@ namespace Graph {
 					edges[i]->push_back(const_cast<WeightedGraph&>(g).getWeightOfEdge(i, const_cast<WeightedGraph&>(g).getOtherSideOfEdge(i, j)));
 				}
 			}
+		}
+	};
+
+	//IMPORTANT NODE: THIS GRAPH IS NOT NECESSARY FOR TREES
+	//THEY CAN EASILY BE REPRESENTD BY A TRADITIONAL GRAPH
+	//HOWEVER SOME ALGORITHMS REQUIRE THE KNOWLEDGE OF THE LEVEL OF THE TOP, WHICH IS THE ONLY REASON TO USE THIS CLASS
+	//IT ADDS O(N) SPACE
+	template<class T>
+	struct Tree : Graph<T> {
+		std::vector<unsigned int> levels;
+		unsigned int root;
+
+		//becaus of the way the levels system, the root node needs a default value
+		//it can still be changed later
+		//this roots it at zero, only way to avoid this is to construct it from a graph
+		Tree(T rootVal, unsigned int size = 10) : Graph(size) , root(0){
+			levels.reserve(size);
+
+			addNode(rootVal);
+
+			levels[0] = 0;
+		}
+
+		Tree(Graph<T> * g, unsigned int rootNode) : root(rootNode){
+			bool * visited = new bool[g->size]{ false };
+			std::vector<unsigned int> pending;
+			pending.reserve(g->size / 2);
+
+			levels.resize(g->size, -1);
+
+			for (unsigned int i = 0; i < g->size; i++) {
+				Graph::addNode(g->nodes[i].obj);
+			}
+
+			levels[rootNode] = 0;
+			visited[rootNode] = true;
+
+			//add the roots kids
+			for (unsigned int i = 0; i < g->getEdgeNum(rootNode); i++) {
+				addEdge(rootNode, g->getOtherSideOfEdge(rootNode, i));
+				visited[g->getOtherSideOfEdge(rootNode, i)] = true;
+				pending.push_back(g->getOtherSideOfEdge(rootNode, i));
+			}
+
+			while (pending.size()) {
+				unsigned int end = pending[pending.size() - 1];
+				pending.pop_back();
+
+				for (unsigned int i = 0; i < g->getEdgeNum(end); i++) {
+					if (!visited[g->getOtherSideOfEdge(end, i)]) {
+						addEdge(end, g->getOtherSideOfEdge(end, i));
+						visited[g->getOtherSideOfEdge(end, i)] = true;
+						pending.push_back(g->getOtherSideOfEdge(end, i));
+					}
+				}
+			}
+
+			delete[] visited;
+		}
+
+		virtual void addNode(T obj) {
+			Graph::addNode(obj);
+
+			levels.push_back(-1);
+		}
+
+		virtual void addEdge(unsigned int i, unsigned int j) {
+			if (levels[i] == -1){
+				levels[i] = levels[j] + 1;
+				Graph::addEdge(i, j);
+
+				return;
+			}
+			if (levels[j] == -1) {
+				levels[j] = levels[i] + 1;
+				Graph::addEdge(i, j);
+
+				return;
+			}
+
+			//if neither of them are negative one then adding the edge will add a cycle
+			throw 5;
+		}
+
+		//deletes not only n, but also all of its children
+		virtual void removeNode(unsigned int n) {
+			//if you delete the root, just erase everything
+			if (n == root) {
+				size = 0;
+
+				nodes.erase(nodes.begin(), nodes.end());
+				edges.erase(edges.begin(), edges.end());
+
+				levels.erase(levels.begin(), levels.end());
+
+				return;
+			}
+
+			//the original parent
+			unsigned int nPar = (*edges[n])[0];
+
+			while (n != nPar) {
+				//if it has children, go to them
+				if (edges[n]->size() > 1) {
+					n = (*edges[n])[1];
+				}
+				else {
+					unsigned int oldN = n;
+
+					//make n its parent
+					n = (*edges[n])[0];
+
+					levels.erase(levels.begin() + oldN, levels.begin() + oldN + 1);
+
+					Graph::removeNode(oldN);
+				}
+			}
+		}
+
+		//because it is a tree, removing an edge disconnects it, and makes you need to throw out a lot of nodes
+		virtual void removeEdge(unsigned int node, unsigned int edge) {
+			//if were deleting the node to its parent, delete it
+			if (!edge && node != root) {
+				removeNode(node);
+			}
+			//else remove the child it leads to
+			else {
+				removeNode((*edges[node])[edge]);
+			}
+		}
+
+		virtual bool hasChild(unsigned int n, unsigned int m) {
+			for (unsigned int i = 1; i < edges[n]->size() / 2; i++) {
+				if (getOtherSideOfEdge(n, i) == m) return true;
+			}
+
+			return false;
+		}
+
+		unsigned int getParent(unsigned int i) {
+			return (*edges[i])[0];
+		}
+
+		virtual unsigned int getChild(unsigned int i, unsigned int child) {
+			return (*edges[i])[child + 1];
+		}
+
+		virtual unsigned int getChildNum(unsigned int i) {
+			return edges[i]->size() - 1;
+		}
+
+		/*RULE OF THREE*/
+		Tree(const Tree& g) {
+			for (unsigned int i = 0; i < g.nodes.size(); i++) {
+				this->addNode(g.nodes[i].obj);
+
+				for (unsigned int j = 0; j < const_cast<Tree&>(g).getEdgeNum(i); j++) {
+
+					(*edges[i]).push_back(const_cast<Tree&>(g).getOtherSideOfEdge(i, j));
+				}
+			}
+
+			levels = g.levels;
+			root = g.root;
+		}
+
+		virtual Tree operator=(const Tree&) {
+			Tree<T> ret(nodes[0].obj, this->size);
+
+			//copy over the node values
+			for (unsigned int i = 1; i < this->size; i++) {
+				ret.addNode(nodes[i].obj);
+			}
+
+			for (unsigned int i = 0; i < this->edges.size(); i++) {
+				for (unsigned int j = 0; j < this->edges[i]->size(); j++) {
+					ret.edges[i]->push_back((*edges[i])[j]);
+				}
+			}
+
+			ret.levels = levels;
+			ret.root = root;
+
+			return ret;
 		}
 	};
 

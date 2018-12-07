@@ -47,6 +47,7 @@
 #include "Tests.h"
 
 //TODO
+//weighted tree, and forest
 //write three network flow algorithms, they just got too tedius and boring (start on page 414/396)
 //figure out whats going on with the template thing in the residual graph from bipartite graph constructor, and get rid of it for speed
 ///optimizaitons in segmented linear regression (266/284), calculate errors in constant time
@@ -65,5 +66,23 @@ int main() {
 	runAllTests();
 	std::cout << double(clock() - startTime) / (double)CLOCKS_PER_SEC << " seconds." << std::endl;
 	//}
+
+	Graph::Tree<int> t(0);
+
+	t.addNode(1);
+	t.addNode(2);
+	t.addNode(3);
+
+	t.addEdge(0, 1);
+	t.addEdge(0, 2);
+	t.addEdge(1, 3);
+
+	Graph::Tree<int> tr(t);
+	Graph::Tree<int> trr = t;
+
+	t.removeEdge(0, 0);
+	tr.removeEdge(1, 1);
+	trr.removeEdge(1, 0);
+
 	std::getchar();
 }
