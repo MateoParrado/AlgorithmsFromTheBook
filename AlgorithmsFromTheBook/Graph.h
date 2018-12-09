@@ -63,7 +63,7 @@ namespace Graph {
 
 		//get is the node n1 is connected to n by position, not object value
 		virtual bool hasChild(unsigned int n, unsigned int n1) {
-			for (unsigned int i = 0; i < edges[n]->size()/2; i++) {
+			for (unsigned int i = 0; i < edges[n]->size(); i++) {
 				if (getOtherSideOfEdge(n, i) == n1) return true;
 			}
 
@@ -224,128 +224,6 @@ namespace Graph {
 		}
 	};
 
-	template<class T>
-	struct WeightedGraph : virtual public Graph<T>{
-	public:
-		WeightedGraph(unsigned int size = 10) : Graph(size) {  }
-
-		unsigned int getTotalEdgesInGraph() {
-			return Graph::getTotalEdgesInGraph()/2;
-		}
-
-		//number of edges connected to vertex _i
-		unsigned int getEdgeNum(int _i) {
-			return (*edges[_i]).size() / 2;
-		}
-
-		//get the node pointed to by the _edge th edge of _node
-		unsigned int getOtherSideOfEdge(unsigned int _node, unsigned int _edge) {
-			return (*edges[_node])[_edge * 2];
-		}
-
-		//get weight of edge between n and m
-		virtual unsigned int getWeightOfEdge(unsigned int n, unsigned int m) {
-			if (edges[n]->size() < edges[m]->size()) {
-				for (unsigned int i = 0; i < edges[n]->size(); i += 2) {
-					if ((*edges[n])[i] == m) return (*edges[n])[i + 1];
-				}
-			}
-
-			for (unsigned int i = 0; i < edges[m]->size(); i += 2) {
-				if ((*edges[m])[i] == n) return (*edges[m])[i + 1];
-			}
-
-			return -1;
-		}
-
-		//get weight of posth edges of node n
-		virtual unsigned int getWeightOfEdgeByPos(unsigned int n, unsigned int pos) {
-			return (*edges[n])[pos + 1];
-		}
-
-		//add an edge by weight
-		void addEdge(unsigned int index1, unsigned int index2, unsigned int weight = 1) {
-			edges[index1]->push_back(index2);
-			edges[index2]->push_back(index1);
-
-			edges[index1]->push_back(weight);
-			edges[index2]->push_back(weight);
-		}
-
-		void removeNode(unsigned int num) {
-			delete edges[num];
-
-			edges.erase(begin(edges) + num);
-			nodes.erase(begin(nodes) + num);
-
-			//remove all links to it in its dependencies, as well as reduce the number of each one by one (beacuse it now has one less node)
-			for (unsigned int i = 0; i < edges.size(); i++) {
-				for (unsigned int j = edges[i]->size() - 2; j < edges[i]->size(); j -= 2) {
-					if ((*edges[i])[j] == num) {
-						edges[i]->erase(begin(*edges[i]) + j, begin(*edges[i]) + j + 2);//delete edge num and weight
-					}
-					else if ((*edges[i])[j] > num) {
-						(*edges[i])[j]--;
-					}
-				}
-			}
-
-			size--;
-		}
-
-		void removeEdge(unsigned int node1, unsigned int node2) {
-			for (unsigned int i = 0; i < edges[node1]->size(); i += 2) {
-				if ((*edges[node1])[i] == node2) {
-					edges[node1]->erase(edges[node1]->begin() + i, edges[node1]->begin() + i + 2);
-					break;
-				}
-			}
-
-			for (unsigned int i = 0; i < edges[node2]->size(); i += 2) {
-				if ((*edges[node2])[i] == node1) {
-					edges[node2]->erase(edges[node2]->begin() + i, edges[node2]->begin() + i + 2);
-					break;
-				}
-			}
-		}
-
-		//return true if the graph contains that edge
-		virtual bool hasEdge(unsigned int node1, unsigned int node2) {
-			for (unsigned int i = 0; i < edges[node1]->size(); i += 2) {
-				if ((*edges[node1])[i] == node2) {
-					return true;
-				}
-			}
-
-			return false;
-		}
-
-		virtual void display() {
-			for (unsigned int i = 0; i < nodes.size(); i++) {
-				std::cout << "NODE " << i << ": ";
-
-				for (unsigned int j = 0; j < edges[i]->size(); j += 2) {
-					std::cout << "{ " << (*edges[i])[j] << ", " << (*edges[i])[j+1] << " }, ";
-				}
-
-				std::cout << std::endl;
-			}
-		}
-
-		//copy constructor
-		WeightedGraph(const WeightedGraph& g) {
-			for (unsigned int i = 0; i < g.nodes.size(); i++) {
-				this->addNode(g.nodes[i].obj);
-
-				for (unsigned int j = 0; j < const_cast<WeightedGraph&>(g).getEdgeNum(i); j++) {
-
-					(*edges[i]).push_back(const_cast<WeightedGraph&>(g).getOtherSideOfEdge(i, j));
-					edges[i]->push_back(const_cast<WeightedGraph&>(g).getWeightOfEdge(i, const_cast<WeightedGraph&>(g).getOtherSideOfEdge(i, j)));
-				}
-			}
-		}
-	};
-
 	//IMPORTANT NODE: THIS GRAPH IS NOT NECESSARY FOR TREES
 	//THEY CAN EASILY BE REPRESENTD BY A TRADITIONAL GRAPH
 	//HOWEVER SOME ALGORITHMS REQUIRE THE KNOWLEDGE OF THE LEVEL OF THE TOP, WHICH IS THE ONLY REASON TO USE THIS CLASS
@@ -364,6 +242,10 @@ namespace Graph {
 			addNode(rootVal);
 
 			levels[0] = 0;
+		}
+
+		Tree(unsigned int rootNum) : root(rootNum) {
+			//this is just helping cover some weird inheritance cases down the line
 		}
 
 		Tree(Graph<T> * g, unsigned int rootNode) : root(rootNode){
@@ -475,7 +357,7 @@ namespace Graph {
 		}
 
 		virtual bool hasChild(unsigned int n, unsigned int m) {
-			for (unsigned int i = 1; i < edges[n]->size() / 2; i++) {
+			for (unsigned int i = 1; i < edges[n]->size(); i++) {
 				if (getOtherSideOfEdge(n, i) == m) return true;
 			}
 
@@ -499,9 +381,9 @@ namespace Graph {
 			for (unsigned int i = 0; i < g.nodes.size(); i++) {
 				this->addNode(g.nodes[i].obj);
 
-				for (unsigned int j = 0; j < const_cast<Tree&>(g).getEdgeNum(i); j++) {
+				for (unsigned int j = 0; j < const_cast<Tree&>(g).edges[i]->size(); j++) {
 
-					(*edges[i]).push_back(const_cast<Tree&>(g).getOtherSideOfEdge(i, j));
+					edges[i]->push_back((*const_cast<Tree&>(g).edges[i])[j]);
 				}
 			}
 
@@ -527,6 +409,327 @@ namespace Graph {
 			ret.root = root;
 
 			return ret;
+		}
+	};
+
+	template<class T>
+	struct WeightedTree : Tree<T> {
+		//becaus of the way the levels system, the root node needs a default value
+		//it can still be changed later
+		//this roots it at zero, only way to avoid this is to construct it from a graph
+		WeightedTree(T rootVal = T(), unsigned int size = 10) : Tree(rootVal, size){
+		}
+
+		WeightedTree(WeightedGraph<T> * g, unsigned int rootNode) : Tree(rootNode) {
+			bool * visited = new bool[g->size]{ false };
+			std::vector<unsigned int> pending;
+			pending.reserve(g->size / 2);
+
+			levels.resize(g->size, -1);
+
+			for (unsigned int i = 0; i < g->size; i++) {
+				Graph::addNode(g->nodes[i].obj);
+			}
+
+			levels[rootNode] = 0;
+			visited[rootNode] = true;
+
+			//add the roots kids
+			for (unsigned int i = 0; i < g->getEdgeNum(rootNode); i++) {
+				addEdge(rootNode, g->getOtherSideOfEdge(rootNode, i), g->getWeightOfEdgeByPos(rootNode, i << 1));
+				visited[g->getOtherSideOfEdge(rootNode, i)] = true;
+				pending.push_back(g->getOtherSideOfEdge(rootNode, i));
+			}
+			this;
+			while (pending.size()) {
+				unsigned int end = pending[pending.size() - 1];
+				pending.pop_back();
+
+				for (unsigned int i = 0; i < g->getEdgeNum(end); i++) {
+					if (!visited[g->getOtherSideOfEdge(end, i)]) {
+						addEdge(end, g->getOtherSideOfEdge(end, i), g->getWeightOfEdgeByPos(end, i << 1));
+						visited[g->getOtherSideOfEdge(end, i)] = true;
+						pending.push_back(g->getOtherSideOfEdge(end, i));
+					}
+				}
+			}
+
+			delete[] visited;
+		}
+
+		//deletes not only n, but also all of its children
+		virtual void removeNode(unsigned int n) {
+			//if you delete the root, just erase everything
+			if (n == root) {
+				size = 0;
+
+				nodes.erase(nodes.begin(), nodes.end());
+				edges.erase(edges.begin(), edges.end());
+
+				levels.erase(levels.begin(), levels.end());
+
+				return;
+			}
+
+			//the original parent
+			unsigned int nPar = (*edges[n])[0];
+
+			while (n != nPar) {
+				//if it has children, go to them
+				if (edges[n]->size() > 2) {
+					n = (*edges[n])[2];
+				}
+				else {
+					unsigned int oldN = n;
+
+					//make n its parent
+					n = (*edges[n])[0];
+
+					levels.erase(levels.begin() + oldN, levels.begin() + oldN + 1);
+
+					//WeightedGraph::removeNode 
+					delete edges[oldN];
+
+					edges.erase(begin(edges) + oldN);
+					nodes.erase(begin(nodes) + oldN);
+
+					//remove all links to it in its dependencies, as well as reduce the number of each one by one (beacuse it now has one less node)
+					for (unsigned int i = 0; i < edges.size(); i++) {
+						for (unsigned int j = edges[i]->size() - 2; j < edges[i]->size(); j -= 2) {
+							if ((*edges[i])[j] == oldN) {
+								edges[i]->erase(begin(*edges[i]) + j, begin(*edges[i]) + j + 2);
+							}
+							else if ((*edges[i])[j] > oldN) {
+								(*edges[i])[j]--;
+							}
+						}
+					}
+
+
+					size--;
+				}
+			}
+		}
+
+		//because it is a tree, removing an edge disconnects it, and makes you need to throw out a lot of nodes
+		virtual void removeEdge(unsigned int node, unsigned int edge) {
+			//if were deleting the node to its parent, delete it
+			if (!edge && node != root) {
+				removeNode(node);
+			}
+			//else remove the child it leads to
+			else {
+				removeNode((*edges[node])[edge << 1]);
+			}
+		}
+
+		virtual void addEdge(unsigned int i, unsigned int j, unsigned int w) {
+			if (levels[i] == -1) {
+				levels[i] = levels[j] + 1;
+
+				edges[i]->push_back(j);
+				edges[j]->push_back(i);
+
+				edges[i]->push_back(w);
+				edges[j]->push_back(w);
+
+				return;
+			}
+			if (levels[j] == -1) {
+				levels[j] = levels[i] + 1;
+				
+				edges[i]->push_back(j);
+				edges[j]->push_back(i);
+
+				edges[i]->push_back(w);
+				edges[j]->push_back(w);
+
+				return;
+			}
+
+			//if neither of them are negative one then adding the edge will add a cycle
+			throw 5;
+		}
+
+		virtual unsigned int getChild(unsigned int n, unsigned int i) {
+			return (*edges[n])[(i << 1) + 2];
+		}
+
+		virtual unsigned int getChildNum(unsigned int n) {
+			return (edges[n]->size() >> 2 )- 1;
+		}
+
+		virtual bool hasChild(unsigned int n, unsigned int m) {
+			for (unsigned int i = 2; i < edges[n]->size(); i += 2) {
+				if (getOtherSideOfEdge(n, i) == m) return true;
+			}
+
+			return false;
+		}
+
+		virtual bool hasEdge(unsigned int n, unsigned int m) {
+			for (unsigned int i = 0; i < edges[n]->size(); i += 2) {
+				if (getOtherSideOfEdge(n, i) == m) return true;
+			}
+
+			return false;
+		}
+
+		virtual unsigned int getEdgeNum(unsigned int n) {
+			return edges[n]->size() >> 1;
+		}
+
+		virtual unsigned int getOtherSideOfEdge(unsigned int n, unsigned int i) {
+			return (*edges[n])[i << 1];
+		}
+
+		virtual unsigned int getTotalEdgesInGraph() {
+			unsigned int tot = 0;
+
+			for (unsigned int i = 0; i < size; i++) {
+				tot += edges[i]->size();
+			}
+
+			return tot >> 1;
+		}
+
+		unsigned int getWeightOfEdge(unsigned int n, unsigned int i) {
+			return (*edges[n])[(i << 1) + 1];
+		}
+
+		unsigned int getWeightOfChild(unsigned int n, unsigned int i) {
+			return (*edges[n])[(i << 1) + 3];
+		}
+
+		unsigned int getWeightOfParent(unsigned int n) {
+			return (*edges[n])[1];
+		}
+
+		/*RULE OF THREE*/
+		WeightedTree(const WeightedTree& g) : Tree(g){
+
+		}
+	};
+
+	template<class T>
+	struct WeightedGraph : virtual public Graph<T> {
+	public:
+		WeightedGraph(unsigned int size = 10) : Graph(size) {  }
+
+		unsigned int getTotalEdgesInGraph() {
+			return Graph::getTotalEdgesInGraph() / 2;
+		}
+
+		//number of edges connected to vertex _i
+		unsigned int getEdgeNum(int _i) {
+			return (*edges[_i]).size() / 2;
+		}
+
+		//get the node pointed to by the _edge th edge of _node
+		unsigned int getOtherSideOfEdge(unsigned int _node, unsigned int _edge) {
+			return (*edges[_node])[_edge * 2];
+		}
+
+		//get weight of edge between n and m
+		virtual unsigned int getWeightOfEdge(unsigned int n, unsigned int m) {
+			if (edges[n]->size() < edges[m]->size()) {
+				for (unsigned int i = 0; i < edges[n]->size(); i += 2) {
+					if ((*edges[n])[i] == m) return (*edges[n])[i + 1];
+				}
+			}
+
+			for (unsigned int i = 0; i < edges[m]->size(); i += 2) {
+				if ((*edges[m])[i] == n) return (*edges[m])[i + 1];
+			}
+
+			return -1;
+		}
+
+		//get weight of posth edges of node n
+		virtual unsigned int getWeightOfEdgeByPos(unsigned int n, unsigned int pos) {
+			return (*edges[n])[pos + 1];
+		}
+
+		//add an edge by weight
+		void addEdge(unsigned int index1, unsigned int index2, unsigned int weight = 1) {
+			edges[index1]->push_back(index2);
+			edges[index2]->push_back(index1);
+
+			edges[index1]->push_back(weight);
+			edges[index2]->push_back(weight);
+		}
+
+		void removeNode(unsigned int num) {
+			delete edges[num];
+
+			edges.erase(begin(edges) + num);
+			nodes.erase(begin(nodes) + num);
+
+			//remove all links to it in its dependencies, as well as reduce the number of each one by one (beacuse it now has one less node)
+			for (unsigned int i = 0; i < edges.size(); i++) {
+				for (unsigned int j = edges[i]->size() - 2; j < edges[i]->size(); j -= 2) {
+					if ((*edges[i])[j] == num) {
+						edges[i]->erase(begin(*edges[i]) + j, begin(*edges[i]) + j + 2);//delete edge num and weight
+					}
+					else if ((*edges[i])[j] > num) {
+						(*edges[i])[j]--;
+					}
+				}
+			}
+
+			size--;
+		}
+
+		void removeEdge(unsigned int node1, unsigned int node2) {
+			for (unsigned int i = 0; i < edges[node1]->size(); i += 2) {
+				if ((*edges[node1])[i] == node2) {
+					edges[node1]->erase(edges[node1]->begin() + i, edges[node1]->begin() + i + 2);
+					break;
+				}
+			}
+
+			for (unsigned int i = 0; i < edges[node2]->size(); i += 2) {
+				if ((*edges[node2])[i] == node1) {
+					edges[node2]->erase(edges[node2]->begin() + i, edges[node2]->begin() + i + 2);
+					break;
+				}
+			}
+		}
+
+		//return true if the graph contains that edge
+		virtual bool hasEdge(unsigned int node1, unsigned int node2) {
+			for (unsigned int i = 0; i < edges[node1]->size(); i += 2) {
+				if ((*edges[node1])[i] == node2) {
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		virtual void display() {
+			for (unsigned int i = 0; i < nodes.size(); i++) {
+				std::cout << "NODE " << i << ": ";
+
+				for (unsigned int j = 0; j < edges[i]->size(); j += 2) {
+					std::cout << "{ " << (*edges[i])[j] << ", " << (*edges[i])[j + 1] << " }, ";
+				}
+
+				std::cout << std::endl;
+			}
+		}
+
+		//copy constructor
+		WeightedGraph(const WeightedGraph& g) {
+			for (unsigned int i = 0; i < g.nodes.size(); i++) {
+				this->addNode(g.nodes[i].obj);
+
+				for (unsigned int j = 0; j < const_cast<WeightedGraph&>(g).getEdgeNum(i); j++) {
+
+					(*edges[i]).push_back(const_cast<WeightedGraph&>(g).getOtherSideOfEdge(i, j));
+					edges[i]->push_back(const_cast<WeightedGraph&>(g).getWeightOfEdge(i, const_cast<WeightedGraph&>(g).getOtherSideOfEdge(i, j)));
+				}
+			}
 		}
 	};
 

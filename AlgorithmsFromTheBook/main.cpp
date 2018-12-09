@@ -67,22 +67,19 @@ int main() {
 	std::cout << double(clock() - startTime) / (double)CLOCKS_PER_SEC << " seconds." << std::endl;
 	//}
 
-	Graph::Tree<int> t(0);
+	cout << (1 << 1);
+	cout << (1 >> 1);
 
-	t.addNode(1);
-	t.addNode(2);
-	t.addNode(3);
+	Graph::WeightedGraph<int> g(10);
 
-	t.addEdge(0, 1);
-	t.addEdge(0, 2);
-	t.addEdge(1, 3);
+	for (int i = 0; i < 5; g.addNode(i++));
 
-	Graph::Tree<int> tr(t);
-	Graph::Tree<int> trr = t;
+	g.addEdge(0, 1, 1);
+	g.addEdge(0, 2, 2);
+	g.addEdge(2, 3, 5);
+	g.addEdge(2, 4, 7);
 
-	t.removeEdge(0, 0);
-	tr.removeEdge(1, 1);
-	trr.removeEdge(1, 0);
+	Graph::WeightedTree<int> k(&g, 0);
 
 	std::getchar();
 }

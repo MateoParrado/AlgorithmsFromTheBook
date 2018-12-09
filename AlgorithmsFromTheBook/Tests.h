@@ -570,7 +570,7 @@ void independentSetTester() {
 	g.addEdge(0, 2);
 	g.addEdge(2, 3);
 	g.addEdge(2, 4);
-
+	
 	assert(independentSetOnTree(g) == 3);
 
 	g.addNode(5);
