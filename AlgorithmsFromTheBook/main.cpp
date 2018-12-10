@@ -70,16 +70,19 @@ int main() {
 	cout << (1 << 1);
 	cout << (1 >> 1);
 
-	Graph::WeightedGraph<int> g(10);
+	Graph::Forest<int> g(5);
 
 	for (int i = 0; i < 5; g.addNode(i++));
 
-	g.addEdge(0, 1, 1);
-	g.addEdge(0, 2, 2);
-	g.addEdge(2, 3, 5);
-	g.addEdge(2, 4, 7);
+	g.addEdge(0, 1);
+	g.addEdge(0, 2);
+	g.addEdge(3, 2);
+	g.addEdge(2, 4);
 
-	Graph::WeightedTree<int> k(&g, 0);
+	Graph::Forest<int> gr(g);
+	
+	g.removeNode(2);
+	gr.removeNode(0);
 
 	std::getchar();
 }

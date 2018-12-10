@@ -1,5 +1,7 @@
 #pragma once
-#pragma warning(disable: 4250)//some weird inheritance dominance thing, could bite me in the ass later
+#pragma warning(disable: 4250)//some weird inheritance dominance thing
+
+
 
 #include <vector>
 #include <iostream>
@@ -134,7 +136,7 @@ namespace Graph {
 		}
 
 		virtual void removeEdge(unsigned int node1, unsigned int node2) {
-			for (unsigned int i = 0; i < edges[node2]->size(); i++) {
+			for (unsigned int i = 0; i < edges[node1]->size(); i++) {
 				if ((*edges[node1])[i] == node2) {
 					edges[node1]->erase(edges[node1]->begin() + i);
 					break;
@@ -291,6 +293,12 @@ namespace Graph {
 			levels.push_back(-1);
 		}
 
+		//keep in mind that this does not hold up for combining two trees
+		//say your levels is [0, -1, 0]
+		//the second zero is like that because it is negative one plus one
+		//then after adding an edge between zero and one it becomes
+		// [0, 1, 0] which is wrong
+		//avoid this if possible, but if its unavoidable, use a forest
 		virtual void addEdge(unsigned int i, unsigned int j) {
 			if (levels[i] == -1){
 				levels[i] = levels[j] + 1;
@@ -357,15 +365,22 @@ namespace Graph {
 		}
 
 		virtual bool hasChild(unsigned int n, unsigned int m) {
-			for (unsigned int i = 1; i < edges[n]->size(); i++) {
-				if (getOtherSideOfEdge(n, i) == m) return true;
+			return getParent(m) == n;
+		}
+
+		virtual bool hasEdge(unsigned int n, unsigned int m) {
+			if (getParent(n) == m) {
+				return true;
 			}
 
-			return false;
+			return getParent(m) == n;
 		}
 
 		unsigned int getParent(unsigned int i) {
-			return (*edges[i])[0];
+			if (i != root) {
+				return (*edges[i])[0];
+			}
+			return -1;
 		}
 
 		virtual unsigned int getChild(unsigned int i, unsigned int child) {
@@ -559,20 +574,12 @@ namespace Graph {
 			return (edges[n]->size() >> 2 )- 1;
 		}
 
-		virtual bool hasChild(unsigned int n, unsigned int m) {
-			for (unsigned int i = 2; i < edges[n]->size(); i += 2) {
-				if (getOtherSideOfEdge(n, i) == m) return true;
-			}
-
-			return false;
-		}
-
 		virtual bool hasEdge(unsigned int n, unsigned int m) {
-			for (unsigned int i = 0; i < edges[n]->size(); i += 2) {
-				if (getOtherSideOfEdge(n, i) == m) return true;
+			if (getParent(n) == m) {
+				return true;
 			}
 
-			return false;
+			return getParent(m) == n;
 		}
 
 		virtual unsigned int getEdgeNum(unsigned int n) {
@@ -606,8 +613,292 @@ namespace Graph {
 		}
 
 		/*RULE OF THREE*/
-		WeightedTree(const WeightedTree& g) : Tree(g){
+		WeightedTree(const WeightedTree& g) : Tree(g) {
 
+		}
+	};
+
+	//doesnt inherit from tree because it doesnt save any time or space, as every function would have to be overwritten
+	template<class T>
+	struct Forest : Graph<T> {
+	private:
+		//reset the root of the tree containing r to be r
+		void resetRoot(unsigned int r) {
+			unsigned int depth = 1;
+
+			XORLinkedList::LinkedList<unsigned int> list;
+
+			list.pushBackNode(r);
+
+			unsigned char * numOn = new unsigned char[size] {0};
+
+			//if it has no kids, dont bother doing all this
+			if (getEdgeNum(list[list.size - 1])) {
+				do {
+					unsigned int endNode = list[list.size - 1];
+
+					if (numOn[endNode] >= getEdgeNum(endNode)) {
+						levels[endNode] = depth;
+
+						//make sure the right parent is the new parent
+						if (getParent(endNode) != list[list.size - 2]) {
+							unsigned int secondToEnd = list[list.size - 2];
+							for (unsigned int j = 1; j < edges[endNode]->size(); j++) {
+
+								if ((*edges[endNode])[j] == secondToEnd) {
+									unsigned int temp = getParent(endNode);
+
+									(*edges[endNode])[0] = secondToEnd;
+									(*edges[endNode])[j] = temp;
+
+									break;
+								}
+							}
+						}
+
+						list.popBackNode();
+						depth--;
+					}
+					else {
+						unsigned int nodeToCheck = getOtherSideOfEdge(endNode, numOn[endNode]++);
+
+						if (!numOn[nodeToCheck]) {
+							list.pushBackNode(nodeToCheck);
+							depth++;
+						}
+					}
+				} while (list.size > 1);
+
+				delete[] numOn;
+			}
+		}
+
+	public:
+		std::vector<unsigned int> levels;
+
+		Forest(unsigned int size = 10) : Graph(size) {
+
+		}
+
+		//construct it from a tree
+		//note that the tree cant really be a forest, because even though it is allowed technically (for easy construction), it isnt a valid tree
+		Forest(const Tree<T>& g) {
+			for (unsigned int i = 0; i < g.nodes.size(); i++) {
+				this->addNode(g.nodes[i].obj);
+
+				for (unsigned int j = 0; j < const_cast<Tree<T>&>(g).edges[i]->size(); j++) {
+
+					edges[i]->push_back((*const_cast<Tree<T>&>(g).edges[i])[j]);
+				}
+			}
+
+			levels = g.levels;
+		}
+
+		void addNode(T val) {
+			Graph::addNode(val);
+
+			//it is its own parent
+			levels.push_back(0);
+		}
+
+		void addEdge(unsigned int n, unsigned int m) {
+			unsigned int r = getRoot(n);
+			unsigned int k = getRoot(m);
+
+			if (r == k) {
+				//they have the same parent, so you just created a cycle
+				throw 4;
+			}
+
+			levels[m] = levels[n] + 1;
+
+			resetRoot(m);
+
+			Graph::addEdge(n, m);
+
+			//switch the first and last elements of the edge, so the parents are right
+			unsigned int temp = getParent(m);
+			(*edges[m])[0] = n;
+			(*edges[m])[edges[m]->size() - 1] = temp;
+		}
+
+		void removeEdge(unsigned int n, unsigned int m) {
+			unsigned int other = getOtherSideOfEdge(n, m);
+
+			Graph::removeEdge(n, other);
+
+			if (m) {
+				setRoot(other);
+			}
+			else {
+				setRoot(n);
+			}
+
+			//the child is now orphaned, so make a new tree
+			if (getParent(n) == other) {
+				Graph::removeEdge(n, other);
+
+				setRoot(n);
+			}
+			else {
+				Graph::removeEdge(n, other);
+
+				setRoot(other);
+			}
+		}
+
+		void removeNode(unsigned int num) {
+
+			while (edges[num]->size()) {
+				//delete from end to not have to scoot them
+				removeEdge(num, edges[num]->size() - 1);
+			}
+
+			delete edges[num];
+
+			edges.erase(begin(edges) + num);
+			nodes.erase(begin(nodes) + num);
+			levels.erase(begin(levels) + num);
+			//remove all links to it in its dependencies, as well as reduce the number of each one by one (beacuse it now has one less node)
+			for (unsigned int i = 0; i < edges.size(); i++) {
+				for (unsigned int j = edges[i]->size() - 1; j < edges[i]->size() /*because its unsigned, when it hits negative one it goes super positive*/; j--) {
+					if ((*edges[i])[j] == num) {
+						edges[i]->erase(begin(*edges[i]) + j);
+					}
+					else if ((*edges[i])[j] > num) {
+						(*edges[i])[j]--;
+					}
+				}
+			}
+
+			size--;
+		}
+ 
+		//gets the root of the particular branch of the forest
+		unsigned int getRoot(unsigned int n) {
+			for (;;) {
+				if (!levels[n]) {
+					return n;
+				}
+				else {
+					n = (*edges[n])[0];
+				}
+			}
+		}
+
+		//same as above, excdpt it makes it a true root, instead of preparing it to be joined by an add edge
+		//set the root of the tree containing r to be r
+		void setRoot(unsigned int r) {
+			levels[r] = 0;
+
+			unsigned int depth = 0;
+
+			XORLinkedList::LinkedList<unsigned int> list;
+
+			list.pushBackNode(r);
+
+			unsigned char * numOn = new unsigned char[size] {0};
+
+			//if it has no kids, dont bother doing all this
+			if (getEdgeNum(list[list.size - 1])) {
+				do {
+					unsigned int endNode = list[list.size - 1];
+
+					if (numOn[endNode] >= getEdgeNum(endNode)) {
+						levels[endNode] = depth;
+
+						//make sure the right parent is the new parent
+						if (getParent(endNode) != list[list.size - 2]) {
+							unsigned int secondToEnd = list[list.size - 2];
+							for (unsigned int j = 1; j < edges[endNode]->size(); j++) {
+
+								if ((*edges[endNode])[j] == secondToEnd) {
+									unsigned int temp = getParent(endNode);
+
+									(*edges[endNode])[0] = secondToEnd;
+									(*edges[endNode])[j] = temp;
+
+									break;
+								}
+							}
+						}
+
+						list.popBackNode();
+						depth--;
+					}
+					else {
+						unsigned int nodeToCheck = getOtherSideOfEdge(endNode, numOn[endNode]++);
+
+						if (!numOn[nodeToCheck]) {
+							list.pushBackNode(nodeToCheck);
+							depth++;
+						}
+					}
+				} while (list.size > 1);
+
+				delete[] numOn;
+			}
+		}
+
+		unsigned int getParent(unsigned int n) {
+			if (levels[n]) {
+				return (*edges[n])[0];
+			}
+			return -1;
+		}
+
+		unsigned int getChild(unsigned int n, unsigned int child) {
+			return (*edges[n])[child + 1];
+		}
+
+		unsigned int getChildNum(unsigned int n) {
+			return edges[n]->size() - 1;
+		}
+
+		bool hasChild(unsigned int n, unsigned int child) {
+			return getParent(child) == n;
+		}
+
+		bool hasEdge(unsigned int n, unsigned int m) {
+			if (getParent(n) == m) {
+				return true;
+			}
+
+			return getParent(m) == n;
+		}
+
+		/*RULE OF THREE*/
+		Forest(const Forest& g) {
+			for (unsigned int i = 0; i < g.nodes.size(); i++) {
+				this->addNode(g.nodes[i].obj);
+
+				for (unsigned int j = 0; j < const_cast<Forest&>(g).edges[i]->size(); j++) {
+
+					edges[i]->push_back((*const_cast<Forest&>(g).edges[i])[j]);
+				}
+			}
+
+			levels = g.levels;
+		}
+
+		virtual Forest operator=(const Forest&) {
+			Forest<T> ret(this->size);
+
+			//copy over the node values
+			for (unsigned int i = 1; i < this->size; i++) {
+				ret.addNode(nodes[i].obj);
+			}
+
+			for (unsigned int i = 0; i < this->edges.size(); i++) {
+				for (unsigned int j = 0; j < this->edges[i]->size(); j++) {
+					ret.edges[i]->push_back((*edges[i])[j]);
+				}
+			}
+
+			ret.levels = levels;
+
+			return ret;
 		}
 	};
 
