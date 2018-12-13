@@ -580,6 +580,20 @@ void independentSetTester() {
 	g.addEdge(1, 5);
 
 	assert(independentSetOnTree(g) == 4);
+
+	Graph::WeightedGraph<int> k(10);
+
+	for (int i = 0; i < 5; k.addNode(i++));
+
+	k.addEdge(0, 1, 1);
+	k.addEdge(0, 2, 3);
+	k.addEdge(2, 3, 2);
+	k.addEdge(2, 4, 3);
+
+	Graph::WeightedTree<int> p(&k, 0);
+
+	assert(weightedIndependentSetOnTree(&p, 0) == 6);
+	assert(weightedIndependentSetOnTree(&p, 2) == 7);
 }
 
 /*INTERVAL SCHEDULING*/

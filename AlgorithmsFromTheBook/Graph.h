@@ -230,6 +230,8 @@ namespace Graph {
 	//THEY CAN EASILY BE REPRESENTD BY A TRADITIONAL GRAPH
 	//HOWEVER SOME ALGORITHMS REQUIRE THE KNOWLEDGE OF THE LEVEL OF THE TOP, WHICH IS THE ONLY REASON TO USE THIS CLASS
 	//IT ADDS O(N) SPACE
+	//ONE RECOMMENDATION IS TO MAKE SURE THAT THE PARENT NODES GET ADDED TO FIRST, THAT IS FOR ALL I < J, I IS NOT J'S PARENT
+	//THIS ISN'T IMPORTANT TO THE IMPLEMENTATION OF THE TREE, BUT FOR SOME ALGORITHMS (WEIGHTED INDEPENDENT SET), IT IS A REQUIREMENT
 	template<class T>
 	struct Tree : Graph<T> {
 		std::vector<unsigned int> levels;
@@ -567,11 +569,17 @@ namespace Graph {
 		}
 
 		virtual unsigned int getChild(unsigned int n, unsigned int i) {
+			if (n == root) {
+				return (*edges[n])[(i << 1)];
+			}
 			return (*edges[n])[(i << 1) + 2];
 		}
 
 		virtual unsigned int getChildNum(unsigned int n) {
-			return (edges[n]->size() >> 2 )- 1;
+			if (n == root) {
+				return (edges[n]->size() >> 1);
+			}
+			return (edges[n]->size() >> 1 ) - 1;
 		}
 
 		virtual bool hasEdge(unsigned int n, unsigned int m) {
@@ -609,6 +617,9 @@ namespace Graph {
 		}
 
 		unsigned int getWeightOfParent(unsigned int n) {
+			if (n == root) {
+				throw 3;
+			}
 			return (*edges[n])[1];
 		}
 
@@ -853,6 +864,9 @@ namespace Graph {
 		}
 
 		unsigned int getChildNum(unsigned int n) {
+			if (n == root) {
+				return edges[n]->size();
+			}
 			return edges[n]->size() - 1;
 		}
 

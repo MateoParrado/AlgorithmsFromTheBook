@@ -1257,3 +1257,50 @@ unsigned int independentSetOnTree(Graph::Graph<T> g) {
 	}
 	return retVal;
 }
+
+template<class T>
+//the tree must be rooted at 0
+//the weight of a node k is represented by the weight of the edge leading to it
+unsigned int weightedIndependentSetOnTree(Graph::WeightedTree<T> * g, unsigned int rootVal) {
+	//first one is OPT[in], second is OPT[out]
+	std::pair<unsigned int, unsigned int> * opt = new std::pair<unsigned int, unsigned int>[g->size];
+
+	for (unsigned int i = g->size - 1; i > 0; i--) {
+		if (!g->getChildNum(i)) {
+			opt[i].first = g->getWeightOfParent(i);
+			opt[i].second = 0;
+		}
+		else {
+			unsigned int tempIn = g->getWeightOfParent(i);
+			unsigned int tempOut = 0;
+
+			for (unsigned int j = 0; j < g->getChildNum(i); j++) {
+				unsigned int c = g->getChild(i, j);
+
+				tempIn += opt[c].second;
+
+				tempOut += std::max(opt[c].first, opt[c].second);
+			}
+
+			opt[i].first = tempIn;
+			opt[i].second = tempOut;
+		}
+	}
+
+	unsigned int tempIn = rootVal;
+	unsigned int tempOut = 0;
+
+	for (unsigned int j = 0; j < g->getChildNum(0); j++) {
+		unsigned int c = g->getChild(0, j);
+
+		tempIn += opt[c].second;
+
+		tempOut += std::max(opt[c].first, opt[c].second);
+	}
+
+	unsigned int ret = std::max(tempIn, tempOut);
+
+	delete[] opt;
+
+	return ret;
+}
