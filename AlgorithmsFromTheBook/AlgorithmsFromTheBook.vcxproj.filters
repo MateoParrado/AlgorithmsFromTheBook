@@ -91,5 +91,8 @@
     <MASM Include="evenodd.asm">
       <Filter>Source Files</Filter>
     </MASM>
+    <MASM Include="multiplication.asm">
+      <Filter>Source Files</Filter>
+    </MASM>
   </ItemGroup>
 </Project>

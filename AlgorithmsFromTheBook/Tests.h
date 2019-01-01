@@ -24,6 +24,10 @@
 #include <assert.h>
 #include <ctime>
 
+//assembly externals, ignore the green squigglies
+extern "C" void asm_even_odd();
+extern "C" int asm_multiply(int x, int y);
+
 /*CACHING*/
 
 void cacheTester() {
@@ -1009,6 +1013,14 @@ void sequenceAlignmentTester() {
 }
 
 /*UTILS*/
+void multiplicationTester() {
+	assert(asm_multiply(4, 5) == 20);
+	assert(asm_multiply(3, 5) == 15);
+	assert(asm_multiply(4, 4) == 16);
+	assert(asm_multiply(4, 6) == 24);
+	assert(asm_multiply(6, 6) == 36);
+}
+
 void getPrimesTester() {
 	assert(getPrimes(0) == 2);
 	assert(getPrimes(3) == 7);
@@ -1020,6 +1032,9 @@ void isEvenTester (){
 	for (int i = INT_MAX - 1; i != INT_MAX; i--) {
 		assert(isEven(i) == !(i % 2));
 	}
+
+	//asm_even_odd is its own tester, and is an otherwise completely useless method
+	asm_even_odd();
 }
 
 void factorialTester() {
@@ -1144,6 +1159,7 @@ void runAllTests() {
 	airlinesTester();
 	vertexCoverTester();
 	independentSetTester();
+	multiplicationTester();
 	//std::cout << double(clock() - startTime) / (double)CLOCKS_PER_SEC << " seconds." << std::endl;
 }
 

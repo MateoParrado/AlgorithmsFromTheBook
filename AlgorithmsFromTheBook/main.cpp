@@ -46,8 +46,9 @@
 #include "Knapsack.h"
 #include "Tests.h"
 
-//assembly externals
+//assembly externals, ignore the green squigglies
 extern "C" void asm_even_odd();
+extern "C" int asm_multiply(int x, int y);
 
 //TODO
 //weighted tree, and forest
@@ -67,32 +68,19 @@ int main() {
 	//for (int i = 0; i < 100; i++) {
 	clock_t startTime = clock();
 	runAllTests();
-	//std::cout << double(clock() - startTime) / (double)CLOCKS_PER_SEC << " seconds." << std::endl;
+	std::cout << double(clock() - startTime) / (double)CLOCKS_PER_SEC << " seconds." << std::endl;
 	//}
 
-	Graph::Forest<int> g(5);
-
-	for (int i = 0; i < 5; g.addNode(i++));
-
-	g.addEdge(0, 1);
-	g.addEdge(0, 2);
-	g.addEdge(3, 2);
-	g.addEdge(2, 4);
-
-	Graph::Forest<int> gr(g);
-	
-	g.removeNode(2);
-	gr.removeNode(0);
-
-	startTime = clock();
-	asm_even_odd();
+	//test multiplication speeds
+	 startTime = clock();
+	for (unsigned int i = 0; i < INT_MAX; i++) {
+		int p = i * (i - 1);
+	}
 	std::cout << double(clock() - startTime) / (double)CLOCKS_PER_SEC << " seconds." << std::endl;
-
-	startTime = clock();
-	isEvenTester();
+	 startTime = clock();
+	for (unsigned int i = 0; i < INT_MAX; i++) {
+		int p = asm_multiply(i, i - 1);
+	}
 	std::cout << double(clock() - startTime) / (double)CLOCKS_PER_SEC << " seconds." << std::endl;
-
-	
-
 	std::getchar();
 }
