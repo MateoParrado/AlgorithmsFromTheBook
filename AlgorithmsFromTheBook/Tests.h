@@ -1017,9 +1017,9 @@ void getPrimesTester() {
 
 void isEvenTester (){
 	//this works, I ran the whole loop, but it makes the testAll function run forever, so I'm commenting it out
-	/*for (int i = INT_MAX - 1; i != INT_MAX; i--) {
+	for (int i = INT_MAX - 1; i != INT_MAX; i--) {
 		assert(isEven(i) == !(i % 2));
-	}*/
+	}
 }
 
 void factorialTester() {
@@ -1132,7 +1132,7 @@ void runAllTests() {
 	rectIntersectsEllipseTester();
 	schedulingTester();
 	pointInPolygonTester();
-	isEvenTester();
+	//isEvenTester();
 	edmondsTester();
 	getPrimesTester();
 	maxFlowTester();

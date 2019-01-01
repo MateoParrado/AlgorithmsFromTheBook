@@ -46,6 +46,9 @@
 #include "Knapsack.h"
 #include "Tests.h"
 
+//assembly externals
+extern "C" void asm_even_odd();
+
 //TODO
 //weighted tree, and forest
 //write three network flow algorithms, they just got too tedius and boring (start on page 414/396)
@@ -64,11 +67,8 @@ int main() {
 	//for (int i = 0; i < 100; i++) {
 	clock_t startTime = clock();
 	runAllTests();
-	std::cout << double(clock() - startTime) / (double)CLOCKS_PER_SEC << " seconds." << std::endl;
+	//std::cout << double(clock() - startTime) / (double)CLOCKS_PER_SEC << " seconds." << std::endl;
 	//}
-
-	cout << (1 << 1);
-	cout << (1 >> 1);
 
 	Graph::Forest<int> g(5);
 
@@ -83,6 +83,16 @@ int main() {
 	
 	g.removeNode(2);
 	gr.removeNode(0);
+
+	startTime = clock();
+	asm_even_odd();
+	std::cout << double(clock() - startTime) / (double)CLOCKS_PER_SEC << " seconds." << std::endl;
+
+	startTime = clock();
+	isEvenTester();
+	std::cout << double(clock() - startTime) / (double)CLOCKS_PER_SEC << " seconds." << std::endl;
+
+	
 
 	std::getchar();
 }
