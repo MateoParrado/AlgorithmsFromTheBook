@@ -10,11 +10,15 @@ One apparent exception to this rule is found in the linked list header. SinglyLi
 
 Another thing to note is the FlightStruct header. This header defines a small struct used in an algorithm defined in NetworkFlowAlgorithms.h. It is included in its own header so it doesn't clutter the already very large header, even though other small data structures are typically defined in the header with their appropriate algorithms.
 
+Each assembly language function is included in its own .asm file.
+
 ## Getting Started
-Either clone or download the zip of the repository. Then simply take the header files you need and place them in your working directorhy, deleting all algorithms you don't need.
+Either clone or download the zip of the repository. Then simply take the header files you need and place them in your working directory, deleting all algorithms you don't need.
 
 ### Prerequisites
 The knapsack packer algorithm, the RNA structure finder algorithm, and the sequence alignment algorithm all use boost::multiarray. If you need to use any of those algorithms, simply download the header at www.boost.org. If you don't want to use those specific algorithms, but still want to use something in their header, simply delete the algorithms and remove the include from the top, and your program will run as intended.
+
+All assembly language functions are written for the x86 architecture.
 
 ## How to use?
 ### Code Examples
