@@ -48,13 +48,14 @@
 
 //assembly externals, ignore the green squigglies
 extern "C" void asm_even_odd();
-extern "C" int asm_multiply(int x, int y);
+extern "C" int asm_multiply(int, int);
+extern "C" int asm_get_barcode_checksum(char *);
 
 //TODO
-//weighted tree, and forest
 //write three network flow algorithms, they just got too tedius and boring (start on page 414/396)
 //figure out whats going on with the template thing in the residual graph from bipartite graph constructor, and get rid of it for speed
 ///optimizaitons in segmented linear regression (266/284), calculate errors in constant time
+//barcode checksum finder
 //implement tests for A*, kmeans, kruskal cluster, knapsack packer, FFT
 
 using namespace std;
@@ -71,16 +72,5 @@ int main() {
 	std::cout << double(clock() - startTime) / (double)CLOCKS_PER_SEC << " seconds." << std::endl;
 	//}
 
-	//test multiplication speeds
-	 startTime = clock();
-	for (unsigned int i = 0; i < INT_MAX; i++) {
-		int p = i * (i - 1);
-	}
-	std::cout << double(clock() - startTime) / (double)CLOCKS_PER_SEC << " seconds." << std::endl;
-	 startTime = clock();
-	for (unsigned int i = 0; i < INT_MAX; i++) {
-		int p = asm_multiply(i, i - 1);
-	}
-	std::cout << double(clock() - startTime) / (double)CLOCKS_PER_SEC << " seconds." << std::endl;
 	std::getchar();
 }

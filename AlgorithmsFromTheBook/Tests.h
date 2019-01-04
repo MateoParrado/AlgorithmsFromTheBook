@@ -27,6 +27,7 @@
 //assembly externals, ignore the green squigglies
 extern "C" void asm_even_odd();
 extern "C" int asm_multiply(int x, int y);
+extern "C" int asm_get_barcode_checksum(char *);
 
 /*CACHING*/
 
@@ -1013,6 +1014,16 @@ void sequenceAlignmentTester() {
 }
 
 /*UTILS*/
+void checksumTester() {
+	char * p = new char[11]{ 0,4,2,1,0,0,0,0,5,2,6 };
+	assert(asm_get_barcode_checksum(p) == 4);
+	p[1]++;
+	assert(asm_get_barcode_checksum(p) == 3);
+	p[1] += 3;
+	assert(asm_get_barcode_checksum(p) == 0);
+	delete p;
+}
+
 void multiplicationTester() {
 	assert(asm_multiply(4, 5) == 20);
 	assert(asm_multiply(3, 5) == 15);
@@ -1115,7 +1126,7 @@ void linearRegressionTester() {
 /*TESTS*/
 void runAllTests() {
 	//clock_t startTime = clock();
-
+	checksumTester();
 	factorialTester();
 	distTester();
 	exponentTester();

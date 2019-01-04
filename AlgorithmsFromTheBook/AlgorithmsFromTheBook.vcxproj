@@ -166,6 +166,7 @@
     <ClInclude Include="Utils.h" />
   </ItemGroup>
   <ItemGroup>
+    <MASM Include="barcodechecksum.asm" />
     <MASM Include="evenodd.asm" />
     <MASM Include="multiplication.asm" />
   </ItemGroup>
