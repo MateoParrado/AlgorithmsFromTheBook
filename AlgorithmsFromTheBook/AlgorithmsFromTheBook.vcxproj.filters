@@ -97,5 +97,8 @@
     <MASM Include="barcodechecksum.asm">
       <Filter>Source Files</Filter>
     </MASM>
+    <MASM Include="ISBN.asm">
+      <Filter>Source Files</Filter>
+    </MASM>
   </ItemGroup>
 </Project>

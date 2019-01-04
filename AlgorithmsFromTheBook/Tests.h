@@ -28,6 +28,7 @@
 extern "C" void asm_even_odd();
 extern "C" int asm_multiply(int x, int y);
 extern "C" int asm_get_barcode_checksum(char *);
+extern "C" int asm_check_ISBN(char *);
 
 /*CACHING*/
 
@@ -1022,6 +1023,12 @@ void checksumTester() {
 	p[1] += 3;
 	assert(asm_get_barcode_checksum(p) == 0);
 	delete p;
+
+	char * c = new char[10]{ 0,3,8,5,4,8,6,8,0,4 };
+	assert(asm_check_ISBN(c));
+	c[1]++;
+	assert(!asm_check_ISBN(c));
+	delete c;
 }
 
 void multiplicationTester() {
