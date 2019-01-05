@@ -100,5 +100,11 @@
     <MASM Include="ISBN.asm">
       <Filter>Source Files</Filter>
     </MASM>
+    <MASM Include="encryption.asm">
+      <Filter>Source Files</Filter>
+    </MASM>
+    <MASM Include="decrypt.asm">
+      <Filter>Source Files</Filter>
+    </MASM>
   </ItemGroup>
 </Project>

@@ -167,6 +167,8 @@
   </ItemGroup>
   <ItemGroup>
     <MASM Include="barcodechecksum.asm" />
+    <MASM Include="decrypt.asm" />
+    <MASM Include="encryption.asm" />
     <MASM Include="evenodd.asm" />
     <MASM Include="ISBN.asm" />
     <MASM Include="multiplication.asm" />

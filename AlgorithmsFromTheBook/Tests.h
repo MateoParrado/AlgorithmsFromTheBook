@@ -29,6 +29,8 @@ extern "C" void asm_even_odd();
 extern "C" int asm_multiply(int x, int y);
 extern "C" int asm_get_barcode_checksum(char *);
 extern "C" int asm_check_ISBN(char *);
+extern "C" void asm_rot_encrypt(char *);
+extern "C" void asm_rot_decrypt(char *);
 
 /*CACHING*/
 
@@ -1039,6 +1041,16 @@ void multiplicationTester() {
 	assert(asm_multiply(6, 6) == 36);
 }
 
+void encryptionTester() {
+	char * test = new char[26]{"abcdefghijklmnopgrstuv"};
+	char * encrypt = new char[26]{ "abcdefghijklmnopgrstuv" };
+	asm_rot_encrypt(encrypt);
+	asm_rot_decrypt(encrypt);
+	for (unsigned int i = 0; i < 26; i++) {
+		assert(test[i] == encrypt[i]);
+	}
+}
+
 void getPrimesTester() {
 	assert(getPrimes(0) == 2);
 	assert(getPrimes(3) == 7);
@@ -1132,6 +1144,8 @@ void linearRegressionTester() {
 
 /*TESTS*/
 void runAllTests() {
+	//this is an out of order disorganized mess
+
 	//clock_t startTime = clock();
 	checksumTester();
 	factorialTester();
@@ -1178,7 +1192,9 @@ void runAllTests() {
 	vertexCoverTester();
 	independentSetTester();
 	multiplicationTester();
+	encryptionTester();
 	//std::cout << double(clock() - startTime) / (double)CLOCKS_PER_SEC << " seconds." << std::endl;
 }
 
+//should honestly deprecate every function in here except run all tests but whatever
 #pragma deprecated (testDeriv, testInt, testingOnlyCostFunc)
