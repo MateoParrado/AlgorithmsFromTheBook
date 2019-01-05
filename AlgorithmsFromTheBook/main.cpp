@@ -53,13 +53,13 @@ extern "C" int asm_get_barcode_checksum(char *);
 extern "C" int asm_check_ISBN(char *);
 extern "C" void asm_rot_encrypt(char *);
 extern "C" void asm_rot_decrypt(char *);
+extern "C" int asm_xorshift(int);
 
 //TODO
 //write three network flow algorithms, they just got too tedius and boring (start on page 414/396)
 //figure out whats going on with the template thing in the residual graph from bipartite graph constructor, and get rid of it for speed
 ///optimizaitons in segmented linear regression (266/284), calculate errors in constant time
 //implement tests for A*, kmeans, kruskal cluster, knapsack packer, FFT
-//write number multiplication in assembler
 
 using namespace std;
 
@@ -71,6 +71,7 @@ int main() {
 
 	//for (int i = 0; i < 100; i++) {
 	clock_t startTime = clock();
+
 	runAllTests();
 	std::cout << double(clock() - startTime) / (double)CLOCKS_PER_SEC << " seconds." << std::endl;
 	//}

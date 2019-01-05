@@ -26,11 +26,12 @@
 
 //assembly externals, ignore the green squigglies
 extern "C" void asm_even_odd();
-extern "C" int asm_multiply(int x, int y);
+extern "C" int asm_multiply(int, int);
 extern "C" int asm_get_barcode_checksum(char *);
 extern "C" int asm_check_ISBN(char *);
 extern "C" void asm_rot_encrypt(char *);
 extern "C" void asm_rot_decrypt(char *);
+extern "C" int asm_xorshift(int);
 
 /*CACHING*/
 
@@ -1057,6 +1058,18 @@ void getPrimesTester() {
 	assert(getPrimes(5) == 13);
 }
 
+void rngTester() {
+	for (int i = 0; i < 1000; i++) {
+
+		int x = i;
+		x ^= x << 13;
+		x ^= x >> 17;
+		x ^= x << 5;
+
+		assert(x == asm_xorshift(i));
+	}
+}
+
 void isEvenTester (){
 	//this works, I ran the whole loop, but it makes the testAll function run forever, so I'm commenting it out
 	for (int i = INT_MAX - 1; i != INT_MAX; i--) {
@@ -1190,6 +1203,7 @@ void runAllTests() {
 	surveyTester();
 	airlinesTester();
 	vertexCoverTester();
+	rngTester();
 	independentSetTester();
 	multiplicationTester();
 	encryptionTester();

@@ -106,5 +106,8 @@
     <MASM Include="decrypt.asm">
       <Filter>Source Files</Filter>
     </MASM>
+    <MASM Include="xorshift.asm">
+      <Filter>Source Files</Filter>
+    </MASM>
   </ItemGroup>
 </Project>
