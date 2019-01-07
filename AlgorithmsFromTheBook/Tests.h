@@ -32,6 +32,7 @@ extern "C" int asm_check_ISBN(char *);
 extern "C" void asm_rot_encrypt(char *);
 extern "C" void asm_rot_decrypt(char *);
 extern "C" int asm_xorshift(int);
+extern "C" int asm_letters_needed(char *, char *);
 
 /*CACHING*/
 
@@ -1050,6 +1051,27 @@ void encryptionTester() {
 	for (unsigned int i = 0; i < 26; i++) {
 		assert(test[i] == encrypt[i]);
 	}
+
+	delete[] test;
+	delete[] encrypt;
+}
+
+void wordFunnelTester() {
+	char * test = new char[6]{ 'l', 'e', 'a', 'v', 'e', 0 };
+	char * test2 = new char[5]{ 'e', 'a', 'v', 'e', 0 };
+
+	assert(asm_letters_needed(test, test2) == 1);
+
+	delete[] test;
+	delete[] test2;
+
+	test = new char[6]{ 's', 'l', 'e', 'e', 't', 0 };
+	test2 = new char[5]{ 'l', 'e', 't', 's', 0 };
+
+	assert(asm_letters_needed(test, test2) == -1);
+
+	delete[] test;
+	delete[] test2;
 }
 
 void getPrimesTester() {
@@ -1203,6 +1225,7 @@ void runAllTests() {
 	surveyTester();
 	airlinesTester();
 	vertexCoverTester();
+	wordFunnelTester();
 	rngTester();
 	independentSetTester();
 	multiplicationTester();

@@ -54,6 +54,7 @@ extern "C" int asm_check_ISBN(char *);
 extern "C" void asm_rot_encrypt(char *);
 extern "C" void asm_rot_decrypt(char *);
 extern "C" int asm_xorshift(int);
+extern "C" int asm_letters_needed(char *, char *);
 
 //TODO
 //write three network flow algorithms, they just got too tedius and boring (start on page 414/396)
