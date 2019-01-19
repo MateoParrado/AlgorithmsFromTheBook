@@ -7,17 +7,21 @@
 
 //returns the vector containing the tasks that should be executed st the largest number of tasks can be executed
 //input in the form (startTime, finishTime)
-std::vector<std::pair<int, int>> intervalScheduler(std::vector<std::pair<int, int>> tasks) {
-	std::sort(tasks.begin(), tasks.end(), [](auto &left, auto &right) {
+std::vector<std::pair<int, int>> intervalScheduler(std::vector<std::pair<int, int>> tasks)
+{
+	std::sort(tasks.begin(), tasks.end(), [](auto &left, auto &right)
+	{
 		return left.second < right.second;
 	}); // sort by the second, aka finish time
 
 	std::vector<std::pair<int, int>> ret;
 
-	while (!tasks.empty()) {
+	while (!tasks.empty()) 
+	{
 		ret.push_back(tasks[0]);
 
-		while (!tasks.empty()) {//to avoid vector out of bounds error
+		while (!tasks.empty()) 
+		{//to avoid vector out of bounds error
 			if (tasks[0].first < ret[ret.size() - 1].second) tasks.erase(tasks.begin());
 			else break;
 		}
@@ -29,8 +33,10 @@ std::vector<std::pair<int, int>> intervalScheduler(std::vector<std::pair<int, in
 //returns a vector of vectors of tasks that should be executed to execute every task while using the fewest "resources"
 //same as trying to minimize number of threads needed to run some number of tasks
 //input in the form (startTime, finishTime)
-std::vector < std::vector<std::pair<int, int>>> parallelScheduler(std::vector<std::pair<int, int>> tasks){
-	std::sort(tasks.begin(), tasks.end(), [](auto &left, auto &right) {
+std::vector < std::vector<std::pair<int, int>>> parallelScheduler(std::vector<std::pair<int, int>> tasks)
+{
+	std::sort(tasks.begin(), tasks.end(), [](auto &left, auto &right) 
+	{
 		return left.second < right.second;
 	}); // sort by the second, aka finish time
 	
@@ -41,21 +47,27 @@ std::vector < std::vector<std::pair<int, int>>> parallelScheduler(std::vector<st
 
 	std::vector<int> numInVec(5);//number of times a task is pushed to a vector
 
-	for (unsigned int i = 0; i < tasks.size(); i++) {
+	for (unsigned int i = 0; i < tasks.size(); i++) 
+	{
 		std::vector<int> opts;//options to put the task in
 
-		for (unsigned int j = 0; j < i; j++) {//finding which vectors it cant be returned in
-			if (!(tasks[j].second <= tasks[i].first)){
+		for (unsigned int j = 0; j < i; j++)
+		{//finding which vectors it cant be returned in
+			if (!(tasks[j].second <= tasks[i].first))
+			{
 				opts.push_back(nums[j]);
 			}
 		}
 
 		//adding the object to its identified vector
-		for (unsigned int j = 0; true; j++) {//infinite loop but for in loop purposes cant just be "for(;;)"
-			if (std::find(opts.begin(), opts.end(), j) == opts.end()) {
+		for (unsigned int j = 0; true; j++)
+		{//infinite loop but for in loop purposes cant just be "for(;;)"
+			if (std::find(opts.begin(), opts.end(), j) == opts.end())
+			{
 				nums.push_back(j);
 
-				if (j > numVecs) { 
+				if (j > numVecs)
+				{ 
 					numVecs = j; 
 					if (numInVec.size() < j) numInVec.push_back(1);
 				}
@@ -70,16 +82,19 @@ std::vector < std::vector<std::pair<int, int>>> parallelScheduler(std::vector<st
 	std::vector<std::vector<std::pair<int, int>>> ret;
 	ret.reserve(numVecs);
 
-	for (unsigned int i = 0; i < numVecs + 1; i++) {
+	for (unsigned int i = 0; i < numVecs + 1; i++)
+	{
 		std::vector<std::pair<int, int>> x;
 		ret.push_back(x);
 	}
 
-	for (unsigned int i = 0; i < numVecs + 1; i++) {
+	for (unsigned int i = 0; i < numVecs + 1; i++) 
+	{
 		ret[i].reserve(numInVec[i]);
 	}
 
-	for (unsigned int i = 0; i < tasks.size(); i++) {
+	for (unsigned int i = 0; i < tasks.size(); i++)
+	{
 		ret[nums[i]].push_back(tasks[i]);
 	}
 
@@ -87,25 +102,30 @@ std::vector < std::vector<std::pair<int, int>>> parallelScheduler(std::vector<st
 }
 
 //schedules tasks in the form (timeToExecute, deadline) in a way to minimize their deadlines
-std::vector<std::pair<int, int>> minimalLatenessScheduler(std::vector<std::pair<int, int>> tasks) {
-	std::sort(tasks.begin(), tasks.end(), [](auto &left, auto &right) {
+std::vector<std::pair<int, int>> minimalLatenessScheduler(std::vector<std::pair<int, int>> tasks) 
+{
+	std::sort(tasks.begin(), tasks.end(), [](auto &left, auto &right) 
+	{
 		return left.second < right.second;
 	});//sort by deadline
 
 	return tasks;
 }
 
-struct weightedTask {
+struct weightedTask
+{
 	unsigned int start, end, weight;
 	weightedTask(unsigned int _start, unsigned int _end, unsigned int _weight) : start(_start), end(_end), weight(_weight) {  }
 };
 
 //get the number of tasks that are before j and dont intersect with it
-unsigned int getP(std::vector<weightedTask> * x, unsigned int j) {
+unsigned int getP(std::vector<weightedTask> * x, unsigned int j) 
+{
 	if (!j) return 0;
 
 	unsigned int retVal = j - 1;
-	for (;;) {
+	for (;;) 
+	{
 		if (((*x)[retVal].end <= (*x)[j].start)) return retVal + 1;
 		if (!retVal) return 0;
 		retVal--;
@@ -114,21 +134,25 @@ unsigned int getP(std::vector<weightedTask> * x, unsigned int j) {
 
 //returns the max value of work able to be done from a given set of weighted tasks
 //must be sorted by end time
-unsigned int getMaxPossibleWeight(std::vector<weightedTask> * x, unsigned int size = -1, unsigned int * ptr = nullptr) {
+unsigned int getMaxPossibleWeight(std::vector<weightedTask> * x, unsigned int size = -1, unsigned int * ptr = nullptr) 
+{
 	bool delAtEnd = false;
 
-	if (!ptr) {
+	if (!ptr) 
+	{
 		ptr = DBG_NEW unsigned int[x->size()];
 		size = x->size();
 
-		for (unsigned int i = 0; i < x->size(); i++) {
+		for (unsigned int i = 0; i < x->size(); i++) 
+		{
 			ptr[i] = 0;
 		}
 		delAtEnd = true;
 	}
 
 	if (!size) return 0;
-	if (ptr[size - 1]) {
+	if (ptr[size - 1]) 
+	{
 		return ptr[size - 1];
 	}
 
@@ -141,11 +165,13 @@ unsigned int getMaxPossibleWeight(std::vector<weightedTask> * x, unsigned int si
 }
 
 //same as above but better memory wise
-std::unique_ptr<unsigned int[]> iterativeGetWeightsArray(std::vector<weightedTask> * x) {
+std::unique_ptr<unsigned int[]> iterativeGetWeightsArray(std::vector<weightedTask> * x) 
+{
 	std::unique_ptr<unsigned int[]> ptr(new unsigned int [x->size()]);
 	ptr[0] = (*x)[0].weight;
 
-	for (unsigned int i = 1; i < x->size(); i++) {
+	for (unsigned int i = 1; i < x->size(); i++) 
+	{
 		unsigned int addOn = getP(x, i);
 		if (addOn) addOn = ptr[addOn];
 
@@ -157,24 +183,30 @@ std::unique_ptr<unsigned int[]> iterativeGetWeightsArray(std::vector<weightedTas
 
 //returns the schedules that create the highest possible weight value
 //must be sorted by end time
-std::string weightedIntervalScheduler(std::vector<weightedTask> * x, unsigned int j = -1, std::unique_ptr<unsigned int[]> ptr = nullptr) {
-	if (!ptr) {
+std::string weightedIntervalScheduler(std::vector<weightedTask> * x, unsigned int j = -1, std::unique_ptr<unsigned int[]> ptr = nullptr) 
+{
+	if (!ptr)
+	{
 		ptr = iterativeGetWeightsArray(x);
 		j = x->size() - 1;
 	}
 
 	unsigned int p = getP(x, j);
 
-	if (!p) {
-		if (!j) {
+	if (!p) 
+	{
+		if (!j)
+		{
 			return std::to_string(j);
 		}
 
-		if ((*x)[j].weight > ptr[j - 1]) {
+		if ((*x)[j].weight > ptr[j - 1])
+		{
 			return std::to_string(j);
 		}
 	}
-	else if ((*x)[j].weight + ptr[p - 1] > ptr[j - 1]) {
+	else if ((*x)[j].weight + ptr[p - 1] > ptr[j - 1])
+	{
 		return std::to_string(j) + weightedIntervalScheduler(x, p - 1, std::move(ptr));
 	}
 

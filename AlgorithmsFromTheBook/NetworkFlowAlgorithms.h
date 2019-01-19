@@ -10,7 +10,8 @@
 
 template<class T>
 //find path between node start and end node end using DFS
-SinglyLinkedList::LinkedList<unsigned int> * findAugmentingPath(Graph::ResidualGraph<T> * g) {
+SinglyLinkedList::LinkedList<unsigned int> * findAugmentingPath(Graph::ResidualGraph<T> * g)
+{
 	std::vector<bool> visited((*g).size);//to not double count nodes
 	visited[g->start] = true;
 
@@ -18,14 +19,18 @@ SinglyLinkedList::LinkedList<unsigned int> * findAugmentingPath(Graph::ResidualG
 
 	ret->pushBackNode(g->start);
 
-	for(;;) {
+	for(;;) 
+	{
 		//for easy lookup, nodes will be added at the end
-		for (unsigned int i = 0; i < (*g).getEdgeNum(ret->getVal(0)); i++) {
+		for (unsigned int i = 0; i < (*g).getEdgeNum(ret->getVal(0)); i++)
+		{
 			//same algorithm as before except it only will count an edge as an edge if it has leftover flow capacity
-			if (g->getResidualCapacity(ret->getVal(0), i)) {
+			if (g->getResidualCapacity(ret->getVal(0), i)) 
+			{
 				int temp = (*g).getOtherSideOfEdge(ret->getVal(0), i); //to not have to calculate it so much
 
-				if (!visited[temp]) {
+				if (!visited[temp]) 
+				{
 					visited[temp] = true;
 
 					ret->pushForwardsNode(temp);
@@ -36,12 +41,15 @@ SinglyLinkedList::LinkedList<unsigned int> * findAugmentingPath(Graph::ResidualG
 		}
 
 		//check for backwards edges if no forwards edge is found
-		for (unsigned int i = 0; i < (*g).getParentNum(ret->getVal(0)); i++) {
+		for (unsigned int i = 0; i < (*g).getParentNum(ret->getVal(0)); i++) 
+		{
 			//same algorithm as before except it only will count an edge as an edge if it has leftover flow capacity
-			if (g->getFlowBetweenNodes(g->getParent(ret->getVal(0), i), ret->getVal(0))) {
+			if (g->getFlowBetweenNodes(g->getParent(ret->getVal(0), i), ret->getVal(0)))
+			{
 				int temp = (*g).getParent(ret->getVal(0), i); //to not have to calculate it so much
 
-				if (!visited[temp]) {
+				if (!visited[temp]) 
+				{
 					visited[temp] = true;
 
 					ret->pushForwardsNode(temp);
@@ -56,15 +64,18 @@ SinglyLinkedList::LinkedList<unsigned int> * findAugmentingPath(Graph::ResidualG
 	edgeFound:
 
 		//prevents segfaults
-		if (ret->head) {
+		if (ret->head)
+		{
 			if (ret->getVal(0) == g->end) break;
 
-			if (!ret->size) {
+			if (!ret->size) 
+			{
 				delete ret;
 				return nullptr; 
 			}
 		}
-		else {//if head is a nullptr, throw it away
+		else 
+		{//if head is a nullptr, throw it away
 			delete ret;
 			return nullptr;
 		}
@@ -75,7 +86,8 @@ SinglyLinkedList::LinkedList<unsigned int> * findAugmentingPath(Graph::ResidualG
 
 template<class T>
 //modification of algorithm above, only finds path with a bottleneck capacity above a certain value
-SinglyLinkedList::LinkedList<unsigned int> * findAugmentingPath(Graph::ResidualGraph<T> * g, unsigned int scalingFactor) {
+SinglyLinkedList::LinkedList<unsigned int> * findAugmentingPath(Graph::ResidualGraph<T> * g, unsigned int scalingFactor) 
+{
 	std::vector<bool> visited((*g).size);//to not double count nodes
 	visited[g->start] = true;
 
@@ -83,14 +95,18 @@ SinglyLinkedList::LinkedList<unsigned int> * findAugmentingPath(Graph::ResidualG
 
 	ret->pushBackNode(g->start);
 
-	for (;;) {
+	for (;;) 
+	{
 		//for easy lookup, nodes will be added at the end
-		for (unsigned int i = 0; i < (*g).getEdgeNum(ret->getVal(0)); i++) {
+		for (unsigned int i = 0; i < (*g).getEdgeNum(ret->getVal(0)); i++) 
+		{
 			//same algorithm as before except it only will count an edge as an edge if it has leftover flow capacity
-			if (g->getResidualCapacity(ret->getVal(0), i) >= scalingFactor) {
+			if (g->getResidualCapacity(ret->getVal(0), i) >= scalingFactor) 
+			{
 				int temp = (*g).getOtherSideOfEdge(ret->getVal(0), i); //to not have to calculate it so much
 
-				if (!visited[temp]) {
+				if (!visited[temp]) 
+				{
 					visited[temp] = true;
 
 					ret->pushForwardsNode(temp);
@@ -101,12 +117,15 @@ SinglyLinkedList::LinkedList<unsigned int> * findAugmentingPath(Graph::ResidualG
 		}
 
 		//check for backwards edges if no forwards edge is found
-		for (unsigned int i = 0; i < (*g).getParentNum(ret->getVal(0)); i++) {
+		for (unsigned int i = 0; i < (*g).getParentNum(ret->getVal(0)); i++) 
+		{
 			//same algorithm as before except it only will count an edge as an edge if it has leftover flow capacity
-			if (g->getFlowBetweenNodes(g->getParent(ret->getVal(0), i), ret->getVal(0)) >= scalingFactor) {
+			if (g->getFlowBetweenNodes(g->getParent(ret->getVal(0), i), ret->getVal(0)) >= scalingFactor) 
+			{
 				int temp = (*g).getParent(ret->getVal(0), i); //to not have to calculate it so much
 
-				if (!visited[temp]) {
+				if (!visited[temp])
+				{
 					visited[temp] = true;
 
 					ret->pushForwardsNode(temp);
@@ -121,15 +140,18 @@ SinglyLinkedList::LinkedList<unsigned int> * findAugmentingPath(Graph::ResidualG
 	edgeFound:
 
 		//prevents segfaults
-		if (ret->head) {
+		if (ret->head) 
+		{
 			if (ret->getVal(0) == g->end) break;
 
-			if (!ret->size) {
+			if (!ret->size)
+			{
 				delete ret;
 				return nullptr;
 			}
 		}
-		else {//if head is a nullptr, throw it away
+		else 
+		{//if head is a nullptr, throw it away
 			delete ret;
 			return nullptr;
 		}
@@ -140,7 +162,8 @@ SinglyLinkedList::LinkedList<unsigned int> * findAugmentingPath(Graph::ResidualG
 
 template<class T>
 //find path between node start and target node end using DFS, ignoring all backwards edges, this is used for the min cut calculation
-bool isPath(Graph::ResidualGraph<T> * g, unsigned int target) {
+bool isPath(Graph::ResidualGraph<T> * g, unsigned int target)
+{
 	std::vector<bool> visited((*g).size);//to not double count nodes
 	visited[g->start] = true;
 
@@ -148,14 +171,18 @@ bool isPath(Graph::ResidualGraph<T> * g, unsigned int target) {
 
 	ret->pushBackNode(g->start);
 
-	for (;;) {
+	for (;;)
+	{
 		//for easy lookup, nodes will be added at the end
-		for (unsigned int i = 0; i < (*g).getEdgeNum(ret->getVal(0)); i++) {
+		for (unsigned int i = 0; i < (*g).getEdgeNum(ret->getVal(0)); i++)
+		{
 			//same algorithm as before except it only will count an edge as an edge if it has leftover flow capacity
-			if (g->getResidualCapacity(ret->getVal(0), i)) {
+			if (g->getResidualCapacity(ret->getVal(0), i))
+			{
 				int temp = (*g).getOtherSideOfEdge(ret->getVal(0), i); //to not have to calculate it so much
 
-				if (!visited[temp]) {
+				if (!visited[temp])
+				{
 					visited[temp] = true;
 
 					ret->pushForwardsNode(temp);
@@ -171,18 +198,22 @@ bool isPath(Graph::ResidualGraph<T> * g, unsigned int target) {
 	edgeFound:
 
 		//prevents segfaults
-		if (ret->head) {
-			if (ret->getVal(0) == target) {
+		if (ret->head)
+		{
+			if (ret->getVal(0) == target) 
+			{
 				delete ret;
 				return true;
 			}
 
-			if (!ret->size) {
+			if (!ret->size) 
+			{
 				delete ret;
 				return false;
 			}
 		}
-		else {//if head is a nullptr, throw it away
+		else 
+		{//if head is a nullptr, throw it away
 			delete ret;
 			return false;
 		}
@@ -195,17 +226,21 @@ bool isPath(Graph::ResidualGraph<T> * g, unsigned int target) {
 
 template<class T>
 //get the value of the minimum possible capacity to increase the flow in a path
-int getBottleneck(Graph::ResidualGraph<T> * g, std::shared_ptr<SinglyLinkedList::LinkedList<unsigned int>> path) {
+int getBottleneck(Graph::ResidualGraph<T> * g, std::shared_ptr<SinglyLinkedList::LinkedList<unsigned int>> path)
+{
 	SinglyLinkedList::Node<unsigned int> * head = path->head;
 	
 	unsigned int minVal = INT_MAX;//this is too low, but still lower than all edge weights, and also std::numeric_Limits::infinity for some reason returns zero for unsigned ints
 
-	while (head->next) {
+	while (head->next) 
+	{
 		//check if its a fowrards node or a backwards node
-		if (g->hasEdge(head->next->obj, head->obj)) {
+		if (g->hasEdge(head->next->obj, head->obj))
+		{
 			minVal = std::min(minVal, g->getResidualCapacityBetweenNodes(head->next->obj, head->obj));
 		}
-		else {
+		else 
+		{
 			minVal = std::min(minVal, g->getFlowBetweenNodes(head->obj, head->next->obj));
 		}
 		head = head->next;
@@ -221,7 +256,8 @@ template<class T>
 //find the maximum flow that can be put through a weighted directed graph
 //start is the node the flow originates at, and end is the sink node tht absorbs all flow
 //it works by creating a "residual graph" and then choosing any path from s - t and pushing flow along it, until it cant anymore
-unsigned int fordFulkersonMaxFlow(const Graph::WeightedDirectedGraph<T> & graph, unsigned int start, unsigned int end) {
+unsigned int fordFulkersonMaxFlow(const Graph::WeightedDirectedGraph<T> & graph, unsigned int start, unsigned int end)
+{
 	Graph::ResidualGraph<T> g(graph, start, end);
 
 	int curFlow = 0;
@@ -237,7 +273,8 @@ unsigned int fordFulkersonMaxFlow(const Graph::WeightedDirectedGraph<T> & graph,
 		int bottleneck = getBottleneck(&g, augPath);
 
 		//if the flow cannot be changed at all then return, could also include a tracker to make sure every path includes at least one forwards node but this is better
-		if (!bottleneck) {
+		if (!bottleneck)
+		{
 			return curFlow;
 		}
 
@@ -245,9 +282,11 @@ unsigned int fordFulkersonMaxFlow(const Graph::WeightedDirectedGraph<T> & graph,
 		SinglyLinkedList::Node<unsigned int> * head = augPath->head;
 
 		//safe from segfaults because if head is a nullptr it would end at the if !augPath
-		for(;;) {
+		for(;;) 
+		{
 			//check if its a fowrards node or a backwards node
-			if (g.hasEdge(head->obj, head->next->obj)) {
+			if (g.hasEdge(head->obj, head->next->obj)) 
+			{
 				g.addFlow(head->obj, head->next->obj, -bottleneck);
 			}
 			else {
@@ -256,7 +295,8 @@ unsigned int fordFulkersonMaxFlow(const Graph::WeightedDirectedGraph<T> & graph,
 
 			head = head->next;
 			//make sure that the flow gets added into the starting node
-			if (!head->next->next) {
+			if (!head->next->next) 
+			{
 				g.addFlow(g.start, head->obj, bottleneck);
 				break;
 			}
@@ -270,7 +310,8 @@ unsigned int fordFulkersonMaxFlow(const Graph::WeightedDirectedGraph<T> & graph,
 template<class T>
 //a modification of the ford fulkerson algorithm above
 //tries to find the largest augmenting paths first, to minimize the number of iterations the algorithm is run
-unsigned int scalingMaxFlow(const Graph::WeightedDirectedGraph<T> & graph, unsigned int start, unsigned int end) {
+unsigned int scalingMaxFlow(const Graph::WeightedDirectedGraph<T> & graph, unsigned int start, unsigned int end) 
+{
 	Graph::ResidualGraph<T> g(graph, start, end);
 
 	unsigned int scalingFactor = 0;
@@ -279,7 +320,8 @@ unsigned int scalingMaxFlow(const Graph::WeightedDirectedGraph<T> & graph, unsig
 		//first find the max flow leaving the source node
 		unsigned int c = 0;
 
-		for (unsigned int i = 0; i < g.getChildNum(start); i++) {
+		for (unsigned int i = 0; i < g.getChildNum(start); i++) 
+		{
 			c += g.getWeightOfEdgeByPos(start, i);
 		}
 
@@ -289,7 +331,8 @@ unsigned int scalingMaxFlow(const Graph::WeightedDirectedGraph<T> & graph, unsig
 
 	unsigned int curFlow = 0;
 
-	while (scalingFactor) {
+	while (scalingFactor)
+	{
 		for (;;) {
 			std::shared_ptr<SinglyLinkedList::LinkedList<unsigned int>> augPath(findAugmentingPath(&g, scalingFactor));
 
@@ -301,7 +344,8 @@ unsigned int scalingMaxFlow(const Graph::WeightedDirectedGraph<T> & graph, unsig
 			int bottleneck = getBottleneck(&g, augPath);
 
 			//if the flow cannot be changed at all then return, could also include a tracker to make sure every path includes at least one forwards node but this is better
-			if (!bottleneck) {
+			if (!bottleneck)
+			{
 				break;
 			}
 
@@ -309,18 +353,22 @@ unsigned int scalingMaxFlow(const Graph::WeightedDirectedGraph<T> & graph, unsig
 			SinglyLinkedList::Node<unsigned int> * head = augPath->head;
 
 			//safe from segfaults because if head is a nullptr it would end at the if !augPath
-			for (;;) {
+			for (;;)
+			{
 				//check if its a fowrards node or a backwards node
-				if (g.hasEdge(head->obj, head->next->obj)) {
+				if (g.hasEdge(head->obj, head->next->obj))
+				{
 					g.addFlow(head->obj, head->next->obj, -bottleneck);
 				}
-				else {
+				else 
+				{
 					g.addFlow(head->next->obj, head->obj, bottleneck);
 				}
 
 				head = head->next;
 				//make sure that the flow gets added into the starting node
-				if (!head->next->next) {
+				if (!head->next->next) 
+				{
 					g.addFlow(g.start, head->obj, bottleneck);
 					break;
 				}
@@ -337,7 +385,8 @@ unsigned int scalingMaxFlow(const Graph::WeightedDirectedGraph<T> & graph, unsig
 }
 
 template<class T>
-unsigned int preflowPush(const Graph::WeightedDirectedGraph<T> & graph, unsigned int start, unsigned int end) {
+unsigned int preflowPush(const Graph::WeightedDirectedGraph<T> & graph, unsigned int start, unsigned int end)
+{
 
 	Graph::Preflow<T> g(graph, start, end);
 
@@ -349,39 +398,48 @@ unsigned int preflowPush(const Graph::WeightedDirectedGraph<T> & graph, unsigned
 
 	excess.reserve(graph.size - 1);//because the start and end nodes can have no excess
 
-	for (unsigned int i = 0; i < g.getChildNum(start); i++) {
+	for (unsigned int i = 0; i < g.getChildNum(start); i++)
+	{
 		excess.push_back(std::make_pair(g.getChild(start, i), g.getWeightOfEdgeByPos(start, i)));
 	}
 
 	//while there is a node with excess, choose one and try and push flow to all edges
-	while (excess.size()) {
+	while (excess.size())
+	{
 		//we choose node excess.size() - 1, for cheap deletions
 		unsigned int chosenNode = excess[excess.size() - 1].first;
 
 		//first check all forwards edges, but only if there are still forwards nodes to be ckecked(aka current is positive)
-		if (current[chosenNode] >= 0) {
-			for (; current[chosenNode] < g.getChildNum(chosenNode); current[chosenNode]++) {
-				if (g.getResidualCapacity(chosenNode, current[chosenNode]) && g.labels[g.getChild(chosenNode, current[chosenNode])] <= g.labels[chosenNode]) {
+		if (current[chosenNode] >= 0) 
+		{
+			for (; current[chosenNode] < g.getChildNum(chosenNode); current[chosenNode]++) 
+			{
+				if (g.getResidualCapacity(chosenNode, current[chosenNode]) && g.labels[g.getChild(chosenNode, current[chosenNode])] <= g.labels[chosenNode]) 
+				{
 					unsigned int pushedFlow = g.push(chosenNode, current[chosenNode], excess[excess.size() - 1].second);
 
 					//add the excess to the node being pushed to, unless its the end node
 					unsigned int childNode = g.getChild(chosenNode, current[chosenNode]);
 
-					if (childNode != end) {
+					if (childNode != end) 
+					{
 						auto posInExcess = std::find_if(excess.begin(), excess.end(),
 							[childNode](std::pair<unsigned int, unsigned int> & p)->bool {return p.first == childNode;});
 
-						if (posInExcess == excess.end()) {
+						if (posInExcess == excess.end()) 
+						{
 							excess.insert(excess.end() - 1, std::make_pair(childNode, pushedFlow));
 						}
-						else {
+						else 
+						{
 							posInExcess->second += pushedFlow;
 						}
 					}
 
 					//subtract the excess from node being checked, and delete it from the vector if the excess is too low
 					excess[excess.size() - 1].second -= pushedFlow;
-					if (excess[excess.size() - 1].second < 1) {
+					if (excess[excess.size() - 1].second < 1) 
+					{
 						excess.erase(excess.end() - 1, excess.end());
 
 						//because we were able to remove all excess from the node, we just want to do it over with a different node
@@ -394,45 +452,54 @@ unsigned int preflowPush(const Graph::WeightedDirectedGraph<T> & graph, unsigned
 		}
 
 		//if the forwards counter hasnt found anything, reset current
-		if (current[chosenNode] > 0) {
+		if (current[chosenNode] > 0) 
+		{
 			current[chosenNode] = 0;
 		}
 		//otherwise, put it into the right space
-		else if (current[chosenNode] < 0) {
+		else if (current[chosenNode] < 0) 
+		{
 			current[chosenNode] *= -1;
 		}
 
 		//then, all the backwards ones
-		for (; current[chosenNode] < g.getParentNum(chosenNode); current[chosenNode]++) {
+		for (; current[chosenNode] < g.getParentNum(chosenNode); current[chosenNode]++)
+		{
 			unsigned int parentNode = g.getParent(chosenNode, current[chosenNode]);
 
 			//find the index of the chosen node in the parents adjacency list
 			unsigned int index = 0;
-			for (unsigned int j = 0; j < g.edges[parentNode]->size(); j += 2) {
-				if ((*g.edges[parentNode])[j] == chosenNode) {
+			for (unsigned int j = 0; j < g.edges[parentNode]->size(); j += 2)
+			{
+				if ((*g.edges[parentNode])[j] == chosenNode)
+				{
 					index = j / 2;
 
 					break;
 				}
 			}
 
-			if (g.getFlow(parentNode, index) && g.labels[g.getParent(chosenNode, current[chosenNode])] <= g.labels[chosenNode]) {
+			if (g.getFlow(parentNode, index) && g.labels[g.getParent(chosenNode, current[chosenNode])] <= g.labels[chosenNode]) 
+			{
 				unsigned int pushedFlow = g.push(parentNode, index, excess[excess.size() - 1].second, false);
 
 				//add the excess to the parent
 				auto posInExcess = std::find_if(excess.begin(), excess.end(),
 					[parentNode](std::pair<unsigned int, unsigned int> & p)->bool {return p.first == parentNode;});
 
-				if (posInExcess == excess.end()) {
+				if (posInExcess == excess.end()) 
+				{
 					excess.insert(excess.end() - 1, std::make_pair(parentNode, pushedFlow));		
 				}
-				else {
+				else
+				{
 					posInExcess->second += pushedFlow;
 				}
 
 				//remove the excess fromt the chosen node, and remove it from the vector if it is too low
 				excess[excess.size() - 1].second -= pushedFlow;
-				if (excess[excess.size() - 1].second < 1) {
+				if (excess[excess.size() - 1].second < 1)
+				{
 					excess.erase(excess.end() - 1, excess.end());
 
 					//because we were able to remove all excess from the node, we just want to do it over with a different node
@@ -445,11 +512,13 @@ unsigned int preflowPush(const Graph::WeightedDirectedGraph<T> & graph, unsigned
 		}
 
 		//if flow can't be pushed, raise the height, unless its start, which you just delete from the excess graph
-		if (chosenNode != start) {
+		if (chosenNode != start) 
+		{
 			current[chosenNode] = 0;
 			g.relabel(chosenNode);
 		}
-		else {
+		else 
+		{
 			current[start] = 0;
 
 			excess.erase(excess.end() - 1, excess.end());
@@ -461,7 +530,8 @@ unsigned int preflowPush(const Graph::WeightedDirectedGraph<T> & graph, unsigned
 	unsigned int flow = 0;
 
 	//calculate the flow of every edge going into the end node
-	for (unsigned int i = 0; i < g.getParentNum(end); i++) {
+	for (unsigned int i = 0; i < g.getParentNum(end); i++)
+	{
 		flow += g.getFlowBetweenNodes(g.getParent(end, i), end);
 	}
 
@@ -471,12 +541,14 @@ unsigned int preflowPush(const Graph::WeightedDirectedGraph<T> & graph, unsigned
 /*MINIMUM CUT*/
 
 template<class T>
-SinglyLinkedList::LinkedList<unsigned int> fordFulkersonMinCut(const Graph::WeightedDirectedGraph<T> & graph, unsigned int start, unsigned int end) {
+SinglyLinkedList::LinkedList<unsigned int> fordFulkersonMinCut(const Graph::WeightedDirectedGraph<T> & graph, unsigned int start, unsigned int end) 
+{
 	Graph::ResidualGraph<T> g(graph, start, end);
 
 	int curFlow = 0;
 
-	for (;;) {
+	for (;;) 
+	{
 		std::shared_ptr<SinglyLinkedList::LinkedList<unsigned int>> augPath(findAugmentingPath(&g));
 
 		//if there are no more paths then break
@@ -487,7 +559,8 @@ SinglyLinkedList::LinkedList<unsigned int> fordFulkersonMinCut(const Graph::Weig
 		int bottleneck = getBottleneck(&g, augPath);
 
 		//if the flow cannot be changed at all then break
-		if (!bottleneck) {
+		if (!bottleneck)
+		{
 			break;
 		}
 
@@ -495,18 +568,22 @@ SinglyLinkedList::LinkedList<unsigned int> fordFulkersonMinCut(const Graph::Weig
 		SinglyLinkedList::Node<unsigned int> * head = augPath->head;
 
 		//safe from segfaults because if head is a nullptr it would end at the if !augPath
-		for (;;) {
+		for (;;)
+		{
 			//check if its a fowrards node or a backwards node
-			if (g.hasEdge(head->obj, head->next->obj)) {
+			if (g.hasEdge(head->obj, head->next->obj))
+			{
 				g.addFlow(head->obj, head->next->obj, -bottleneck);
 			}
-			else {
+			else
+			{
 				g.addFlow(head->next->obj, head->obj, bottleneck);
 			}
 
 			head = head->next;
 			//make sure that the flow gets added into the starting node
-			if (!head->next->next) {
+			if (!head->next->next)
+			{
 				g.addFlow(g.start, head->obj, bottleneck);
 				break;
 			}
@@ -519,12 +596,15 @@ SinglyLinkedList::LinkedList<unsigned int> fordFulkersonMinCut(const Graph::Weig
 	SinglyLinkedList::LinkedList<unsigned int> ret;
 	ret.pushBackNode(start);
 
-	for (unsigned int i = 0; i < g.size; i++) {
-		if (i == start || i == end) {
+	for (unsigned int i = 0; i < g.size; i++) 
+	{
+		if (i == start || i == end)
+		{
 			continue;
 		}
 
-		if (isPath(&g, i)) {
+		if (isPath(&g, i)) 
+		{
 			ret.pushBackNode(i);
 		}
 	}
@@ -536,7 +616,8 @@ SinglyLinkedList::LinkedList<unsigned int> fordFulkersonMinCut(const Graph::Weig
 
 template<class T>
 //returns the number of pairs in the maximum matching of a bipartite graph
-unsigned int maximumBipartiteMatchingNum(const Graph::BipartiteGraph<T> & graph) {
+unsigned int maximumBipartiteMatchingNum(const Graph::BipartiteGraph<T> & graph)
+{
 	Graph::ResidualGraph<T> g(graph);
 
 	int curFlow = 0;
@@ -552,18 +633,22 @@ unsigned int maximumBipartiteMatchingNum(const Graph::BipartiteGraph<T> & graph)
 		SinglyLinkedList::Node<unsigned int> * head = augPath->head;
 
 		//safe from segfaults because if head is a nullptr it would end at the if !augPath
-		for (;;) {
+		for (;;)
+		{
 			//check if its a fowrards node or a backwards node
-			if (g.hasEdge(head->obj, head->next->obj)) {
+			if (g.hasEdge(head->obj, head->next->obj))
+			{
 				g.addFlow(head->obj, head->next->obj, -1);
 			}
-			else {
+			else
+			{
 				g.addFlow(head->next->obj, head->obj, 1);
 			}
 
 			head = head->next;
 			//make sure that the flow gets added into the starting node
-			if (!head->next->next) {
+			if (!head->next->next)
+			{
 				g.addFlow(g.start, head->obj, 1);
 				break;
 			}
@@ -577,10 +662,12 @@ unsigned int maximumBipartiteMatchingNum(const Graph::BipartiteGraph<T> & graph)
 template<class T>
 //returns the number of pairs in the maximum matching of a bupartite graph
 //note: graph MUST BE BIPARTITE
-std::unique_ptr<std::vector<std::pair<unsigned int, unsigned int>>> maximumBipartiteMatching(const Graph::BipartiteGraph<T> & graph) {
+std::unique_ptr<std::vector<std::pair<unsigned int, unsigned int>>> maximumBipartiteMatching(const Graph::BipartiteGraph<T> & graph) 
+{
 	Graph::ResidualGraph<T> g(graph);
 
-	for (;;) {
+	for (;;)
+	{
 		std::shared_ptr<SinglyLinkedList::LinkedList<unsigned int>> augPath(findAugmentingPath(&g));
 
 		//if there are no more paths then end
@@ -591,18 +678,22 @@ std::unique_ptr<std::vector<std::pair<unsigned int, unsigned int>>> maximumBipar
 		SinglyLinkedList::Node<unsigned int> * head = augPath->head;
 
 		//safe from segfaults because if head is a nullptr it would end at the if !augPath
-		for (;;) {
+		for (;;)
+		{
 			//check if its a fowrards node or a backwards node
-			if (g.hasEdge(head->obj, head->next->obj)) {
+			if (g.hasEdge(head->obj, head->next->obj))
+			{
 				g.addFlow(head->obj, head->next->obj, -1);
 			}
-			else {
+			else 
+			{
 				g.addFlow(head->next->obj, head->obj, 1);
 			}
 
 			head = head->next;
 			//make sure that the flow gets added into the starting node
-			if (!head->next->next) {
+			if (!head->next->next) 
+			{
 				g.addFlow(g.start, head->obj, 1);
 				break;
 			}
@@ -615,10 +706,13 @@ done:
 	std::unique_ptr<std::vector<std::pair<unsigned int, unsigned int>>> retVec(new std::vector<std::pair<unsigned int, unsigned int>>());
 	retVec->reserve(g.size - 2);
 
-	for (unsigned int i = 0; i < graph.firstPartitionSize; i++) {
+	for (unsigned int i = 0; i < graph.firstPartitionSize; i++)
+	{
 
-		for (unsigned int j = 0; j < g.getChildNum(i); j++) {
-			if (g.getFlow(i, j)) {
+		for (unsigned int j = 0; j < g.getChildNum(i); j++) 
+		{
+			if (g.getFlow(i, j))
+			{
 				retVec->push_back(std::make_pair(i, g.getChild(i, j)));
 				break;
 			}
@@ -630,15 +724,18 @@ done:
 
 template<class T>
 //returns true if the BIPARTITE graph has a perfect matching
-bool bipartiteHasPerfectMatching(const Graph::BipartiteGraph<T> & graph) {
+bool bipartiteHasPerfectMatching(const Graph::BipartiteGraph<T> & graph)
+{
 	Graph::ResidualGraph<T> g(graph);
 
 	//for a perfect matching, both sides must be the same size
-	if (graph.firstPartitionSize != graph.size / 2) {
+	if (graph.firstPartitionSize != graph.size / 2)
+	{
 		return false;
 	}
 
-	for (;;) {
+	for (;;)
+	{
 		std::shared_ptr<SinglyLinkedList::LinkedList<unsigned int>> augPath(findAugmentingPath(&g));
 
 		//if there are no more paths then end
@@ -649,18 +746,22 @@ bool bipartiteHasPerfectMatching(const Graph::BipartiteGraph<T> & graph) {
 		SinglyLinkedList::Node<unsigned int> * head = augPath->head;
 
 		//safe from segfaults because if head is a nullptr it would end at the if !augPath
-		for (;;) {
+		for (;;) 
+		{
 			//check if its a fowrards node or a backwards node
-			if (g.hasEdge(head->obj, head->next->obj)) {
+			if (g.hasEdge(head->obj, head->next->obj))
+			{
 				g.addFlow(head->obj, head->next->obj, -1);
 			}
-			else {
+			else 
+			{
 				g.addFlow(head->next->obj, head->obj, 1);
 			}
 
 			head = head->next;
 			//make sure that the flow gets added into the starting node
-			if (!head->next->next) {
+			if (!head->next->next)
+			{
 				g.addFlow(g.start, head->obj, 1);
 				break;
 			}
@@ -670,10 +771,12 @@ bool bipartiteHasPerfectMatching(const Graph::BipartiteGraph<T> & graph) {
 
 done:
 
-	for (unsigned int i = 0; i < graph.firstPartitionSize; i++) {
+	for (unsigned int i = 0; i < graph.firstPartitionSize; i++)
+	{
 
 		//if start does not lead to any of the edges, it is not a perfect matching
-		if (!g.getFlow(g.start, i)) {
+		if (!g.getFlow(g.start, i))
+		{
 			return false;
 		}
 	}
@@ -685,12 +788,14 @@ done:
 
 template<class T>
 //find the maximum numebr of edge disjoint paths in a directed graph from a start node to an end node
-unsigned int disjointPaths(const Graph::DirectedGraph<T> & graph, unsigned int start, unsigned int end) {
+unsigned int disjointPaths(const Graph::DirectedGraph<T> & graph, unsigned int start, unsigned int end)
+{
 	Graph::ResidualGraph<T> g(graph, start, end);
 
 	int curFlow = 0;
 
-	for (;;) {
+	for (;;) 
+	{
 		std::shared_ptr<SinglyLinkedList::LinkedList<unsigned int>> augPath(findAugmentingPath(&g));
 
 		//if there are no more paths then end
@@ -701,18 +806,22 @@ unsigned int disjointPaths(const Graph::DirectedGraph<T> & graph, unsigned int s
 		SinglyLinkedList::Node<unsigned int> * head = augPath->head;
 
 		//safe from segfaults because if head is a nullptr it would end at the if !augPath
-		for (;;) {
+		for (;;)
+		{
 			//check if its a fowrards node or a backwards node
-			if (g.hasEdge(head->obj, head->next->obj)) {
+			if (g.hasEdge(head->obj, head->next->obj))
+			{
 				g.addFlow(head->obj, head->next->obj, -1);
 			}
-			else {
+			else
+			{
 				g.addFlow(head->next->obj, head->obj, 1);
 			}
 
 			head = head->next;
 			//make sure that the flow gets added into the starting node
-			if (!head->next->next) {
+			if (!head->next->next) 
+			{
 				g.addFlow(g.start, head->obj, 1);
 				break;
 			}
@@ -725,12 +834,14 @@ unsigned int disjointPaths(const Graph::DirectedGraph<T> & graph, unsigned int s
 
 template<class T>
 //find the maximum numebr of edge disjoint paths in an undirected graph from a start node to an end node
-unsigned int disjointPaths(const Graph::Graph<T> & graph, unsigned int start, unsigned int end) {
+unsigned int disjointPaths(const Graph::Graph<T> & graph, unsigned int start, unsigned int end)
+{
 	Graph::ResidualGraph<T> g(graph, start, end);
 
 	int curFlow = 0;
 
-	for (;;) {
+	for (;;)
+	{
 		std::shared_ptr<SinglyLinkedList::LinkedList<unsigned int>> augPath(findAugmentingPath(&g));
 
 		//if there are no more paths then end
@@ -741,18 +852,22 @@ unsigned int disjointPaths(const Graph::Graph<T> & graph, unsigned int start, un
 		SinglyLinkedList::Node<unsigned int> * head = augPath->head;
 
 		//safe from segfaults because if head is a nullptr it would end at the if !augPath
-		for (;;) {
+		for (;;)
+		{
 			//check if its a fowrards node or a backwards node
-			if (g.hasEdge(head->obj, head->next->obj)) {
+			if (g.hasEdge(head->obj, head->next->obj))
+			{
 				g.addFlow(head->obj, head->next->obj, -1);
 			}
-			else {
+			else 
+			{
 				g.addFlow(head->next->obj, head->obj, 1);
 			}
 
 			head = head->next;
 			//make sure that the flow gets added into the starting node
-			if (!head->next->next) {
+			if (!head->next->next)
+			{
 				g.addFlow(g.start, head->obj, 1);
 				break;
 			}
@@ -771,7 +886,8 @@ template<class T>
 //positive demands means capacity, and negative demands means supply
 //this is in essence a multi-source, multi-sink flow network, where every node with negative demand supplies those with positive demand
 //returns nullptr when there is no way to neutralize the supply and demand
-Graph::ResidualGraph<T> * maximumCirculation(const Graph::WeightedDirectedGraph<T> & graph, int * demands) {
+Graph::ResidualGraph<T> * maximumCirculation(const Graph::WeightedDirectedGraph<T> & graph, int * demands)
+{
 	//construct the graph, then modify it later
 	Graph::ResidualGraph<T> * g = DBG_NEW Graph::ResidualGraph<T>(graph, 0, 1);
 
@@ -785,12 +901,15 @@ Graph::ResidualGraph<T> * maximumCirculation(const Graph::WeightedDirectedGraph<
 	unsigned int checkForFeasibility = 0;
 
 	//for each node, it demands[i] is negative make the source link to it, if not link it to the sink
-	for (unsigned int i = 0; i < graph.nodes.size(); i++) {
-		if (demands[i] < 0) {
+	for (unsigned int i = 0; i < graph.nodes.size(); i++)
+	{
+		if (demands[i] < 0)
+		{
 			g->addEdge(g->nodes.size() - 2, i, -demands[i]);
 			checkForFeasibility -= demands[i];
 		}
-		else if (demands[i] > 0) {
+		else if (demands[i] > 0)
+		{
 			g->addEdge(i, g->nodes.size() - 1, demands[i]);
 		}
 	}
@@ -799,7 +918,8 @@ Graph::ResidualGraph<T> * maximumCirculation(const Graph::WeightedDirectedGraph<
 	g->start = g->nodes.size() - 2;
 	g->end = g->nodes.size() - 1;
 
-	for (;;) {
+	for (;;) 
+	{
 		std::shared_ptr<SinglyLinkedList::LinkedList<unsigned int>> augPath(findAugmentingPath(g));
 
 		//if there are no more paths then end
@@ -813,18 +933,22 @@ Graph::ResidualGraph<T> * maximumCirculation(const Graph::WeightedDirectedGraph<
 		SinglyLinkedList::Node<unsigned int> * head = augPath->head;
 
 		//safe from segfaults because if head is a nullptr it would end at the if !augPath
-		for (;;) {
+		for (;;)
+		{
 			//check if its a fowrards node or a backwards node
-			if (g->hasEdge(head->obj, head->next->obj)) {
+			if (g->hasEdge(head->obj, head->next->obj))
+			{
 				g->addFlow(head->obj, head->next->obj, -bottleneck);
 			}
-			else {
+			else 
+			{
 				g->addFlow(head->next->obj, head->obj, bottleneck);
 			}
 
 			head = head->next;
 			//make sure that the flow gets added into the starting node
-			if (!head->next->next) {
+			if (!head->next->next) 
+			{
 				g->addFlow(g->start, head->obj, bottleneck);
 				break;
 			}
@@ -836,11 +960,13 @@ done:
 
 	unsigned int endTotal = 0;
 
-	for (unsigned int i = 0; i < g->parents[g->end]->size(); i += 2) {
+	for (unsigned int i = 0; i < g->parents[g->end]->size(); i += 2)
+	{
 		endTotal += g->getFlowBetweenNodes((*g->parents[g->end])[i], g->end);
 	}
 
-	if (endTotal != checkForFeasibility) {
+	if (endTotal != checkForFeasibility)
+	{
 		delete g;
 		return nullptr;
 	}
@@ -855,7 +981,8 @@ template<class T>
 //finds the maximum circulation for a graph, with minimum requirements for each edge
 //demands is an array with the minimum requirement for each edge
 //returns nullptr when there is no way to neutralize the supply and demand
-Graph::ResidualGraph<T> * boundedMaximumCirculation(const Graph::WeightedDirectedGraph<T> & graph, int * demands, unsigned int bound) {
+Graph::ResidualGraph<T> * boundedMaximumCirculation(const Graph::WeightedDirectedGraph<T> & graph, int * demands, unsigned int bound)
+{
 	//construct the graph, then modify it later
 	Graph::ResidualGraph<T> * g = DBG_NEW Graph::ResidualGraph<T>(graph, 0, 1);
 
@@ -868,15 +995,19 @@ Graph::ResidualGraph<T> * boundedMaximumCirculation(const Graph::WeightedDirecte
 	//used to check if there is a feasible circulation later
 	unsigned int checkForFeasibility = 0;
 
-	for (unsigned int i = 0; i < graph.size; i++) {
-		if (demands[i] < 0) {
+	for (unsigned int i = 0; i < graph.size; i++)
+	{
+		if (demands[i] < 0) 
+		{
 			checkForFeasibility -= demands[i];
 		}
 	}
 
 	//go through every edge and subtract the lower bound
-	for (unsigned int i = 0; i < g->nodes.size(); i++) {
-		for (unsigned int j = 1; j < g->edges[i]->size(); j += 2) {
+	for (unsigned int i = 0; i < g->nodes.size(); i++)
+	{
+		for (unsigned int j = 1; j < g->edges[i]->size(); j += 2) 
+		{
 			(*g->edges[i])[j] -= bound;
 			demands[(*g->edges[i])[j - 1]] -= bound;
 			demands[i] += bound;
@@ -884,11 +1015,14 @@ Graph::ResidualGraph<T> * boundedMaximumCirculation(const Graph::WeightedDirecte
 	}
 
 	//for each node, it demands[i] is negative make the source link to it, if not link it to the sink
-	for (unsigned int i = 0; i < graph.nodes.size(); i++) {
-		if (demands[i] < 0) {
+	for (unsigned int i = 0; i < graph.nodes.size(); i++)
+	{
+		if (demands[i] < 0)
+		{
 			g->addEdge(g->nodes.size() - 2, i, -demands[i]);
 		}
-		else if (demands[i] > 0) {
+		else if (demands[i] > 0) 
+		{
 			g->addEdge(i, g->nodes.size() - 1, demands[i]);
 		}
 	}
@@ -898,7 +1032,8 @@ Graph::ResidualGraph<T> * boundedMaximumCirculation(const Graph::WeightedDirecte
 	g->end = g->nodes.size() - 1;
 
 
-	for (;;) {
+	for (;;)
+	{
 		std::shared_ptr<SinglyLinkedList::LinkedList<unsigned int>> augPath(findAugmentingPath(g));
 
 		//if there are no more paths then end
@@ -912,18 +1047,22 @@ Graph::ResidualGraph<T> * boundedMaximumCirculation(const Graph::WeightedDirecte
 		SinglyLinkedList::Node<unsigned int> * head = augPath->head;
 
 		//safe from segfaults because if head is a nullptr it would end at the if !augPath
-		for (;;) {
+		for (;;) 
+		{
 			//check if its a fowrards node or a backwards node
-			if (g->hasEdge(head->obj, head->next->obj)) {
+			if (g->hasEdge(head->obj, head->next->obj))
+			{
 				g->addFlow(head->obj, head->next->obj, -bottleneck);
 			}
-			else {
+			else
+			{
 				g->addFlow(head->next->obj, head->obj, bottleneck);
 			}
 
 			head = head->next;
 			//make sure that the flow gets added into the starting node
-			if (!head->next->next) {
+			if (!head->next->next) 
+			{
 				g->addFlow(g->start, head->obj, bottleneck);
 				break;
 			}
@@ -934,8 +1073,10 @@ Graph::ResidualGraph<T> * boundedMaximumCirculation(const Graph::WeightedDirecte
 done:
 
 	//add the weights into the edge, and the flows into the graph
-	for (unsigned int i = 0; i < g->nodes.size(); i++) {
-		for (unsigned int j = 1; j < g->edges[i]->size(); j += 2) {
+	for (unsigned int i = 0; i < g->nodes.size(); i++) 
+	{
+		for (unsigned int j = 1; j < g->edges[i]->size(); j += 2) 
+		{
 			(*g->edges[i])[j] += bound * std::max(1u, g->getParentNum(i) / g->getChildNum(i));
 			(*g->flows[i])[j / 2] += bound * std::max(1u, g->getParentNum(i) / g->getChildNum(i));
 		}
@@ -943,11 +1084,13 @@ done:
 
 	unsigned int endTotal = 0;
 
-	for (unsigned int i = 0; i < g->parents[g->end]->size(); i += 2) {
+	for (unsigned int i = 0; i < g->parents[g->end]->size(); i += 2)
+	{
 		endTotal += g->getFlowBetweenNodes((*g->parents[g->end])[i], g->end);
 	}
 
-	if (endTotal != checkForFeasibility) {
+	if (endTotal != checkForFeasibility)
+	{
 		delete g;
 		return nullptr;
 	}
@@ -963,7 +1106,8 @@ template<class T>
 //same as above, except the bounds can be different for each edge of the graph
 //it will loop through bounds and take the first value of the first node for the first edge, etc
 //demands will be modified
-bool differentlyBoundedMaximumCirculation(const Graph::WeightedDirectedGraph<T> & graph, int * demands, unsigned int * bounds) {
+bool differentlyBoundedMaximumCirculation(const Graph::WeightedDirectedGraph<T> & graph, int * demands, unsigned int * bounds)
+{
 	//construct the graph, then modify it later
 	Graph::ResidualGraph<T> * g = DBG_NEW Graph::ResidualGraph<T>(graph, 0, 1);
 
@@ -977,8 +1121,10 @@ bool differentlyBoundedMaximumCirculation(const Graph::WeightedDirectedGraph<T> 
 	unsigned int boundNumOn = 0;
 
 	//go through every edge and subtract the lower bound, and update its demands
-	for (unsigned int i = 0; i < g->nodes.size(); i++) {
-		for (unsigned int j = 1; j < g->edges[i]->size(); j += 2) {
+	for (unsigned int i = 0; i < g->nodes.size(); i++) 
+	{
+		for (unsigned int j = 1; j < g->edges[i]->size(); j += 2) 
+		{
 			(*g->edges[i])[j] -= bounds[boundNumOn];
 			demands[(*g->edges[i])[j - 1]] -= bounds[boundNumOn];
 			demands[i] += bounds[boundNumOn];
@@ -988,11 +1134,14 @@ bool differentlyBoundedMaximumCirculation(const Graph::WeightedDirectedGraph<T> 
 	}
 
 	//for each node, it demands[i] is negative make the source link to it, if not link it to the sink
-	for (unsigned int i = 0; i < graph.nodes.size(); i++) {
-		if (demands[i] < 0) {
+	for (unsigned int i = 0; i < graph.nodes.size(); i++) 
+	{
+		if (demands[i] < 0)
+		{
 			g->addEdge(g->nodes.size() - 2, i, -demands[i]);
 		}
-		else if (demands[i] > 0) {
+		else if (demands[i] > 0) 
+		{
 			g->addEdge(i, g->nodes.size() - 1, demands[i]);
 		}
 	}
@@ -1005,13 +1154,16 @@ bool differentlyBoundedMaximumCirculation(const Graph::WeightedDirectedGraph<T> 
 	//used to check if there is a feasible circulation later
 	unsigned int checkForFeasibility = 0;
 
-	for (unsigned int i = 0; i < graph.size; i++) {
-		if (demands[i] < 0) {
+	for (unsigned int i = 0; i < graph.size; i++) 
+	{
+		if (demands[i] < 0) 
+		{
 			checkForFeasibility -= demands[i];
 		}
 	}
 
-	for (;;) {
+	for (;;)
+	{
 		std::shared_ptr<SinglyLinkedList::LinkedList<unsigned int>> augPath(findAugmentingPath(g));
 
 		//if there are no more paths then end
@@ -1025,18 +1177,22 @@ bool differentlyBoundedMaximumCirculation(const Graph::WeightedDirectedGraph<T> 
 		SinglyLinkedList::Node<unsigned int> * head = augPath->head;
 
 		//safe from segfaults because if head is a nullptr it would end at the if !augPath
-		for (;;) {
+		for (;;)
+		{
 			//check if its a fowrards node or a backwards node
-			if (g->hasEdge(head->obj, head->next->obj)) {
+			if (g->hasEdge(head->obj, head->next->obj))
+			{
 				g->addFlow(head->obj, head->next->obj, -bottleneck);
 			}
-			else {
+			else
+			{
 				g->addFlow(head->next->obj, head->obj, bottleneck);
 			}
 
 			head = head->next;
 			//make sure that the flow gets added into the starting node
-			if (!head->next->next) {
+			if (!head->next->next)
+			{
 				g->addFlow(g->start, head->obj, bottleneck);
 				break;
 			}
@@ -1050,7 +1206,8 @@ done:
 
 	boundNumOn = 0;
 
-	for (unsigned int i = 0; i < g->getChildNum(g->start); i++){
+	for (unsigned int i = 0; i < g->getChildNum(g->start); i++)
+	{
 		flowOutOfStart += g->getFlow(g->start, i);
 	}
 
@@ -1063,7 +1220,8 @@ done:
 //customers can only be asked about a product if they bought it, so customer bought product is a 2d array of wether they bought it
 //customers must be asked at least minproductsasked and at most maxproductsasked
 //customers must be asked about every product at least mintimesasked and at most maxtimesasked, to gather sufficient information
-bool surveyCanBeDesigned(unsigned int customerNum, unsigned int productNum, bool * customerBoughtProduct, unsigned int minProductsAsked, unsigned int maxProductsAsked, unsigned int minTimesAsked, unsigned int maxTimesAsked) {
+bool surveyCanBeDesigned(unsigned int customerNum, unsigned int productNum, bool * customerBoughtProduct, unsigned int minProductsAsked, unsigned int maxProductsAsked, unsigned int minTimesAsked, unsigned int maxTimesAsked) 
+{
 	Graph::WeightedDirectedGraph<char> g(customerNum + productNum + 2);
 
 	//source node
@@ -1073,26 +1231,32 @@ bool surveyCanBeDesigned(unsigned int customerNum, unsigned int productNum, bool
 	g.addNode(1);
 
 	//add a node for each customer and product
-	for (unsigned int i = 0; i < customerNum + productNum; i++) {
+	for (unsigned int i = 0; i < customerNum + productNum; i++) 
+	{
 		g.addNode(i);
 	}
 
 	//add an edge of weight one if a customer bought a product 
-	for (unsigned int i = 0; i < customerNum; i++) {
-		for (unsigned int j = 0; j < productNum; j++) {
-			if (customerBoughtProduct[i * customerNum + j]) {
+	for (unsigned int i = 0; i < customerNum; i++)
+	{
+		for (unsigned int j = 0; j < productNum; j++) 
+		{
+			if (customerBoughtProduct[i * customerNum + j])
+			{
 				g.addEdge(i + 2, j + customerNum + 2, 1);
 			}
 		}
 	}
 
 	//add an edge from the source to each customer
-	for (unsigned int i = 0; i < customerNum; i++) {
+	for (unsigned int i = 0; i < customerNum; i++)
+	{
 		g.addEdge(0, i + 2, maxProductsAsked);
 	}
 
 	//add edge from each product to sink
-	for (unsigned int i = customerNum + 2; i < customerNum + productNum + 2; i++) {
+	for (unsigned int i = customerNum + 2; i < customerNum + productNum + 2; i++) 
+	{
 		g.addEdge(i, 1, maxTimesAsked);
 	}
 
@@ -1108,8 +1272,10 @@ bool surveyCanBeDesigned(unsigned int customerNum, unsigned int productNum, bool
 	//used later to figure out when the product edges start
 	unsigned int numOn = 0;
 
-	for (unsigned int i = 0; i < g.size; i++) {
-		if (i < customerNum + 2) {
+	for (unsigned int i = 0; i < g.size; i++)
+	{
+		if (i < customerNum + 2)
+		{
 			numOn += g.getChildNum(i);
 		}
 
@@ -1119,12 +1285,14 @@ bool surveyCanBeDesigned(unsigned int customerNum, unsigned int productNum, bool
 	unsigned int * bounds = DBG_NEW unsigned int[totalEdges] {0};
 
 	//minimum bounds of edges leaving source is minproductsasked
-	for (unsigned int i = 0; i < g.getChildNum(0); i++) {
+	for (unsigned int i = 0; i < g.getChildNum(0); i++) 
+	{
 		bounds[i] += minProductsAsked;
 	}
 
 	//minimum bounds of edges entering sink  is mintimesasked
-	for (unsigned int i = numOn; i < totalEdges; i++) {
+	for (unsigned int i = numOn; i < totalEdges; i++) 
+	{
 		bounds[i] = minTimesAsked;
 	}
 
@@ -1145,10 +1313,12 @@ bool surveyCanBeDesigned(unsigned int customerNum, unsigned int productNum, bool
 //FLIGHTS MUST BE SORTED BY START TIME
 //START TIMES MUST BE IN MILITARY TIME
 //IF THIS ALGORITHM IS USED OVER A SPAN OF MORE THAN ONE DAY, THE TIMES OF DAY J MUST HAVE 24 * J ADDED TO THEM
-bool planesCanBeScheduled(FlightStruct * flights, unsigned int numberOfFlights, float * flightCost, unsigned int cityNum, unsigned int numberOfPlanes, unsigned int maintenanceTime) {
+bool planesCanBeScheduled(FlightStruct * flights, unsigned int numberOfFlights, float * flightCost, unsigned int cityNum, unsigned int numberOfPlanes, unsigned int maintenanceTime) 
+{
 	Graph::WeightedDirectedGraph<char> g(cityNum + 2);
 
-	for (unsigned int i = 0; i < numberOfFlights * 2 + 2; i++) {
+	for (unsigned int i = 0; i < numberOfFlights * 2 + 2; i++)
+	{
 		g.addNode(i);
 	}
 
@@ -1156,7 +1326,8 @@ bool planesCanBeScheduled(FlightStruct * flights, unsigned int numberOfFlights, 
 	unsigned int edgeNum = 1;
 
 	//for every flight, add an edge between the two nodes
-	for (unsigned int i = 0; i < numberOfFlights; i++) {
+	for (unsigned int i = 0; i < numberOfFlights; i++)
+	{
 		//edge between two nodes
 		g.addEdge(i * 2, i * 2 + 1, 1);
 
@@ -1172,21 +1343,26 @@ bool planesCanBeScheduled(FlightStruct * flights, unsigned int numberOfFlights, 
 	g.addEdge(2 * numberOfFlights, 2 * numberOfFlights + 1, numberOfPlanes);
 
 	//for each destination add potential edges if there is a potential flight between them, even though it isnt required
-	for (unsigned int i = 0; i < numberOfFlights; i++) {
+	for (unsigned int i = 0; i < numberOfFlights; i++) 
+	{
 		//the earliest a plane can be reused after this flight
 		float reusableTime = flights[i].startTime + flightCost[flights[i].startCity * cityNum + flights[i].endCity] + maintenanceTime;
 		
 		//check if it can do both flight i and flight j for all js ahead of i
-		for (unsigned int j = i + 1; j < numberOfFlights; j++) {
+		for (unsigned int j = i + 1; j < numberOfFlights; j++) 
+		{
 			//if they start and end in the same city, no doble maintenance time
-			if (flights[j].startCity == flights[i].endCity) {
-				if (reusableTime + flightCost[flights[i].endCity * cityNum + flights[j].startCity] <= flights[j].startTime) {
+			if (flights[j].startCity == flights[i].endCity) 
+			{
+				if (reusableTime + flightCost[flights[i].endCity * cityNum + flights[j].startCity] <= flights[j].startTime)
+				{
 					g.addEdge(i * 2 + 1, j * 2, 1);
 
 					edgeNum++;
 				}
 			}
-			else if (reusableTime + flightCost[flights[i].endCity * cityNum + flights[j].startCity] + maintenanceTime <= flights[j].startTime) {
+			else if (reusableTime + flightCost[flights[i].endCity * cityNum + flights[j].startCity] + maintenanceTime <= flights[j].startTime)
+			{
 				edgeNum++;
 
 				g.addEdge(i * 2 + 1, j * 2, 1);
@@ -1205,8 +1381,10 @@ bool planesCanBeScheduled(FlightStruct * flights, unsigned int numberOfFlights, 
 	unsigned int numOn = 0;
 
 	//set the minimum of each required flight to one
-	for (unsigned int i = 0; i < cityNum; i++) {
-		if (!(i % 2)) {
+	for (unsigned int i = 0; i < cityNum; i++)
+	{
+		if (!(i % 2))
+		{
 			bounds[numOn] = 1;
 		}
 

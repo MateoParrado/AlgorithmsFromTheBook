@@ -3,13 +3,17 @@
 
 template<class T>
 //helper func to handle the recursion in the lower func
-std::vector<T> inversionCounter(std::vector<T> vec, unsigned int * counter) {
+std::vector<T> inversionCounter(std::vector<T> vec, unsigned int * counter) 
+{
 	//end recursion
-	if (vec.size() == 1) {
+	if (vec.size() == 1)
+	{
 		return vec;
 	}
-	if (vec.size() == 2) {
-		if (vec[0] < vec[1]) {
+	if (vec.size() == 2)
+	{
+		if (vec[0] < vec[1])
+		{
 			return vec;
 		}
 
@@ -32,15 +36,20 @@ std::vector<T> inversionCounter(std::vector<T> vec, unsigned int * counter) {
 	unsigned int firstIndex = 0;
 	unsigned int secondIndex = 0;
 
-	while (retVec.size() < vec.size()) {
-		if (firstIndex == firstHalf.size()) {
-			for (unsigned int j = secondIndex; j < secondHalf.size(); j++) {
+	while (retVec.size() < vec.size())
+	{
+		if (firstIndex == firstHalf.size())
+		{
+			for (unsigned int j = secondIndex; j < secondHalf.size(); j++)
+			{
 				retVec.push_back(secondHalf[j]);
 			}
 			break;
 		}
-		else if (secondIndex == secondHalf.size()) {
-			for (unsigned int j = firstIndex; j < firstHalf.size(); j++) {
+		else if (secondIndex == secondHalf.size())
+		{
+			for (unsigned int j = firstIndex; j < firstHalf.size(); j++)
+			{
 				retVec.push_back(firstHalf[j]);
 			}
 
@@ -48,7 +57,8 @@ std::vector<T> inversionCounter(std::vector<T> vec, unsigned int * counter) {
 			break;
 		}
 
-		if (firstHalf[firstIndex] <= secondHalf[secondIndex]) {
+		if (firstHalf[firstIndex] <= secondHalf[secondIndex])
+		{
 			retVec.push_back(firstHalf[firstIndex]);
 			firstIndex++;
 			continue;
@@ -67,12 +77,16 @@ template<class T>
 //counts the number of times a list of objects is out of order
 //for example, 2, 4, 1, 3, 5 has 3
 //(4, 1), (4, 3), (2, 1)
-unsigned int inversionCounter(std::vector<T> vec) {
-	if (vec.size() <= 1) {
+unsigned int inversionCounter(std::vector<T> vec)
+{
+	if (vec.size() <= 1) 
+	{
 		return 0;
 	}
-	if (vec.size() == 2) {
-		if (vec[0] < vec[1]) {
+	if (vec.size() == 2)
+	{
+		if (vec[0] < vec[1]) 
+		{
 			return 0;
 		}
 		return 1;
@@ -86,16 +100,20 @@ unsigned int inversionCounter(std::vector<T> vec) {
 	unsigned int firstIndex = 0;
 	unsigned int secondIndex = 0;
 
-	while (true) {
-		if (firstIndex == firstHalf.size()) {
+	for(;;)
+	{
+		if (firstIndex == firstHalf.size())
+		{
 			break;
 		}
-		else if (secondIndex == secondHalf.size()) {
+		else if (secondIndex == secondHalf.size()) 
+		{
 			(*counter) += firstHalf.size() - firstIndex + 1;
 			break;
 		}
 
-		if (firstHalf[firstIndex] <= secondHalf[secondIndex]) {
+		if (firstHalf[firstIndex] <= secondHalf[secondIndex]) 
+		{
 			firstIndex++;
 			continue;
 		}

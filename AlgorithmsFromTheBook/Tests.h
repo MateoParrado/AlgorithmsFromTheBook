@@ -36,7 +36,8 @@ extern "C" int asm_letters_needed(char *, char *);
 
 /*CACHING*/
 
-void cacheTester() {
+void cacheTester()
+{
 	std::vector<char> vec = { 'a', 'b', 'c', 'd', 'a', 'd', 'e', 'a', 'd', 'b', 'c' };
 	assert(cacher(vec, 3) == 4);
 	std::vector<char> vec1 = { 'a', 'b', 'c', 'b', 'c', 'a', 'b' };
@@ -46,10 +47,12 @@ void cacheTester() {
 
 /*CLOSEST PAIR*/
 
-void closestPairTester() {
+void closestPairTester() 
+{
 	//make a huge random list and test if it gets the right answer with a brute force check
 	std::vector<std::pair<int, int>> testVec(1000);
-	for (int i = 0; i < 1000; i++) {
+	for (int i = 0; i < 1000; i++)
+	{
 		testVec[i] = std::make_pair(rand() % 1000, rand() % 1000);
 	}
 
@@ -62,7 +65,8 @@ void closestPairTester() {
 /*CLUSTERING*/
 /*DATA COMPRESSION*/
 
-void huffmanTester() {
+void huffmanTester() 
+{
 	assert(huffmanDecoder(huffmanEncoder("float like a butterfly sting like a bee")) == "float like a butterfly sting like a bee");
 	assert(huffmanDecoder(huffmanEncoder("why be a king, when you could be a god")) == "why be a king, when you could be a god");
 }
@@ -70,7 +74,8 @@ void huffmanTester() {
 /*FAST FOURIER TRANSFORM*/
 /*GEOMETRY*/
 
-void rectIntersectsEllipseTester() {
+void rectIntersectsEllipseTester()
+{
 	//testing normal rect collision
 	assert(rectIntersectsEllipse({ -1, -1 }, 2, 2, { -3, 0 }, 2, 3));
 	assert(!rectIntersectsEllipse({ -1, -1 }, 2, 2, { -3, 0 }, 1.9, 3));
@@ -82,13 +87,15 @@ void rectIntersectsEllipseTester() {
 	assert(rectIntersectsEllipse({ -2, -2 }, 1, 1, { 0, 0 }, 2, 2));
 }
 
-void lineSegmentIntersectionTester() {
+void lineSegmentIntersectionTester() 
+{
 	assert(!lineSegmentIntersection({ 1, 1 }, { 10, 1 }, { 1, 2 }, { 10, 2 }));
 	assert(!lineSegmentIntersection({ -5, -5 }, { 0, 0 }, { 1, 1 }, { 10, 10 }));
 	assert(lineSegmentIntersection({ 10, 0 }, { 0, 10 }, { 0, 0 }, { 10, 10 }));
 }
 
-void pointInPolygonTester() {
+void pointInPolygonTester()
+{
 	std::pair<double, double> poly[3] = { {0, 0}, {1, 0}, {.5, 1} };
 
 	assert(pointInPolygon({ .5, .5 }, &poly[0], 3));
@@ -101,7 +108,8 @@ void pointInPolygonTester() {
 
 /*GRAPH ALGORITHMSH*/
 
-void connectivityTestTester() {
+void connectivityTestTester()
+{
 	Graph::WeightedGraph<int> g;
 	for (int i = 0; i < 6; i++) {
 		g.addNode(i);
@@ -126,10 +134,12 @@ void connectivityTestTester() {
 	assert(!depthFirstConnecivityTest(&g));
 }
 
-void cycleTestTester() {
+void cycleTestTester()
+{
 
 	Graph::WeightedGraph<int> g;
-	for (int i = 0; i < 6; i++) {
+	for (int i = 0; i < 6; i++)
+	{
 		g.addNode(i);
 	}
 
@@ -156,9 +166,11 @@ void cycleTestTester() {
 
 }
 
-void bipartiteTester() {
+void bipartiteTester()
+{
 	Graph::Graph<int> g;
-	for (int i = 0; i < 7; i++) {
+	for (int i = 0; i < 7; i++) 
+	{
 		g.addNode(i);
 	}
 	g.addEdge(0, 4);
@@ -175,9 +187,11 @@ void bipartiteTester() {
 	assert(!isBipartite(&g));
 }
 
-void firstSearchesTester() {
+void firstSearchesTester() 
+{
 	Graph::Graph<int> g;
-	for (int i = 0; i < 6; i++) {
+	for (int i = 0; i < 6; i++)
+	{
 		g.addNode(i);
 	}
 
@@ -206,7 +220,8 @@ void firstSearchesTester() {
 	assert(str == "");
 }
 
-void dijkstraMinDistTester() {
+void dijkstraMinDistTester() 
+{
 	Graph::WeightedGraph<int> g;
 	for (int i = 0; i < 6; i++) {
 		g.addNode(i);
@@ -230,9 +245,11 @@ void dijkstraMinDistTester() {
 	assert(dists[5] == 2);
 }
 
-void dijkstraTester() {
+void dijkstraTester() 
+{
 	Graph::WeightedGraph<int> g;
-	for (int i = 0; i < 6; i++) {
+	for (int i = 0; i < 6; i++) 
+	{
 		g.addNode(i);
 	}
 
@@ -258,7 +275,8 @@ void dijkstraTester() {
 	assert(path1.popFrontNode() == 3);
 }
 
-void bellmanFordTester() {
+void bellmanFordTester() 
+{
 	Graph::WeightedDirectedGraph<char> g;
 	g.addNode('a');
 	g.addNode('b');
@@ -312,10 +330,12 @@ void bellmanFordTester() {
 	delete vec;
 }
 
-void negativeCycleTester() {
+void negativeCycleTester()
+{
 	Graph::WeightedDirectedGraph<int> g;
 
-	for (int i = 0; i < 6; i++) {
+	for (int i = 0; i < 6; i++)
+	{
 		g.addNode(i);
 	}
 
@@ -347,7 +367,8 @@ void negativeCycleTester() {
 	assert(!vec);
 }
 
-void minimumSpanningTreeTester() {
+void minimumSpanningTreeTester() 
+{
 	Graph::WeightedGraph<int> g(9);
 
 	for (int i = 0; i < 9; i++) g.addNode(i);
@@ -426,10 +447,12 @@ void minimumSpanningTreeTester() {
 	assert(g2.hasChild(6, 7));
 }
 
-void edmondsTester() {
+void edmondsTester() 
+{
 	Graph::WeightedDirectedGraph<int> g(7);
 
-	for (int i = 0; i < 7; i++) {
+	for (int i = 0; i < 7; i++)
+	{
 		g.addNode(i);
 	}
 
@@ -450,8 +473,10 @@ void edmondsTester() {
 
 	unsigned int totalWeight = 0;
 
-	for (unsigned int i = 0; i < edmonds->size; i++) {
-		for (unsigned int j = 0; j < edmonds->getEdgeNum(i); j++) {
+	for (unsigned int i = 0; i < edmonds->size; i++)
+	{
+		for (unsigned int j = 0; j < edmonds->getEdgeNum(i); j++)
+		{
 			totalWeight += edmonds->getWeightOfEdgeByPos(i, j);
 		}
 	}
@@ -462,7 +487,8 @@ void edmondsTester() {
 
 	Graph::WeightedDirectedGraph<int> g2(6);
 
-	for (int i = 0; i < 6; i++) {
+	for (int i = 0; i < 6; i++)
+	{
 		g2.addNode(i);
 	}
 
@@ -480,8 +506,10 @@ void edmondsTester() {
 
 	totalWeight = 0;
 
-	for (unsigned int i = 0; i < edmonds->size; i++) {
-		for (unsigned int j = 0; j < edmonds->getEdgeNum(i); j++) {
+	for (unsigned int i = 0; i < edmonds->size; i++)
+	{
+		for (unsigned int j = 0; j < edmonds->getEdgeNum(i); j++) 
+		{
 			totalWeight += edmonds->getWeightOfEdgeByPos(i, j);
 		}
 	}
@@ -491,10 +519,12 @@ void edmondsTester() {
 	delete edmonds;
 }
 
-void isDAGTester() {
+void isDAGTester()
+{
 	Graph::DirectedGraph<int> g;
 
-	for (int i = 0; i < 6; i++) {
+	for (int i = 0; i < 6; i++)
+	{
 		g.addNode(i);
 	}
 
@@ -510,13 +540,15 @@ void isDAGTester() {
 	g.addEdge(0, 5);
 	g.addEdge(1, 4);
 
-	//assert(!isDAG(g));
+	assert(!isDAG(g));
 }
 
-void topologicalSortTester() {
+void topologicalSortTester()
+{
 	Graph::DirectedGraph<int> g;
 
-	for (int i = 0; i < 6; i++) {
+	for (int i = 0; i < 6; i++)
+	{
 		g.addNode(i);
 	}
 
@@ -549,10 +581,12 @@ void topologicalSortTester() {
 }
 
 void vertexCoverTester() {
-	for (unsigned int i = 0; i < 5; i++) {
+	for (unsigned int i = 0; i < 5; i++)
+	{
 		Graph::Graph<int> g(7);
 
-		for (int i = 0; i < 7; i++) {
+		for (int i = 0; i < 7; i++)
+		{
 			g.addNode(i);
 		}
 
@@ -571,7 +605,8 @@ void vertexCoverTester() {
 	}
 }
 
-void independentSetTester() {
+void independentSetTester()
+{
 	Graph::Graph<int> g(10);
 
 	for (int i = 0; i < 5; g.addNode(i++));
@@ -608,7 +643,8 @@ void independentSetTester() {
 
 /*INTERVAL SCHEDULING*/
 
-void schedulingTester() {
+void schedulingTester() 
+{
 	std::vector<std::pair<int, int>> tasks = { { 0, 80 },{ 0, 10 },{ 0, 20 },{ 15, 30 },{ 28, 32 },{ 40, 50 },{ 45, 60 },{ 80, 90 },{ 85, 95 } };
 	assert(intervalScheduler(tasks).size() == 4);//the only thing that matters is the number of tasks scheduled, as there are many optimums
 	assert(parallelScheduler(tasks).size() == 3);
@@ -635,7 +671,8 @@ void schedulingTester() {
 
 /*INVERSION COUNTER*/
 
-void inversionCounterTester() {
+void inversionCounterTester()
+{
 	std::vector<int> vec = { 1, 2, 3, 4, 5 };
 	assert(inversionCounter(vec) == 0);
 	std::vector<int> vec1 = { 2, 4, 1, 3, 5 };
@@ -648,7 +685,8 @@ void inversionCounterTester() {
 
 /*NETWORK FLOW ALGORITHMS*/
 
-void maxFlowTester() {
+void maxFlowTester() 
+{
 	Graph::WeightedDirectedGraph<int> g(4);
 	g.addNode(0);
 	g.addNode(1);
@@ -666,7 +704,8 @@ void maxFlowTester() {
 	//assert(preflowPush(g, 0, 3) == 30);
 
 	Graph::WeightedDirectedGraph<int> k(6);
-	for (int i = 0; i < 6; i++) {
+	for (int i = 0; i < 6; i++) 
+	{
 		k.addNode(i);
 	}
 	k.addEdge(0, 1, 10);
@@ -684,7 +723,8 @@ void maxFlowTester() {
 	assert(preflowPush(k, 0, 5) == 19);
 }
 
-void minCutTester() {
+void minCutTester()
+{
 	Graph::WeightedDirectedGraph<int> g(4);
 	g.addNode(0);
 	g.addNode(1);
@@ -702,7 +742,8 @@ void minCutTester() {
 
 
 	Graph::WeightedDirectedGraph<int> k(6);
-	for (int i = 0; i < 6; i++) {
+	for (int i = 0; i < 6; i++) 
+	{
 		k.addNode(i);
 	}
 	k.addEdge(0, 1, 10);
@@ -722,10 +763,12 @@ void minCutTester() {
 	assert(e.tail->obj == 2);
 }
 
-void bipartiteMatchingTester() {
+void bipartiteMatchingTester() 
+{
 	Graph::BipartiteGraph<char> g(5);
 
-	for (int i = 0; i < 10; i++) {
+	for (int i = 0; i < 10; i++)
+	{
 		g.addNode(i);
 	}
 
@@ -760,10 +803,12 @@ void bipartiteMatchingTester() {
 	assert(bipartiteHasPerfectMatching(g));
 }
 
-void disjointPathsTester() {
+void disjointPathsTester() 
+{
 	Graph::DirectedGraph<char> g(7);
 
-	for (int i = 0; i < 7; i++) {
+	for (int i = 0; i < 7; i++)
+	{
 		g.addNode(i);
 	}
 
@@ -783,7 +828,8 @@ void disjointPathsTester() {
 
 	Graph::Graph<char> k(7);
 
-	for (int i = 0; i < 7; i++) {
+	for (int i = 0; i < 7; i++)
+	{
 		k.addNode(i);
 	}
 
@@ -802,7 +848,8 @@ void disjointPathsTester() {
 	assert(disjointPaths(k, 0, 6) == 3);
 }
 
-void circulationsTester() {
+void circulationsTester()
+{
 	Graph::WeightedDirectedGraph<char> g(4);
 	g.addNode(0);
 	g.addNode(1);
@@ -861,14 +908,16 @@ void circulationsTester() {
 	assert(differentlyBoundedMaximumCirculation(g, &s[0], &z[0]));
 }
 
-void surveyTester() {
+void surveyTester()
+{
 	bool x[3][3] = { {1, 1, 0}, {1, 0, 1}, {0, 1, 1} };
 
 	assert(surveyCanBeDesigned(3, 3, &x[0][0], 1, 3, 1, 3));
 	assert(!surveyCanBeDesigned(3, 3, &x[0][0], 4, 3, 2, 3));
 }
 
-void airlinesTester() {
+void airlinesTester()
+{
 	FlightStruct x[6] = { FlightStruct(0, 1, 6), FlightStruct(2, 3, 7),
 						 FlightStruct(1, 4, 8), FlightStruct(2, 5, 11),
 						 FlightStruct(5, 6, 14.25), FlightStruct(7, 6, 17) };
@@ -890,7 +939,8 @@ void airlinesTester() {
 
 /*RNA*/
 
-void rnaStructureTester() {
+void rnaStructureTester() 
+{
 	//all that matters is the optimal size, it can pick whichever pairs it wants
 	RNA * rna = DBG_NEW RNA("UGUACCGGUAGUACA");
 
@@ -912,7 +962,8 @@ void rnaStructureTester() {
 /*SEGMENTED REGRESSION*/
 
 //this is a sufficient test for squared error because it needs squared error to work
-void segmentedLinearRegressionTester() {
+void segmentedLinearRegressionTester() 
+{
 	std::pair<int, int> x[9] = { { 0, 0 },{ 1, 0 },{ 2, 0 },{ 3, 2 },{ 4, 4 },{ 5, 2 },{ 6, 0 },{ 7, 0 },{ 8, 0 } };
 
 	std::vector<std::pair<unsigned int, unsigned int>> * vec = segmentedLinearRegression(&x[0], 9, 3);
@@ -924,7 +975,8 @@ void segmentedLinearRegressionTester() {
 
 /*SORTING ALGOS*/
 
-void sortingtester() {
+void sortingtester()
+{
 	std::vector<int> toSort = { 3, 2, 4, 5, 6, 8, 7, 8, 7, 8, 9, 0, 9, 8, 9, 0, 9, 7 };
 
 	std::vector<int> heap = heapSort(&toSort);
@@ -937,7 +989,8 @@ void sortingtester() {
 
 /*STABLE MATCHING*/
 
-void stableMatchingTester() {
+void stableMatchingTester()
+{
 	unsigned int men[4][4] = { { 0, 1, 2, 3 },{ 2, 1, 3, 0 },{ 0, 2, 3, 1 },{ 3, 2, 0, 1 } };
 	unsigned int women[4][4] = { { 3, 2, 0, 1 },{ 0, 2, 3, 1 },{ 0, 1, 2, 3 },{ 2, 1, 3, 0 } };
 
@@ -951,7 +1004,8 @@ void stableMatchingTester() {
 
 	assert(match.size() == 4);
 
-	for (unsigned int i = 0; i < match.size(); i++) {
+	for (unsigned int i = 0; i < match.size(); i++)
+	{
 		//make sure that every element in the matching is one of the correct elements of the answer, but not necessarily in any order
 		assert((match[i].first == 0 && match[i].second == 1) ||
 			(match[i].first == 1 && match[i].second == 2) ||
@@ -962,18 +1016,21 @@ void stableMatchingTester() {
 
 /*STRING ALGOS*/
 
-void greatestCommonSubstringTester() {
+void greatestCommonSubstringTester()
+{
 	assert(greatestCommonSubstring("abc", "arm") == "a");
 	assert(greatestCommonSubstring("arm", "pine") == "");
 	assert(greatestCommonSubstring("crab", "cra") == "cra");
 }
 
-unsigned int testingOnlyCostFunc(char a, char b) {
+unsigned int testingOnlyCostFunc(char a, char b) 
+{
 	if (a == b) return 0;
 	return 3;
 }
 
-void sequenceAlignmentTester() {
+void sequenceAlignmentTester() 
+{
 	std::vector<std::pair<unsigned int, unsigned int>> * vec = sequenceAlignment("abc", "def", 1, testingOnlyCostFunc);
 
 	assert(!vec->size());
@@ -1019,7 +1076,8 @@ void sequenceAlignmentTester() {
 }
 
 /*UTILS*/
-void checksumTester() {
+void checksumTester()
+{
 	char * p = new char[11]{ 0,4,2,1,0,0,0,0,5,2,6 };
 	assert(asm_get_barcode_checksum(p) == 4);
 	p[1]++;
@@ -1035,7 +1093,8 @@ void checksumTester() {
 	delete c;
 }
 
-void multiplicationTester() {
+void multiplicationTester() 
+{
 	assert(asm_multiply(4, 5) == 20);
 	assert(asm_multiply(3, 5) == 15);
 	assert(asm_multiply(4, 4) == 16);
@@ -1043,12 +1102,14 @@ void multiplicationTester() {
 	assert(asm_multiply(6, 6) == 36);
 }
 
-void encryptionTester() {
+void encryptionTester()
+{
 	char * test = new char[26]{"abcdefghijklmnopgrstuv"};
 	char * encrypt = new char[26]{ "abcdefghijklmnopgrstuv" };
 	asm_rot_encrypt(encrypt);
 	asm_rot_decrypt(encrypt);
-	for (unsigned int i = 0; i < 26; i++) {
+	for (unsigned int i = 0; i < 26; i++) 
+	{
 		assert(test[i] == encrypt[i]);
 	}
 
@@ -1056,7 +1117,8 @@ void encryptionTester() {
 	delete[] encrypt;
 }
 
-void wordFunnelTester() {
+void wordFunnelTester() 
+{
 	char * test = new char[6]{ 'l', 'e', 'a', 'v', 'e', 0 };
 	char * test2 = new char[5]{ 'e', 'a', 'v', 'e', 0 };
 
@@ -1074,14 +1136,17 @@ void wordFunnelTester() {
 	delete[] test2;
 }
 
-void getPrimesTester() {
+void getPrimesTester() 
+{
 	assert(getPrimes(0) == 2);
 	assert(getPrimes(3) == 7);
 	assert(getPrimes(5) == 13);
 }
 
-void rngTester() {
-	for (int i = 0; i < 1000; i++) {
+void rngTester()
+{
+	for (int i = 0; i < 1000; i++)
+	{
 
 		int x = i;
 		x ^= x << 13;
@@ -1092,9 +1157,11 @@ void rngTester() {
 	}
 }
 
-void isEvenTester (){
+void isEvenTester ()
+{
 	//this works, I ran the whole loop, but it makes the testAll function run forever, so I'm commenting it out
-	for (int i = INT_MAX - 1; i != INT_MAX; i--) {
+	for (int i = INT_MAX - 1; i != INT_MAX; i--)
+	{
 		assert(isEven(i) == !(i % 2));
 	}
 
@@ -1102,13 +1169,15 @@ void isEvenTester (){
 	asm_even_odd();
 }
 
-void factorialTester() {
+void factorialTester() 
+{
 	assert(factorial(4) == 24);
 	assert(factorial(0) == 1);
 	assert(factorial(1) == 1);
 }
 
-void distTester() {
+void distTester()
+{
 
 	std::pair<int, int> p = { 0, 0 };
 	std::pair<int, int> p1 = { 5, 0 };
@@ -1119,7 +1188,8 @@ void distTester() {
 	assert(dist(&p1, &p2) == dist(&p2, &p1) && dist(&p2, &p1) == sqrt(178));
 }
 
-void exponentTester() {
+void exponentTester()
+{
 	assert(exponent(2, 10) == 1024);
 	assert(exponent(18, 1) == 18);
 	assert(exponent(3, 0) == 1);
@@ -1127,30 +1197,37 @@ void exponentTester() {
 }
 
 //c++ does not support local functions, so this needs to be defined above the tests
-double testDeriv(double x) { 
+double testDeriv(double x) 
+{ 
 	return x * x; 
 }
 
-void derivativeTester() {
-	for (int i = -8; i < 8; i++) {
+void derivativeTester() 
+{
+	for (int i = -8; i < 8; i++)
+	{
 		assert(derivative(testDeriv, i) == 2 * i);
 	}
 }
 
 //c++ does not support local functions, so this needs to be defined above the tests
-double testInt(double x) {
+double testInt(double x)
+{
 	return 3 * x * x;
 }
 
-void integralTester() {
-	for (int i = -8; i < 8; i++) {
+void integralTester()
+{
+	for (int i = -8; i < 8; i++)
+	{
 		//make sure its a very good estimate
 		assert(abs(integral(testInt, 0, i, 20000) - (i*i*i)) < 0.1);
 	}
 }
 
 //tests both gcd and djykstra gcd
-void gcdTester() {
+void gcdTester()
+{
 	assert(gcd(10, 15) == 5);
 	assert(gcd(35, 10) == 5);
 	assert(gcd(31, 2) == 1);
@@ -1160,7 +1237,8 @@ void gcdTester() {
 	assert(dijkstraGcd(31, 2) == 1);
 }
 
-void linearRegressionTester() {
+void linearRegressionTester() 
+{
 	std::pair<int, int> * x = DBG_NEW std::pair<int, int>[5];
 	x[0] = { 0, 1 };
 	x[1] = { 1, 3 }; 
@@ -1168,7 +1246,8 @@ void linearRegressionTester() {
 	x[3] = { 3, 7 };
 	x[4] = { 4, 9 };
 
-	for (int i = 2; i < 5; i++) {
+	for (int i = 2; i < 5; i++) 
+	{
 		assert(linearRegression(x, i) == std::make_pair(2.0, 1.0));
 	}
 
@@ -1178,7 +1257,8 @@ void linearRegressionTester() {
 
 
 /*TESTS*/
-void runAllTests() {
+void runAllTests()
+{
 	//this is an out of order disorganized mess
 
 	//clock_t startTime = clock();

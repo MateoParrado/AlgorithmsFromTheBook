@@ -64,13 +64,15 @@ extern "C" int asm_letters_needed(char *, char *);
 
 using namespace std;
 
-int main() {
+int main()
+{
 #ifdef _DEBUG
 	//to track memory leaks
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif
 
-	//for (int i = 0; i < 100; i++) {
+	//for (int i = 0; i < 100; i++) 
+	//{
 	clock_t startTime = clock();
 
 	runAllTests();

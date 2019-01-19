@@ -1,9 +1,11 @@
 #pragma once
 #include <iostream>
 
-namespace SinglyLinkedList {
+namespace SinglyLinkedList 
+{
 	template <class T>
-	struct Node {
+	struct Node 
+	{
 		T obj;
 		Node<T> * next;
 
@@ -12,7 +14,8 @@ namespace SinglyLinkedList {
 	};
 
 	template<class T>
-	struct LinkedList {
+	struct LinkedList 
+	{
 	public:
 		Node<T> * head = nullptr;
 		Node<T> * tail = nullptr;
@@ -22,15 +25,18 @@ namespace SinglyLinkedList {
 		LinkedList() {  }
 
 		//add node at end of list by value
-		void pushBackNode(T val) {
+		void pushBackNode(T val) 
+		{
 			Node<T> * temp = DBG_NEW Node<T>(val);
 
-			if (head == nullptr) {
+			if (head == nullptr)
+			{
 				head = temp;
 				tail = temp;
 				temp = nullptr;
 			}
-			else {
+			else 
+			{
 				tail->next = temp; //covers the case when head == tail too
 				tail = temp;
 			}
@@ -39,7 +45,8 @@ namespace SinglyLinkedList {
 		}
 
 		//add to the front by value
-		void pushForwardsNode(T val) {
+		void pushForwardsNode(T val)
+		{
 			Node<T> * temp = DBG_NEW Node<T>(val);
 
 			temp->next = head;
@@ -49,22 +56,27 @@ namespace SinglyLinkedList {
 		}
 
 		//insert a node by value
-		void insertNode(T val, unsigned int pos) {
+		void insertNode(T val, unsigned int pos) 
+		{
 			Node<T> * temp = DBG_NEW Node<T>(val);
-			if (!size) {
+			if (!size) 
+			{
 				head = temp;
 				tail = temp;
 				temp = nullptr;
 			}
-			else if (!pos) {//first?
+			else if (!pos)
+			{//first?
 				temp->next = head;
 				head = temp;
 			}
-			else if (pos < size) {
+			else if (pos < size) 
+			{
 				Node<T> * cur = head;
 				Node<T> * prev = nullptr;
 
-				for (unsigned int i = 0; i < pos - 1; i++) {
+				for (unsigned int i = 0; i < pos - 1; i++) 
+				{
 					prev = cur;
 					cur = cur->next;
 				}
@@ -72,13 +84,16 @@ namespace SinglyLinkedList {
 				temp->next = cur->next;
 				cur->next = temp;
 			}
-			else {//if its past the end, just do push back node, copied for memory leak reasons
-				if (head == nullptr) {
+			else 
+			{//if its past the end, just do push back node, copied for memory leak reasons
+				if (head == nullptr)
+				{
 					head = temp;
 					tail = temp;
 					temp = nullptr;
 				}
-				else {
+				else 
+				{
 					tail->next = temp; //covers the case when head == tail too
 					tail = temp;
 				}
@@ -88,13 +103,16 @@ namespace SinglyLinkedList {
 		}
 
 		//add node at end of list by pointer
-		void pushBackNode(Node<T> * temp) {
-			if (head == nullptr) {
+		void pushBackNode(Node<T> * temp) 
+		{
+			if (head == nullptr) 
+			{
 				head = temp;
 				tail = temp;
 				temp = nullptr;
 			}
-			else {
+			else 
+			{
 				tail->next = temp; //covers the case when head == tail too
 				tail = temp;
 			}
@@ -103,7 +121,8 @@ namespace SinglyLinkedList {
 		}
 
 		//add to the front by pointer
-		void pushForwardsNode(Node<T> * temp) {
+		void pushForwardsNode(Node<T> * temp) 
+		{
 			temp->next = head;
 			head = temp;
 
@@ -111,16 +130,20 @@ namespace SinglyLinkedList {
 		}
 
 		//insert a node by pointer
-		void insertNode(Node<T> * temp, unsigned int pos) {
-			if (!pos) {//first?
+		void insertNode(Node<T> * temp, unsigned int pos) 
+		{
+			if (!pos)
+			{//first?
 				temp->next = head;
 				head = temp;
 			}
-			else if (pos < size) {
+			else if (pos < size) 
+			{
 				Node<T> * cur = head;
 				Node<T> * prev = nullptr;
 
-				for (unsigned int i = 0; i < pos - 1; i++) {
+				for (unsigned int i = 0; i < pos - 1; i++)
+				{
 					prev = cur;
 					cur = cur->next;
 				}
@@ -128,13 +151,16 @@ namespace SinglyLinkedList {
 				temp->next = cur->next;
 				cur->next = temp;
 			}
-			else {//if its past the end, just do push back node, copied for memory leak reasons
-				if (head == nullptr) {
+			else 
+			{//if its past the end, just do push back node, copied for memory leak reasons
+				if (head == nullptr) 
+				{
 					head = temp;
 					tail = temp;
 					temp = nullptr;
 				}
-				else {
+				else 
+				{
 					tail->next = temp; //covers the case when head == tail too
 					tail = temp;
 				}
@@ -144,7 +170,8 @@ namespace SinglyLinkedList {
 		}
 
 		//delete front node
-		T popFrontNode() {
+		T popFrontNode() 
+		{
 			if (size == 0) throw true;
 
 			Node<T> * temp = head;
@@ -161,13 +188,15 @@ namespace SinglyLinkedList {
 		}
 
 		//deleting a node at any position, no specific one for popping from back because it has no performance change
-		T popNode(unsigned int pos) {
+		T popNode(unsigned int pos) 
+		{
 			if (pos >= size) throw false;
 
 			Node<T> * prev = nullptr;
 			Node<T> * cur = head;
 
-			for (unsigned int i = 0; i < pos; i++) {
+			for (unsigned int i = 0; i < pos; i++)
+			{
 				prev = cur;
 				cur = cur->next;
 			}
@@ -184,7 +213,8 @@ namespace SinglyLinkedList {
 		}
 
 		//remove front node without deleting
-		void unlinkFrontNode() {
+		void unlinkFrontNode() 
+		{
 			if (size == 0) throw true;
 
 			Node<T> * temp = head;
@@ -195,13 +225,15 @@ namespace SinglyLinkedList {
 		}
 
 		//remove a node at any position without deleting, no specific one for popping from back because it has no performance change
-		void unlinkNode(unsigned int pos) {
+		void unlinkNode(unsigned int pos) 
+		{
 			if (pos >= size) throw false;
 
 			Node<T> * prev = nullptr;
 			Node<T> * cur = head;
 
-			for (unsigned int i = 0; i < pos; i++) {
+			for (unsigned int i = 0; i < pos; i++)
+			{
 				prev = cur;
 				cur = cur->next;
 			}
@@ -211,30 +243,36 @@ namespace SinglyLinkedList {
 			size--;
 		}
 
-		T getVal(unsigned int _i) {
+		T getVal(unsigned int _i) 
+		{
 			Node<T> * temp = head;
 
-			for (unsigned int i = 0; i < _i; i++) {
+			for (unsigned int i = 0; i < _i; i++) 
+			{
 				temp = (*temp).next;
 			}
 
 			return (*temp).obj;
 		}
 
-		T operator[](unsigned int _i) {
+		T operator[](unsigned int _i)
+		{
 			Node<T> * temp = head;
 
-			for (unsigned int i = 0; i < _i; i++) {
+			for (unsigned int i = 0; i < _i; i++)
+			{
 				temp = (*temp).next;
 			}
 
 			return (*temp).obj;
 		}
 
-		void display() {
+		void display()
+		{
 			Node<T> * temp = head;
 
-			while (temp) {
+			while (temp) 
+			{
 				std::cout << temp->obj << std::endl;
 
 				temp = temp->next;
@@ -242,10 +280,12 @@ namespace SinglyLinkedList {
 		}
 
 		/*RULE OF FIVE*/
-		LinkedList(const LinkedList& old) {
+		LinkedList(const LinkedList& old) 
+		{
 			Node<T> * temp = old.head;
 
-			while (temp) {
+			while (temp)
+			{
 				Node<T> * tempNode = DBG_NEW Node<T>(temp);
 
 				this->pushBackNode(tempNode);
@@ -256,7 +296,8 @@ namespace SinglyLinkedList {
 
 		LinkedList operator=(const LinkedList&) = delete;
 
-		LinkedList(LinkedList&& other) {
+		LinkedList(LinkedList&& other) 
+		{
 			head = other.head;
 			tail = other.tail;
 
@@ -269,9 +310,12 @@ namespace SinglyLinkedList {
 
 		LinkedList operator=(const LinkedList&&) = delete;
 
-		~LinkedList() {
-			if (head) {
-				while (head->next) {
+		~LinkedList() 
+		{
+			if (head) 
+			{
+				while (head->next)
+				{
 					Node<T> * temp = head->next;
 					delete head;
 					head = temp;
@@ -281,9 +325,11 @@ namespace SinglyLinkedList {
 	};
 }
 
-namespace XORLinkedList{
+namespace XORLinkedList
+{
 	template <class T>
-	struct Node {
+	struct Node 
+	{
 		T obj;
 		Node<T> * next;
 
@@ -301,15 +347,18 @@ namespace XORLinkedList{
 		LinkedList() {};
 
 		//add node at end of list by value
-		void pushBackNode(T val) {
+		void pushBackNode(T val)
+		{
 			Node<T> * temp = DBG_NEW Node<T>(val);
 
-			if (head == nullptr) {
+			if (head == nullptr)
+			{
 				head = temp;
 				tail = temp;
 				temp = nullptr;
 			}
-			else {
+			else
+			{
 				Node<T> * tempTail = tail;
 
 				tail->next = (Node<T> *) ((uintptr_t)(tail->next) ^ (uintptr_t)(temp)); //covers the case when head == tail too
@@ -321,8 +370,10 @@ namespace XORLinkedList{
 			size++;
 		}
 
-		void pushForwardsNode(T val) {
-			if (this->head) {
+		void pushForwardsNode(T val) 
+		{
+			if (this->head) 
+			{
 				Node<T> * temp = DBG_NEW Node<T>(val);
 
 				temp->next = head;
@@ -331,7 +382,8 @@ namespace XORLinkedList{
 
 				head = temp;
 			}
-			else {
+			else 
+			{
 				head = DBG_NEW Node<T>(val);
 				tail = head;
 			}
@@ -339,11 +391,13 @@ namespace XORLinkedList{
 			size++;
 		}
 
-		void insertNode(T val, unsigned int pos) {
+		void insertNode(T val, unsigned int pos)
+		{
 			if (pos > size) {
 				throw 1;
 			}
-			if (pos == size || !head) {
+			if (pos == size || !head)
+			{
 				pushBackNode(val);
 				return;
 			}
@@ -355,7 +409,8 @@ namespace XORLinkedList{
 			Node<T> * prev = nullptr;
 			Node<T> * next; //dummy variable
 
-			for (unsigned int i = 0; i < bound; i++) {
+			for (unsigned int i = 0; i < bound; i++)
+			{
 				next = (Node<T> *)((uintptr_t)(prev) ^ (uintptr_t)(cur->next));
 
 				prev = cur;
@@ -373,13 +428,16 @@ namespace XORLinkedList{
 		}
 
 		//add node at end of list by pointer
-		void pushBackNode(Node<T> * temp) {
-			if (head == nullptr) {
+		void pushBackNode(Node<T> * temp)
+		{
+			if (head == nullptr)
+			{
 				head = temp;
 				tail = temp;
 				head->next = nullptr;
 			}
-			else {
+			else
+			{
 				tail->next = (Node<T> *)((uintptr_t)(temp) ^ (uintptr_t)(tail->next)); //covers the case when head == tail too
 				temp->next = tail;
 				tail = temp;
@@ -388,13 +446,16 @@ namespace XORLinkedList{
 			size++;
 		}
 
-		void pushForwardsNode(Node<T> * temp) {
-			if (head == nullptr) {
+		void pushForwardsNode(Node<T> * temp)
+		{
+			if (head == nullptr)
+			{
 				head = temp;
 				tail = temp;
 				head->next = nullptr;
 			}
-			else {
+			else 
+			{
 				head->next = (Node<T> *)((uintptr_t)(temp) ^ (uintptr_t)(head->next)); //covers the case when head == tail too
 				temp->next = head;
 				head = temp;
@@ -403,17 +464,21 @@ namespace XORLinkedList{
 			size++;
 		}
 
-		void insertNode(Node<T> * temp, unsigned int pos) {
+		void insertNode(Node<T> * temp, unsigned int pos)
+		{
 			if (pos > size) {
 				throw 3;
 			}
-			if (head == nullptr || !pos) {
+			if (head == nullptr || !pos)
+			{
 				pushForwardsNode(temp);
 			}
-			else if (pos == size) {
+			else if (pos == size)
+			{
 				pushBackNode(temp);
 			}
-			else {
+			else
+			{
 				Node<T> * cur = (pos < size / 2) ? head : tail;
 
 				unsigned int bound = (pos < size / 2) ? pos : size - pos - 1;
@@ -421,7 +486,8 @@ namespace XORLinkedList{
 				Node<T> * prev = nullptr;
 				Node<T> * next; //dummy variable
 
-				for (unsigned int i = 0; i < bound; i++) {
+				for (unsigned int i = 0; i < bound; i++)
+				{
 					next = (Node<T> *)((uintptr_t)(prev) ^ (uintptr_t)(cur->next));
 
 					prev = cur;
@@ -438,7 +504,8 @@ namespace XORLinkedList{
 			}
 		}
 
-		T popBackNode() {
+		T popBackNode()
+		{
 			Node<T> * temp = tail;
 
 			tail = tail->next;
@@ -455,8 +522,10 @@ namespace XORLinkedList{
 
 		}
 
-		T popFrontNode() {
-			if (size == 1) {
+		T popFrontNode()
+		{
+			if (size == 1)
+			{
 				T t = head->obj;
 
 				tail = nullptr;
@@ -485,7 +554,8 @@ namespace XORLinkedList{
 			return t;
 		}
 
-		T popNode(unsigned int pos) {
+		T popNode(unsigned int pos)
+		{
 			if (pos == size - 1) {
 				return popBackNode();
 			}
@@ -497,7 +567,8 @@ namespace XORLinkedList{
 			Node<T> * prev = nullptr;
 			Node<T> * next = nullptr; //dummy variable
 
-			for (unsigned int i = 0; i < bound; i++) {
+			for (unsigned int i = 0; i < bound; i++)
+			{
 				next = (Node<T> *)((uintptr_t)(prev) ^ (uintptr_t)(cur->next));
 
 				prev = cur;
@@ -518,8 +589,10 @@ namespace XORLinkedList{
 			return t;
 		}
 
-		T getVal(unsigned int _i) {
-			if (_i >= size) {
+		T getVal(unsigned int _i) 
+		{
+			if (_i >= size) 
+			{
 				throw 4;
 			}
 
@@ -530,7 +603,8 @@ namespace XORLinkedList{
 			Node<T> * prev = nullptr;
 			Node<T> * next; //dummy variable
 
-			for (unsigned int i = 0; i < upperBound; i++) {
+			for (unsigned int i = 0; i < upperBound; i++) 
+			{
 				next = (Node<T> *)((uintptr_t)(prev) ^ (uintptr_t)(cur->next));
 
 				prev = cur;
@@ -540,8 +614,10 @@ namespace XORLinkedList{
 			return cur->obj;
 		}
 
-		T operator[](unsigned int _i) {
-			if (_i >= size) {
+		T operator[](unsigned int _i) 
+		{
+			if (_i >= size)
+			{
 				throw 4;
 			}
 
@@ -552,7 +628,8 @@ namespace XORLinkedList{
 			Node<T> * prev = nullptr;
 			Node<T> * next; //dummy variable
 
-			for (unsigned int i = 0; i < upperBound; i++) {
+			for (unsigned int i = 0; i < upperBound; i++)
+			{
 				next = (Node<T> *)((uintptr_t)(prev) ^ (uintptr_t)(cur->next));
 
 				prev = cur;
@@ -562,13 +639,16 @@ namespace XORLinkedList{
 			return cur->obj;
 		}
 
-		void display() {
-			if (head) {
+		void display()
+		{
+			if (head) 
+			{
 				Node<T> * cur = head;
 				Node<T> * prev = nullptr;
 				Node<T> * next; //dummy variable
 
-				while (cur) {
+				while (cur) 
+				{
 					std::cout << cur->obj << " ";
 
 					next = (Node<T> *)((uintptr_t)(prev) ^ (uintptr_t)(cur->next));
@@ -580,12 +660,14 @@ namespace XORLinkedList{
 		}
 
 		/*RULE OF FIVE*/
-		LinkedList(const LinkedList& old) {
+		LinkedList(const LinkedList& old) 
+		{
 			Node<T> * cur = old.head;
 			Node<T> * prev = nullptr;
 			Node<T> * next; //dummy variable
 
-			while (cur) {
+			while (cur)
+			{
 				next = (Node<T> *)((uintptr_t)(prev) ^ (uintptr_t)(cur->next));
 
 				pushBackNode(cur);
@@ -597,7 +679,8 @@ namespace XORLinkedList{
 
 		LinkedList operator=(const LinkedList&) = delete;
 
-		LinkedList(LinkedList&& other) {
+		LinkedList(LinkedList&& other)
+		{
 			head = other.head;
 			tail = other.tail;
 
@@ -611,13 +694,16 @@ namespace XORLinkedList{
 		LinkedList operator=(const LinkedList&&) = delete;
 
 		//this is janky and ugly, but doesnt throw a segfault because the parent gets passed a null head ptr in the destructor
-		~LinkedList() {
-			if (head) {
+		~LinkedList()
+		{
+			if (head)
+			{
 				Node<T> * cur = head;
 				Node<T> * prev = nullptr;
 				Node<T> * next; //dummy variable
 
-				while(cur) {
+				while(cur) 
+				{
 					next = (Node<T> *)((uintptr_t)(prev) ^ (uintptr_t)(cur->next));
 
 					prev = cur;
@@ -636,10 +722,12 @@ namespace XORLinkedList{
 }
 
 //inherits from linked list
-namespace DoublyLinkedList {
+namespace DoublyLinkedList
+{
 
 	template <class T>
-	struct Node{
+	struct Node
+	{
 		T obj;
 
 		Node<T> * next;
@@ -650,7 +738,8 @@ namespace DoublyLinkedList {
 	};
 
 	template<class T>
-	struct LinkedList{
+	struct LinkedList
+	{
 	public:
 		Node<T> * head = nullptr;
 		Node<T> * tail = nullptr;
@@ -660,15 +749,18 @@ namespace DoublyLinkedList {
 		LinkedList() { 	}
 
 		//add node at end of list by value
-		void pushBackNode(T val) {
+		void pushBackNode(T val) 
+		{
 			Node<T> * temp = DBG_NEW Node<T>(val);
 
-			if (head == nullptr) {
+			if (head == nullptr) 
+			{
 				head = temp;
 				tail = temp;
 				temp = nullptr;
 			}
-			else {
+			else 
+			{
 				tail->next = temp; //covers the case when head == tail too
 				temp->prev = tail;
 				tail = temp;
@@ -678,7 +770,8 @@ namespace DoublyLinkedList {
 		}
 
 		//add to the front by value
-		void pushForwardsNode(T val) {
+		void pushForwardsNode(T val) 
+		{
 			Node<T> * temp = DBG_NEW Node<T>(val);
 
 			temp->next = head;
@@ -690,26 +783,32 @@ namespace DoublyLinkedList {
 		}
 
 		//insert a node by value
-		void insertNode(T val, int pos) {
+		void insertNode(T val, int pos) 
+		{
 			Node<T> * temp = DBG_NEW Node<T>(val);
 
-			if (!size) {
+			if (!size) 
+			{
 				head = temp;
 				tail = temp;
 				temp = nullptr;
 			}
-			else if (!pos) {//first?
+			else if (!pos) 
+			{//first?
 				temp->next = head;
 				head->prev = temp;
 
 				head = temp;
 			}
-			else if (pos < size) {
-				if (pos < size / 2) {
+			else if (pos < size) 
+			{
+				if (pos < size / 2)
+				{
 					Node<T> * cur = head;
 					Node<T> * pre = nullptr;
 
-					for (int i = 0; i < pos - 1; i++) {
+					for (int i = 0; i < pos - 1; i++) 
+					{
 						pre = cur;
 						cur = cur->next;
 					}
@@ -720,14 +819,16 @@ namespace DoublyLinkedList {
 					cur->next = temp;
 					cur->next->prev = temp;
 				}
-				else {
+				else 
+				{
 					Node<T> * cur = tail;
 					Node<T> * post = nullptr;
 
 					auto sd = size;
 					auto df = pos;
 					auto dfdf = size - pos;
-					for (int i = 0; i < size - pos; i++) {
+					for (int i = 0; i < size - pos; i++) 
+					{
 						post = cur;
 						cur = cur->prev;
 					}
@@ -739,13 +840,16 @@ namespace DoublyLinkedList {
 					cur->next = temp;
 				}
 			}
-			else {//if its past the end, just do push back node, copied for memory leak reasons
-				if (head == nullptr) {
+			else
+			{//if its past the end, just do push back node, copied for memory leak reasons
+				if (head == nullptr)
+				{
 					head = temp;
 					tail = temp;
 					temp = nullptr;
 				}
-				else {
+				else 
+				{
 					tail->next = temp; //covers the case when head == tail too
 					temp->prev = tail;
 					tail = temp;
@@ -756,13 +860,16 @@ namespace DoublyLinkedList {
 		}
 
 		//add node at end of list by pointer
-		void pushBackNode(Node<T> * temp) {
-			if (head == nullptr) {
+		void pushBackNode(Node<T> * temp)
+		{
+			if (head == nullptr) 
+			{
 				head = temp;
 				tail = temp;
 				temp = nullptr;
 			}
-			else {
+			else 
+			{
 				tail->next = temp; //covers the case when head == tail too
 				temp->prev = tail;
 
@@ -773,7 +880,8 @@ namespace DoublyLinkedList {
 		}
 
 		//add to the front by pointer
-		void pushForwardsNode(Node<T> * temp) {
+		void pushForwardsNode(Node<T> * temp)
+		{
 			temp->next = head;
 			head->prev = temp;
 
@@ -783,24 +891,30 @@ namespace DoublyLinkedList {
 		}
 
 		//insert a node by pointer
-		void insertNode(Node<T> * temp, int pos) {
-			if (!size) {
+		void insertNode(Node<T> * temp, int pos) 
+		{
+			if (!size)
+			{
 				head = temp;
 				tail = temp;
 				temp = nullptr;
 			}
-			else if (!pos) {//first?
+			else if (!pos)
+			{//first?
 				temp->next = head;
 				head->prev = temp;
 
 				head = temp;
 			}
-			else if (pos < size) {
-				if (pos < size / 2) {
+			else if (pos < size) 
+			{
+				if (pos < size / 2)
+				{
 					Node<T> * cur = head;
 					Node<T> * pre = nullptr;
 
-					for (int i = 0; i < pos - 1; i++) {
+					for (int i = 0; i < pos - 1; i++)
+					{
 						pre = cur;
 						cur = cur->next;
 					}
@@ -811,14 +925,16 @@ namespace DoublyLinkedList {
 					cur->next = temp;
 					cur->next->prev = temp;
 				}
-				else {
+				else 
+				{
 					Node<T> * cur = tail;
 					Node<T> * post = nullptr;
 
 					auto sd = size;
 					auto df = pos;
 					auto dfdf = size - pos;
-					for (int i = 0; i < size - pos; i++) {
+					for (int i = 0; i < size - pos; i++)
+					{
 						post = cur;
 						cur = cur->prev;
 					}
@@ -830,13 +946,16 @@ namespace DoublyLinkedList {
 					cur->next = temp;
 				}
 			}
-			else {//if its past the end, just do push back node, copied for memory leak reasons
-				if (head == nullptr) {
+			else 
+			{//if its past the end, just do push back node, copied for memory leak reasons
+				if (head == nullptr) 
+				{
 					head = temp;
 					tail = temp;
 					temp = nullptr;
 				}
-				else {
+				else
+				{
 					tail->next = temp; //covers the case when head == tail too
 					temp->prev = tail;
 					tail = temp;
@@ -847,7 +966,8 @@ namespace DoublyLinkedList {
 		}
 
 		//delete front node
-		T popFrontNode() {
+		T popFrontNode() 
+		{
 			if (size == 0) throw true;
 
 			Node<T> * temp = head;
@@ -863,7 +983,8 @@ namespace DoublyLinkedList {
 			return obj;
 		}
 
-		T popBackNode() {
+		T popBackNode() 
+		{
 			if (size == 0) throw true;
 
 			Node<T> * temp = tail;
@@ -880,14 +1001,17 @@ namespace DoublyLinkedList {
 		}
 
 		//deleting a node at any position
-		T popNode(int pos) {
+		T popNode(int pos)
+		{
 			if (pos >= size) throw false;
 
-			if (pos < size / 2) {
+			if (pos < size / 2)
+			{
 				Node<T> * pre = nullptr;
 				Node<T> * cur = head;
 
-				for (int i = 0; i < pos; i++) {
+				for (int i = 0; i < pos; i++)
+				{
 					pre = cur;
 					cur = cur->next;
 				}
@@ -903,10 +1027,12 @@ namespace DoublyLinkedList {
 
 				return obj;
 			}
-			else {
+			else 
+			{
 				Node<T> * cur = tail;
 
-				for (int i = 0; i < size - pos - 1; i++) {
+				for (int i = 0; i < size - pos - 1; i++)
+				{
 					cur = cur->prev;
 				}
 
@@ -924,7 +1050,8 @@ namespace DoublyLinkedList {
 		}
 		
 		//remove front node without deleting
-		void unlinkFrontNode() {
+		void unlinkFrontNode()
+		{
 			if (size == 0) throw true;
 
 			Node<T> * temp = head;
@@ -937,7 +1064,8 @@ namespace DoublyLinkedList {
 		}
 
 		//remove back node without deleting
-		void unlinkBackNode() {
+		void unlinkBackNode() 
+		{
 			if (size == 0) throw true;
 
 			Node<T> * temp = tail;
@@ -950,14 +1078,17 @@ namespace DoublyLinkedList {
 		}
 
 		//remove a node at any position without deleting, no specific one for popping from back because it has no performance change
-		void unlinkNode(int pos) {
+		void unlinkNode(int pos)
+		{
 			if (pos >= size) throw false;
 
-			if (pos < size / 2) {
+			if (pos < size / 2)
+			{
 				Node<T> * pre = nullptr;
 				Node<T> * cur = head;
 
-				for (int i = 0; i < pos; i++) {
+				for (int i = 0; i < pos; i++)
+				{
 					pre = cur;
 					cur = cur->next;
 				}
@@ -965,10 +1096,12 @@ namespace DoublyLinkedList {
 				pre->next = cur->next;
 				cur->next->prev = pre;
 			}
-			else {
+			else 
+			{
 				Node<T> * cur = tail;
 
-				for (int i = 0; i < size - pos - 1; i++) {
+				for (int i = 0; i < size - pos - 1; i++)
+				{
 					cur = cur->prev;
 				}
 
@@ -979,20 +1112,25 @@ namespace DoublyLinkedList {
 			size--;
 		}
 
-		T getVal(unsigned int _i) {
-			if (_i < size / 2) {
+		T getVal(unsigned int _i)
+		{
+			if (_i < size / 2)
+			{
 				Node<T> * temp = head;
 
-				for (int i = 0; i < _i; i++) {
+				for (int i = 0; i < _i; i++)
+				{
 					temp = (*temp).next;
 				}
 
 				return (*temp).obj;
 			}
-			else {
+			else 
+			{
 				Node<T> * temp = tail;
 
-				for (int i = 0; i < size - _i - 1; i++) {
+				for (int i = 0; i < size - _i - 1; i++)
+				{
 					temp = (*temp).prev;
 				}
 
@@ -1000,20 +1138,25 @@ namespace DoublyLinkedList {
 			}
 		}
 
-		T operator[](unsigned int _i) {
-			if (_i < size / 2) {
+		T operator[](unsigned int _i)
+		{
+			if (_i < size / 2) 
+			{
 				Node<T> * temp = head;
 
-				for (int i = 0; i < _i; i++) {
+				for (int i = 0; i < _i; i++)
+				{
 					temp = (*temp).next;
 				}
 
 				return (*temp).obj;
 			}
-			else {
+			else
+			{
 				Node<T> * temp = tail;
 
-				for (int i = 0; i < size - _i - 1; i++) {
+				for (int i = 0; i < size - _i - 1; i++)
+				{
 					temp = (*temp).prev;
 				}
 
@@ -1021,10 +1164,12 @@ namespace DoublyLinkedList {
 			}
 		}
 
-		void display() {
+		void display() 
+		{
 			Node<T> * temp = head;
 
-			while (temp) {
+			while (temp)
+			{
 				std::cout << temp->obj << std::endl;
 
 				temp = temp->next;
@@ -1032,10 +1177,12 @@ namespace DoublyLinkedList {
 		}
 
 		/*RULE OF FIVE*/
-		LinkedList(const LinkedList& old) {
+		LinkedList(const LinkedList& old)
+		{
 			Node<T> * temp = old.head;
 
-			while (temp) {
+			while (temp)
+			{
 				Node<T> * tempNode = DBG_NEW Node<T>(temp);
 
 				this->pushBackNode(tempNode);
@@ -1046,7 +1193,8 @@ namespace DoublyLinkedList {
 
 		LinkedList operator=(const LinkedList&) = delete;
 
-		LinkedList(LinkedList&& other) {
+		LinkedList(LinkedList&& other)
+		{
 			head = other.head;
 			tail = other.tail;
 
@@ -1059,9 +1207,12 @@ namespace DoublyLinkedList {
 
 		LinkedList operator=(const LinkedList&&) = delete;
 
-		~LinkedList() {
-			if (head) {
-				while (head->next) {
+		~LinkedList()
+		{
+			if (head) 
+			{
+				while (head->next)
+				{
 					Node<T> * temp = head->next;
 					delete head;
 					head = temp;

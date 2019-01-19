@@ -2,7 +2,8 @@
 #include "Utils.h"
 
 //cheks if two line segments intersect
-bool lineSegmentIntersection(std::pair<double, double> p, std::pair<double, double> p1, std::pair<double, double> p2, std::pair<double, double> p3) {
+bool lineSegmentIntersection(std::pair<double, double> p, std::pair<double, double> p1, std::pair<double, double> p2, std::pair<double, double> p3)
+{
 	//-1 = counterclockwise, 0 = colinear, 1 = clockwise
 	double o, o1, o2, o3;
 
@@ -31,16 +32,20 @@ bool lineSegmentIntersection(std::pair<double, double> p, std::pair<double, doub
 }
 
 //checks if a rectangle intersects with an elipse
-bool rectIntersectsEllipse(std::pair<double, double> rectTopLeft, double width, double height, std::pair<double, double> ellipseCenter, double widthRadius, double heightRadius) {
+bool rectIntersectsEllipse(std::pair<double, double> rectTopLeft, double width, double height, std::pair<double, double> ellipseCenter, double widthRadius, double heightRadius) 
+{
 	//first check for rectangular intersections
 	if (rectTopLeft.second + height >= ellipseCenter.second - heightRadius && rectTopLeft.second <= ellipseCenter.second + heightRadius &&
-		rectTopLeft.first + width >= ellipseCenter.first - widthRadius && rectTopLeft.first <= ellipseCenter.first + widthRadius) {
+		rectTopLeft.first + width >= ellipseCenter.first - widthRadius && rectTopLeft.first <= ellipseCenter.first + widthRadius)
+	{
 
 		//check if the rectangle crosses either of the axes
-		if (rectTopLeft.first < ellipseCenter.first && rectTopLeft.first + width > ellipseCenter.first) {
+		if (rectTopLeft.first < ellipseCenter.first && rectTopLeft.first + width > ellipseCenter.first)
+		{
 			return true;
 		}
-		if (rectTopLeft.second < ellipseCenter.second && rectTopLeft.second + height > ellipseCenter.second) {
+		if (rectTopLeft.second < ellipseCenter.second && rectTopLeft.second + height > ellipseCenter.second)
+		{
 			return true;
 		}
 
@@ -49,19 +54,22 @@ bool rectIntersectsEllipse(std::pair<double, double> rectTopLeft, double width, 
 		//first find foci of ellipse
 		std::pair<double, double> f1, f2;
 
-		if (widthRadius > heightRadius) {
+		if (widthRadius > heightRadius) 
+		{
 			double focalDist = sqrt(widthRadius * widthRadius - heightRadius * heightRadius);
 
 			f1 = std::make_pair(ellipseCenter.first, ellipseCenter.second + focalDist);
 			f2 = std::make_pair(ellipseCenter.first, ellipseCenter.second - focalDist);
 		}
-		else if (widthRadius < heightRadius) {
+		else if (widthRadius < heightRadius) 
+		{
 			double focalDist = sqrt(-widthRadius * widthRadius + heightRadius * heightRadius);
 
 			f1 = std::make_pair(ellipseCenter.first + focalDist, ellipseCenter.second);
 			f2 = std::make_pair(ellipseCenter.first - focalDist, ellipseCenter.second);
 		}
-		else { // circle
+		else 
+		{ // circle
 			if (dist(&rectTopLeft, &ellipseCenter) < widthRadius) return true;
 			if (dist(&std::make_pair(rectTopLeft.first, rectTopLeft.second + height), &ellipseCenter) < widthRadius) return true;
 			if (dist(&std::make_pair(rectTopLeft.first + width, rectTopLeft.second + height), &ellipseCenter) < widthRadius) return true;
@@ -82,10 +90,12 @@ bool rectIntersectsEllipse(std::pair<double, double> rectTopLeft, double width, 
 }
 
 //checks if a given point is inside of a polygon or not
-bool pointInPolygon(std::pair<double, double> point, std::pair<double, double> * polygon, unsigned int size) {
+bool pointInPolygon(std::pair<double, double> point, std::pair<double, double> * polygon, unsigned int size)
+{
 	double maxX = -std::numeric_limits<double>::infinity();
 
-	for (unsigned int i = 0; i < size; i++) {
+	for (unsigned int i = 0; i < size; i++)
+	{
 		if (polygon[i].first == point.first && polygon[i].second == point.second)
 			return true;
 
@@ -98,10 +108,12 @@ bool pointInPolygon(std::pair<double, double> point, std::pair<double, double> *
 	unsigned int numberHit = 0;
 
 	//check how many a line drawn straight right from the point would hit
-	for (unsigned int i = 0; i < size; i++) {
+	for (unsigned int i = 0; i < size; i++)
+	{
 		//if they intersect and are not colinear ( the point isn't in line with a vertex of the polygon)
 		if (lineSegmentIntersection(point, std::make_pair(maxX, point.second), polygon[i], polygon[(i + 1) % size]) &&
-			((point.second - polygon[i].second) * (polygon[(i + 1) % size].first - point.first) - (point.first - polygon[i].first) * (polygon[(i + 1) % size].second - point.second))) {
+			((point.second - polygon[i].second) * (polygon[(i + 1) % size].first - point.first) - (point.first - polygon[i].first) * (polygon[(i + 1) % size].second - point.second))) 
+		{
 			
 			numberHit++;
 		}
