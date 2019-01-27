@@ -112,5 +112,8 @@
     <MASM Include="wordfunnel.asm">
       <Filter>Source Files</Filter>
     </MASM>
+    <MASM Include="palindrome.asm">
+      <Filter>Source Files</Filter>
+    </MASM>
   </ItemGroup>
 </Project>

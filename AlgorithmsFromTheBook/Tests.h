@@ -33,6 +33,7 @@ extern "C" void asm_rot_encrypt(char *);
 extern "C" void asm_rot_decrypt(char *);
 extern "C" int asm_xorshift(int);
 extern "C" int asm_letters_needed(char *, char *);
+extern "C" char asm_longest_palindromic_substring(char *);
 
 /*CACHING*/
 
@@ -1157,6 +1158,12 @@ void rngTester()
 	}
 }
 
+void longestPalindromeTester() {
+	char x[] = { 'a', 'b', 'a', 'b', 'a', 'b', 'a', 0 };
+
+	assert(asm_longest_palindromic_substring(x) == 7);
+}
+
 void isEvenTester ()
 {
 	//this works, I ran the whole loop, but it makes the testAll function run forever, so I'm commenting it out
@@ -1310,6 +1317,7 @@ void runAllTests()
 	independentSetTester();
 	multiplicationTester();
 	encryptionTester();
+	longestPalindromeTester();
 	//std::cout << double(clock() - startTime) / (double)CLOCKS_PER_SEC << " seconds." << std::endl;
 }
 

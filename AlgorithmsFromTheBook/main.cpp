@@ -55,6 +55,7 @@ extern "C" void asm_rot_encrypt(char *);
 extern "C" void asm_rot_decrypt(char *);
 extern "C" int asm_xorshift(int);
 extern "C" int asm_letters_needed(char *, char *);
+extern "C" char asm_longest_palindromic_substring(char *);
 
 //TODO
 //write three network flow algorithms, they just got too tedius and boring (start on page 414/396)
@@ -74,9 +75,14 @@ int main()
 	//for (int i = 0; i < 100; i++) 
 	//{
 	clock_t startTime = clock();
+	char x[] = { 'a', 'b', 'a', 'b', 'a', 'b', 'a', 0 };
 
-	runAllTests();
+	for (int i = 0; i < 1000000; i++) {
+		asm_longest_palindromic_substring(x);
+	}
 	std::cout << double(clock() - startTime) / (double)CLOCKS_PER_SEC << " seconds." << std::endl;
+	
+	runAllTests();
 	//}
 
 	std::getchar();

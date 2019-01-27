@@ -356,5 +356,9 @@ std::vector<std::pair<unsigned int, unsigned int>> * spaceEfficientSequenceAlign
 	return ptr;
 }
 
+int getLengthOfLongestPalindrome(std::string * s) {
+
+}
+
 #pragma deprecated(backwardsSpaceEfficientSequenceAlignmentVal, spaceEfficientSequenceAlignmentVal)
 #pragma warning (default : 4018)

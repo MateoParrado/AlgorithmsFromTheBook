@@ -38,10 +38,12 @@ keepShifting:
 	mov cl, byte ptr[esi]
 	ror byte ptr [eax], cl;rotate right
 	jmp done
+
 negative:
 	mov cl, byte ptr [esi];negate it and rotate left
 	neg cl
 	rol byte ptr [eax],  cl
+
 done:
 	inc eax;point at the next thing
 	inc esi
