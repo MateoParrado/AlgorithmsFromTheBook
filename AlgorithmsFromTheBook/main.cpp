@@ -74,14 +74,24 @@ int main()
 
 	//for (int i = 0; i < 100; i++) 
 	//{
-	clock_t startTime = clock();
 	char x[] = { 'a', 'b', 'a', 'b', 'a', 'b', 'a', 0 };
 
-	for (int i = 0; i < 1000000; i++) {
+	clock_t startTime = clock();
+	for (int i = 0; i < 1000000; i++)
+	{
 		asm_longest_palindromic_substring(x);
 	}
 	std::cout << double(clock() - startTime) / (double)CLOCKS_PER_SEC << " seconds." << std::endl;
 	
+	std::string y = "abababa";
+
+	startTime = clock();
+	for (int i = 0; i < 1000000; i++) 
+	{
+		getLengthOfLongestPalindrome(&y);
+	}
+	std::cout << double(clock() - startTime) / (double)CLOCKS_PER_SEC << " seconds." << std::endl;
+
 	runAllTests();
 	//}
 

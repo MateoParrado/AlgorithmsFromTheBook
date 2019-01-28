@@ -1161,7 +1161,16 @@ void rngTester()
 void longestPalindromeTester() {
 	char x[] = { 'a', 'b', 'a', 'b', 'a', 'b', 'a', 0 };
 
+	std::string y = "abababa";
+	std::string z = "acncacn";
+	std::string raceCar = "racecar";
+	std::string p = "abba";
+
 	assert(asm_longest_palindromic_substring(x) == 7);
+	assert(getLengthOfLongestPalindrome(&y) == 7);
+	assert(getLengthOfLongestPalindrome(&z) == 5);
+	assert(getLengthOfLongestPalindrome(&raceCar) == 7);
+	assert(getLengthOfLongestPalindrome(&p) == 4);
 }
 
 void isEvenTester ()

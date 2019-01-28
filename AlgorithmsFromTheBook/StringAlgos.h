@@ -356,8 +356,104 @@ std::vector<std::pair<unsigned int, unsigned int>> * spaceEfficientSequenceAlign
 	return ptr;
 }
 
-int getLengthOfLongestPalindrome(std::string * s) {
+//get length of longest palindrome in a substring
+//note that it will return a value that includes some preprocessed spaces, so you can divide the result by two
+//if its odd its centered on a letter, if its even its centered in between two charachters
+int getLengthOfLongestPalindrome(std::string * s) 
+{
+	//holds null chars in between letters
+	std::string preprocessedStr;
+	preprocessedStr.resize(s->size() * 2 + 1, 0);
 
+	for (int i = 0; i < s->size(); i++)
+	{
+		preprocessedStr[2 * i + 1] = (*s)[i];
+	}
+
+	//holds size of largest plaindrome centered at x
+	char * sizeArray = new char[preprocessedStr.size()]{ 0 };
+
+	unsigned int furthestRightPalindrome = 0;
+	unsigned int palindromeSize = 0;
+
+	for (int i = 0; i < preprocessedStr.size(); i++) 
+	{
+		//dist from center of palindrome
+		int dist = 1;
+		
+		//are we within a palindrome?
+		if ((i - furthestRightPalindrome) < palindromeSize)
+		{
+			//are we fully contained?
+			//even though i have literally no idea why the negative i works, it comes from furthestPalindrome - (i - furthestPalindrome)
+			if (sizeArray[-i] + i - furthestRightPalindrome < furthestRightPalindrome - palindromeSize)
+			{
+				sizeArray[i] = sizeArray[-i] - 1;
+
+				if (sizeArray[i] + i > furthestRightPalindrome + palindromeSize) 
+				{
+					furthestRightPalindrome = i;
+					palindromeSize = sizeArray[i];
+				}
+				continue;
+			}//are we partially contained
+			else 
+			{
+				//for some reason oi doesn't work here, deal with it later
+				sizeArray[i] = sizeArray[furthestRightPalindrome - (i - furthestRightPalindrome)] - 1;
+
+				dist = sizeArray[furthestRightPalindrome - (i - furthestRightPalindrome)];
+			}
+		}
+		for (;;)
+		{
+			//bottom bounds check
+			if (i - dist < 0)
+			{
+				if (dist > 2 && i + --dist> furthestRightPalindrome + palindromeSize)
+				{
+					furthestRightPalindrome = i;
+					palindromeSize = dist;
+				}
+				break;
+			}
+			//top bounds check
+			if (i + dist >= preprocessedStr.size()) goto done;
+
+
+			//does the palindrome continue
+			if (preprocessedStr[i - dist] == preprocessedStr[i + dist])
+			{
+				dist++;
+				sizeArray[i]++;
+			}
+			else {
+				//correct palindrome savers
+				if (dist > 2 && i + --dist> furthestRightPalindrome + palindromeSize)
+				{
+					furthestRightPalindrome = i + dist;
+					palindromeSize = dist;
+				}
+				break;
+			}
+		}
+	}
+done:
+
+	int retVal = 0;
+
+	//find largest value
+	for (int i = 0; i < preprocessedStr.size(); i++) 
+	{
+		if (sizeArray[i] > retVal)
+		{
+			retVal = sizeArray[i];
+		}
+	}
+
+	delete[] sizeArray;
+
+	return retVal;
 }
 
 #pragma deprecated(backwardsSpaceEfficientSequenceAlignmentVal, spaceEfficientSequenceAlignmentVal)
