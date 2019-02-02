@@ -71,52 +71,19 @@ int main()
 	//to track memory leaks
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif
-	/*
-	//for (int i = 0; i < 100; i++) 
-	//{
-	char x[] = { 'a', 'b', 'a', 'b', 'a', 'b', 'a', 0 };
-
 	clock_t startTime = clock();
-	for (int i = 0; i < 1000000; i++)
-	{
-		asm_longest_palindromic_substring(x);
-	}
-	std::cout << double(clock() - startTime) / (double)CLOCKS_PER_SEC << " seconds." << std::endl;
-	
-	std::string y = "abababa";
-
-	startTime = clock();
-	for (int i = 0; i < 1; i++) 
-	{
-		getLengthOfLongestPalindrome(&y);
-	}
-	std::cout << double(clock() - startTime) / (double)CLOCKS_PER_SEC << " seconds." << std::endl;
-
 	runAllTests();
-	//}
-	*/
-	Map::SetMap<int, int> m;
+	std::cout << double(clock() - startTime) / (double)CLOCKS_PER_SEC << " seconds." << std::endl;
 
-	for (int i = 0; i < 2; i++) {
-		m.addKey(i, i + 1);
-	}
+	std::function<int(int)> lambda = [](int x) { return x % 10;};
+	Map::HashMap<int, int> map(lambda, 10);
 
-	SinglyLinkedList::LinkedList<int> x;
-	x.pushBackNode(1);
-	x.pushBackNode(2);
+	map.addKey(1, 1);
+	map.addKey(0, 2);
 
-	SinglyLinkedList::LinkedList<int> y = x;
+	Map::HashMap<int, int> ma = std::move(map);
 
-	Map::SetMap<int, int> p = m;
-	Map::SetMap<int, int> k(m);
-
-	m.addKey(17, 85);
-
-	Graph::Forest<int> f;
-	f.addNode(0);
-	f.addNode(1);
-
-	Graph::Forest<int> kk = f;
+	std::cout << ma.getKey(1) << ma.getKey(2) << ma.getKey(12);
 
 	std::getchar();
 }
