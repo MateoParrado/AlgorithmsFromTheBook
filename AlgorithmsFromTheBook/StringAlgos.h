@@ -371,7 +371,7 @@ int getLengthOfLongestPalindrome(std::string * s)
 	}
 
 	//holds size of largest plaindrome centered at x
-	char * sizeArray = new char[preprocessedStr.size()]{ 0 };
+	char * sizeArray = DBG_NEW char[preprocessedStr.size()]{ 0 };
 
 	unsigned int furthestRightPalindrome = 0;
 	unsigned int palindromeSize = 0;

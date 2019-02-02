@@ -218,25 +218,23 @@ namespace Graph
 			}
 		}
 
-		virtual Graph operator=(const Graph&) 
+		virtual Graph& operator=(const Graph&) 
 		{
-			Graph<T> ret(this->size);
-
 			//copy over the node values
 			for (unsigned int i = 0; i < this->size; i++)
 			{
-				ret.addNode(nodes[i].obj);
+				addNode(nodes[i].obj);
 			}
 
 			for (unsigned int i = 0; i < this->edges.size(); i++) 
 			{
 				for (unsigned int j = 0; j < this->edges[i]->size(); j++) 
 				{
-					ret.edges[i]->push_back((*edges[i])[j]);
+					edges[i]->push_back((*edges[i])[j]);
 				}
 			}
 
-			return ret;
+			return *this;
 		}
 
 		virtual ~Graph() {
@@ -299,7 +297,7 @@ namespace Graph
 
 		Tree(Graph<T> * g, unsigned int rootNode) : root(rootNode)
 		{
-			bool * visited = new bool[g->size]{ false };
+			bool * visited = DBG_NEW bool[g->size]{ false };
 			std::vector<unsigned int> pending;
 			pending.reserve(g->size / 2);
 
@@ -481,28 +479,26 @@ namespace Graph
 			root = g.root;
 		}
 
-		virtual Tree operator=(const Tree&)
+		virtual Tree& operator=(const Tree&)
 		{
-			Tree<T> ret(nodes[0].obj, this->size);
-
 			//copy over the node values
 			for (unsigned int i = 1; i < this->size; i++) 
 			{
-				ret.addNode(nodes[i].obj);
+				addNode(nodes[i].obj);
 			}
 
 			for (unsigned int i = 0; i < this->edges.size(); i++)
 			{
 				for (unsigned int j = 0; j < this->edges[i]->size(); j++)
 				{
-					ret.edges[i]->push_back((*edges[i])[j]);
+					edges[i]->push_back((*edges[i])[j]);
 				}
 			}
 
-			ret.levels = levels;
-			ret.root = root;
+			levels = levels;
+			root = root;
 
-			return ret;
+			return *this;
 		}
 	};
 
@@ -517,7 +513,7 @@ namespace Graph
 
 		WeightedTree(WeightedGraph<T> * g, unsigned int rootNode) : Tree(rootNode) 
 		{
-			bool * visited = new bool[g->size]{ false };
+			bool * visited = DBG_NEW bool[g->size]{ false };
 			std::vector<unsigned int> pending;
 			pending.reserve(g->size / 2);
 
@@ -756,7 +752,7 @@ namespace Graph
 
 			list.pushBackNode(r);
 
-			unsigned char * numOn = new unsigned char[size] {0};
+			unsigned char * numOn = DBG_NEW unsigned char[size] {0};
 
 			//if it has no kids, dont bother doing all this
 			if (getEdgeNum(list[list.size - 1]))
@@ -952,7 +948,7 @@ namespace Graph
 
 			list.pushBackNode(r);
 
-			unsigned char * numOn = new unsigned char[size] {0};
+			unsigned char * numOn = DBG_NEW unsigned char[size] {0};
 
 			//if it has no kids, dont bother doing all this
 			if (getEdgeNum(list[list.size - 1])) 
@@ -1058,27 +1054,25 @@ namespace Graph
 			levels = g.levels;
 		}
 
-		virtual Forest operator=(const Forest&) 
+		virtual Forest& operator=(const Forest&) 
 		{
-			Forest<T> ret(this->size);
-
 			//copy over the node values
 			for (unsigned int i = 1; i < this->size; i++)
 			{
-				ret.addNode(nodes[i].obj);
+				addNode(nodes[i].obj);
 			}
 
 			for (unsigned int i = 0; i < this->edges.size(); i++) 
 			{
 				for (unsigned int j = 0; j < this->edges[i]->size(); j++)
 				{
-					ret.edges[i]->push_back((*edges[i])[j]);
+					edges[i]->push_back((*edges[i])[j]);
 				}
 			}
 
-			ret.levels = levels;
+			levels = levels;
 
-			return ret;
+			return *this;
 		}
 	};
 
@@ -1401,21 +1395,19 @@ namespace Graph
 			}
 		}
 
-		DirectedGraph operator=(const DirectedGraph&)
+		DirectedGraph& operator=(const DirectedGraph&)
 		{
-			DirectedGraph<T> ret(this->size);
-
 			//copy over the node values
 			for (unsigned int i = 0; i < this->size; i++)
 			{
-				ret.addNode(nodes[i].obj);
+				addNode(nodes[i].obj);
 			}
 
 			for (unsigned int i = 0; i < this->edges.size(); i++)
 			{
 				for (unsigned int j = 0; j < this->edges[i]->size(); j++) 
 				{
-					ret.edges[i]->push_back((*edges[i])[j]);
+					edges[i]->push_back((*edges[i])[j]);
 				}
 			}
 
@@ -1423,11 +1415,11 @@ namespace Graph
 			{
 				for (unsigned int j = 0; j < this->parents[i]->size(); j++) 
 				{
-					ret.parents[i]->push_back((*parents[i])[j]);
+					parents[i]->push_back((*parents[i])[j]);
 				}
 			}
 
-			return ret;
+			return *this;
 		}
 
 		~DirectedGraph()
@@ -1635,21 +1627,19 @@ namespace Graph
 			}
 		}
 
-		WeightedDirectedGraph operator=(const WeightedDirectedGraph&) 
+		WeightedDirectedGraph& operator=(const WeightedDirectedGraph&) 
 		{
-			WeightedDirectedGraph<T> ret(this->size);
-
 			//copy over the node values
 			for (unsigned int i = 0; i < this->size; i++)
 			{
-				ret.addNode(nodes[i].obj);
+				addNode(nodes[i].obj);
 			}
 
 			for (unsigned int i = 0; i < this->edges.size(); i++)
 			{
 				for (unsigned int j = 0; j < this->edges[i]->size(); j++) 
 				{
-					ret.edges[i]->push_back((*edges[i])[j]);
+					edges[i]->push_back((*edges[i])[j]);
 				}
 			}
 
@@ -1657,11 +1647,11 @@ namespace Graph
 			{
 				for (unsigned int j = 0; j < this->parents[i]->size(); j++) 
 				{
-					ret.parents[i]->push_back((*parents[i])[j]);
+					parents[i]->push_back((*parents[i])[j]);
 				}
 			}
 
-			return ret;
+			return *this;
 		}
 
 	};

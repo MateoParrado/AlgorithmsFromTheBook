@@ -1438,7 +1438,7 @@ template<class T>
 unsigned int weightedIndependentSetOnTree(Graph::WeightedTree<T> * g, unsigned int rootVal)
 {
 	//first one is OPT[in], second is OPT[out]
-	std::pair<unsigned int, unsigned int> * opt = new std::pair<unsigned int, unsigned int>[g->size];
+	std::pair<unsigned int, unsigned int> * opt = DBG_NEW std::pair<unsigned int, unsigned int>[g->size];
 
 	for (unsigned int i = g->size - 1; i > 0; i--)
 	{

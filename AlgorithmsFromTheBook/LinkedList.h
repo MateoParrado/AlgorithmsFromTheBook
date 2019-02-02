@@ -188,7 +188,7 @@ namespace SinglyLinkedList
 		}
 
 		//deleting a node at any position, no specific one for popping from back because it has no performance change
-		T popNode(unsigned int pos) 
+		T popNode(unsigned int pos)
 		{
 			if (pos >= size) throw false;
 
@@ -197,6 +197,33 @@ namespace SinglyLinkedList
 
 			for (unsigned int i = 0; i < pos; i++)
 			{
+				prev = cur;
+				cur = cur->next;
+			}
+
+			prev->next = cur->next;
+
+			T obj = cur->obj;
+
+			delete cur;
+
+			size--;
+
+			return obj;
+		}
+
+		T popNodeByVal(T val)
+		{
+			Node<T> * prev = nullptr;
+			Node<T> * cur = head;
+
+			for (;;)
+			{
+				if (cur->obj == val) 
+				{
+					break;
+				}
+				
 				prev = cur;
 				cur = cur->next;
 			}
@@ -294,7 +321,21 @@ namespace SinglyLinkedList
 			}
 		}
 
-		LinkedList operator=(const LinkedList&) = delete;
+		LinkedList& operator=(const LinkedList& old)
+		{
+			Node<T> * temp = old.head;
+
+			while (temp)
+			{
+				Node<T> * tempNode = DBG_NEW Node<T>(temp);
+
+				this->pushBackNode(tempNode);
+
+				temp = temp->next;
+			}
+
+			return *this;
+		}
 
 		LinkedList(LinkedList&& other) 
 		{
@@ -308,7 +349,19 @@ namespace SinglyLinkedList
 			other.size = 0;
 		}
 
-		LinkedList operator=(const LinkedList&&) = delete;
+		LinkedList& operator=(LinkedList&& other)
+		{
+			head = other.head;
+			tail = other.tail;
+
+			size = other.size;
+
+			other.head = nullptr;
+			other.tail = nullptr;
+			other.size = 0;
+
+			return *this;
+		}
 
 		~LinkedList() 
 		{
@@ -677,7 +730,7 @@ namespace XORLinkedList
 			}
 		}
 
-		LinkedList operator=(const LinkedList&) = delete;
+		LinkedList& operator=(const LinkedList&) = delete;
 
 		LinkedList(LinkedList&& other)
 		{
@@ -691,7 +744,7 @@ namespace XORLinkedList
 			other.size = 0;
 		}
 
-		LinkedList operator=(const LinkedList&&) = delete;
+		LinkedList& operator=(const LinkedList&&) = delete;
 
 		//this is janky and ugly, but doesnt throw a segfault because the parent gets passed a null head ptr in the destructor
 		~LinkedList()
@@ -1191,7 +1244,7 @@ namespace DoublyLinkedList
 			}
 		}
 
-		LinkedList operator=(const LinkedList&) = delete;
+		LinkedList& operator=(const LinkedList&) = delete;
 
 		LinkedList(LinkedList&& other)
 		{
@@ -1205,7 +1258,7 @@ namespace DoublyLinkedList
 			other.size = 0;
 		}
 
-		LinkedList operator=(const LinkedList&&) = delete;
+		LinkedList& operator=(const LinkedList&&) = delete;
 
 		~LinkedList()
 		{

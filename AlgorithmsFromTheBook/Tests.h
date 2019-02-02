@@ -18,6 +18,7 @@
 #include "SegmentedRegression.h"
 #include "Geometry.h"
 #include "FlightStruct.h"
+#include "Map.h"
 
 #include <vector>
 #include <algorithm>
@@ -1079,7 +1080,7 @@ void sequenceAlignmentTester()
 /*UTILS*/
 void checksumTester()
 {
-	char * p = new char[11]{ 0,4,2,1,0,0,0,0,5,2,6 };
+	char * p = DBG_NEW char[11]{ 0,4,2,1,0,0,0,0,5,2,6 };
 	assert(asm_get_barcode_checksum(p) == 4);
 	p[1]++;
 	assert(asm_get_barcode_checksum(p) == 3);
@@ -1087,7 +1088,7 @@ void checksumTester()
 	assert(asm_get_barcode_checksum(p) == 0);
 	delete p;
 
-	char * c = new char[10]{ 0,3,8,5,4,8,6,8,0,4 };
+	char * c = DBG_NEW char[10]{ 0,3,8,5,4,8,6,8,0,4 };
 	assert(asm_check_ISBN(c));
 	c[1]++;
 	assert(!asm_check_ISBN(c));
@@ -1105,8 +1106,8 @@ void multiplicationTester()
 
 void encryptionTester()
 {
-	char * test = new char[26]{"abcdefghijklmnopgrstuv"};
-	char * encrypt = new char[26]{ "abcdefghijklmnopgrstuv" };
+	char * test = DBG_NEW char[26]{"abcdefghijklmnopgrstuv"};
+	char * encrypt = DBG_NEW char[26]{ "abcdefghijklmnopgrstuv" };
 	asm_rot_encrypt(encrypt);
 	asm_rot_decrypt(encrypt);
 	for (unsigned int i = 0; i < 26; i++) 
@@ -1120,16 +1121,16 @@ void encryptionTester()
 
 void wordFunnelTester() 
 {
-	char * test = new char[6]{ 'l', 'e', 'a', 'v', 'e', 0 };
-	char * test2 = new char[5]{ 'e', 'a', 'v', 'e', 0 };
+	char * test = DBG_NEW char[6]{ 'l', 'e', 'a', 'v', 'e', 0 };
+	char * test2 = DBG_NEW char[5]{ 'e', 'a', 'v', 'e', 0 };
 
 	assert(asm_letters_needed(test, test2) == 1);
 
 	delete[] test;
 	delete[] test2;
 
-	test = new char[6]{ 's', 'l', 'e', 'e', 't', 0 };
-	test2 = new char[5]{ 'l', 'e', 't', 's', 0 };
+	test = DBG_NEW char[6]{ 's', 'l', 'e', 'e', 't', 0 };
+	test2 = DBG_NEW char[5]{ 'l', 'e', 't', 's', 0 };
 
 	assert(asm_letters_needed(test, test2) == -1);
 

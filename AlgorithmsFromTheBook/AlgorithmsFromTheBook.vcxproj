@@ -156,6 +156,7 @@
     <ClInclude Include="InversionCounter.h" />
     <ClInclude Include="Knapsack.h" />
     <ClInclude Include="LinkedList.h" />
+    <ClInclude Include="Map.h" />
     <ClInclude Include="NetworkFlowAlgorithms.h" />
     <ClInclude Include="RNA.h" />
     <ClInclude Include="SegmentedRegression.h" />
