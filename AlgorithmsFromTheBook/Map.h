@@ -17,6 +17,8 @@ namespace Map
 	template <class K, class V>
 	struct SetMap 
 	{
+		//copy constructor
+		//copy assignment operator
 	protected:
 		//default initialized
 		SinglyLinkedList::LinkedList<std::pair<K, V>> list;
@@ -146,6 +148,8 @@ namespace Map
 		}
 
 		SetMap& operator=(const SetMap& old) {
+			
+
 			this->list = old.list;
 
 			return *this;

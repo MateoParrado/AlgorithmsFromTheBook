@@ -112,5 +112,11 @@ int main()
 
 	m.addKey(17, 85);
 
+	Graph::Forest<int> f;
+	f.addNode(0);
+	f.addNode(1);
+
+	Graph::Forest<int> kk = f;
+
 	std::getchar();
 }
