@@ -14,6 +14,10 @@ namespace Map
 	//copy constructor
 	//copy assignment operator
 
+	//MAP BASED OFF A LINKED LIST
+	//O(N) LOOP UPS
+	//O(1) INSERTIONS AND DELETIONS
+	//O(N) MEMORY
 	template <class K, class V>
 	struct SetMap 
 	{
