@@ -45,6 +45,7 @@
 #include "FlightStruct.h"
 #include "Knapsack.h"
 #include "Map.h"
+#include "BitPacking.h"
 #include "Tests.h"
 
 //assembly externals, ignore the green squigglies
@@ -62,6 +63,8 @@ extern "C" char asm_longest_palindromic_substring(char *);
 //write three network flow algorithms, they just got too tedius and boring (start on page 414/396)
 //figure out whats going on with the template thing in the residual graph from bipartite graph constructor, and get rid of it for speed
 ///optimizaitons in segmented linear regression (266/284), calculate errors in constant time
+//bitpacker
+//assembler big addition
 
 using namespace std;
 
@@ -75,15 +78,23 @@ int main()
 	runAllTests();
 	std::cout << double(clock() - startTime) / (double)CLOCKS_PER_SEC << " seconds." << std::endl;
 
-	std::function<int(int)> lambda = [](int x) { return x % 10;};
-	Map::HashMap<int, int> map(lambda, 10);
+	std::cout << asm_xorshift(12) % 25 << std::endl;
 
-	map.addKey(1, 1);
-	map.addKey(0, 2);
+	BitPacking::BitArray bits(24);
+	BitPacking::BitArray b(24);
+	b.setRange(0, 6);
+	for (int i = 0; i < 24; i++)
+	{
+		bits.setBit(i);
+		bits.print();
 
-	Map::HashMap<int, int> ma = std::move(map);
+		std::cout << "  ";
 
-	std::cout << ma.getKey(1) << ma.getKey(2) << ma.getKey(12);
+		BitPacking::BitArray o = bits;
+
+		o.print();
+		std::cout << std::endl;
+	}
 
 	std::getchar();
 }

@@ -345,11 +345,18 @@ namespace Map
 
 		HashMap& operator=(HashMap&& old)
 		{
-			lists = old.lists;
-			buckets = old.buckets;
+			if (this != &old)
+			{
+				delete[] lists;
 
-			old.buckets = 0;
-			old.lists = nullptr;
+				lists = old.lists;
+				buckets = old.buckets;
+
+				old.buckets = 0;
+				old.lists = nullptr;
+			}
+
+			return *this;
 		}
 
 		~HashMap()

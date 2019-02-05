@@ -19,6 +19,7 @@
 #include "Geometry.h"
 #include "FlightStruct.h"
 #include "Map.h"
+#include "BitPacking.h"
 
 #include <vector>
 #include <algorithm>

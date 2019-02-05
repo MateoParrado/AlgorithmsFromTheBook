@@ -142,7 +142,9 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BitPacking.h" />
     <ClInclude Include="Caching.h" />
+    <ClInclude Include="CharLiteral.h" />
     <ClInclude Include="ClosestPair.h" />
     <ClInclude Include="Clustering.h" />
     <ClInclude Include="DataCompression.h" />
