@@ -154,6 +154,7 @@
     <ClInclude Include="Graph.h" />
     <ClInclude Include="GraphAlgorithms.h" />
     <ClInclude Include="Heap.h" />
+    <ClInclude Include="Interpreters.h" />
     <ClInclude Include="IntervalScheduling.h" />
     <ClInclude Include="InversionCounter.h" />
     <ClInclude Include="Knapsack.h" />
@@ -169,6 +170,7 @@
     <ClInclude Include="Utils.h" />
   </ItemGroup>
   <ItemGroup>
+    <MASM Include="arithmeticExpressionInterpreter.asm" />
     <MASM Include="barcodechecksum.asm" />
     <MASM Include="decrypt.asm" />
     <MASM Include="encryption.asm" />

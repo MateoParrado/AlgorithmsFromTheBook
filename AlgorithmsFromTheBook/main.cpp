@@ -58,13 +58,14 @@ extern "C" void asm_rot_decrypt(char *);
 extern "C" int asm_xorshift(int);
 extern "C" int asm_letters_needed(char *, char *);
 extern "C" char asm_longest_palindromic_substring(char *);
+extern "C" int asm_arithmetic_expression_calculator(char *);
 
 //TODO
-//write three network flow algorithms, they just got too tedius and boring (start on page 414/396)
 //figure out whats going on with the template thing in the residual graph from bipartite graph constructor, and get rid of it for speed
 ///optimizaitons in segmented linear regression (266/284), calculate errors in constant time
 //bitpacker
 //assembler big addition
+//arithmetic interpreter
 
 using namespace std;
 
@@ -78,23 +79,7 @@ int main()
 	runAllTests();
 	std::cout << double(clock() - startTime) / (double)CLOCKS_PER_SEC << " seconds." << std::endl;
 
-	std::cout << asm_xorshift(12) % 25 << std::endl;
-
-	BitPacking::BitArray bits(24);
-	BitPacking::BitArray b(24);
-	b.setRange(0, 6);
-	for (int i = 0; i < 24; i++)
-	{
-		bits.setBit(i);
-		bits.print();
-
-		std::cout << "  ";
-
-		BitPacking::BitArray o = bits;
-
-		o.print();
-		std::cout << std::endl;
-	}
-
+	std::cout << asm_arithmetic_expression_calculator("4/2+2/2") << std::endl;
+	
 	std::getchar();
 }

@@ -14,7 +14,8 @@ asm_xorshift PROC
 ; feedback shift register. Note that the numbers
 ; do not appear fully random, and are not usable 
 ; at full size. They should be modded down to a 
-; smaller number.
+; smaller number. At least the first 16 bits 
+; should be removed.
 ; 
 ; Receives:
 ;	a seed dword on the stack

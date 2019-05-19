@@ -20,6 +20,7 @@
 #include "FlightStruct.h"
 #include "Map.h"
 #include "BitPacking.h"
+#include "Interpreters.h"
 
 #include <vector>
 #include <algorithm>
@@ -36,6 +37,7 @@ extern "C" void asm_rot_decrypt(char *);
 extern "C" int asm_xorshift(int);
 extern "C" int asm_letters_needed(char *, char *);
 extern "C" char asm_longest_palindromic_substring(char *);
+extern "C" int asm_arithmetic_expression_calculator(char *);
 
 /*CACHING*/
 
@@ -642,6 +644,24 @@ void independentSetTester()
 
 	assert(weightedIndependentSetOnTree(&p, 0) == 6);
 	assert(weightedIndependentSetOnTree(&p, 2) == 7);
+}
+
+/*INTERPRETERS*/
+void arithmeticInterpreterTester()
+{
+	assert(arithmeticExpressionCalculator("1+2+3") == 6);
+	assert(arithmeticExpressionCalculator("45") == 45);
+	assert(arithmeticExpressionCalculator("2*12*3") == 72);
+	assert(arithmeticExpressionCalculator("1+2*3") == 7);
+	assert(arithmeticExpressionCalculator("4/2") == 2);
+	assert(arithmeticExpressionCalculator(" 4 - 2 / 2") == 3);
+
+	assert(asm_arithmetic_expression_calculator("1+2+3") == 6);
+	assert(asm_arithmetic_expression_calculator("45") == 45);
+	assert(asm_arithmetic_expression_calculator("2*12*3") == 72);
+	assert(asm_arithmetic_expression_calculator("1+2*3") == 7);
+	assert(asm_arithmetic_expression_calculator("4/2") == 2);
+	assert(asm_arithmetic_expression_calculator(" 4 - 2 / 2") == 3);
 }
 
 /*INTERVAL SCHEDULING*/
@@ -1278,8 +1298,6 @@ void linearRegressionTester()
 void runAllTests()
 {
 	//this is an out of order disorganized mess
-
-	//clock_t startTime = clock();
 	checksumTester();
 	factorialTester();
 	distTester();
@@ -1305,6 +1323,7 @@ void runAllTests()
 	lineSegmentIntersectionTester();
 	minimumSpanningTreeTester();
 	isDAGTester();
+	arithmeticInterpreterTester();
 	topologicalSortTester();
 	sequenceAlignmentTester();
 	negativeCycleTester();
@@ -1329,7 +1348,6 @@ void runAllTests()
 	multiplicationTester();
 	encryptionTester();
 	longestPalindromeTester();
-	//std::cout << double(clock() - startTime) / (double)CLOCKS_PER_SEC << " seconds." << std::endl;
 }
 
 //should honestly deprecate every function in here except run all tests but whatever
