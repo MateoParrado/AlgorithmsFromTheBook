@@ -17,7 +17,7 @@ asm_rot_encrypt PROC
 ; key above.
 ; 
 ; Receives:
-;	EAX, a pointer to the string
+;	pointer to the string on the stack
 ; 
 ; Returns: 
 ;	nothing
@@ -25,6 +25,11 @@ asm_rot_encrypt PROC
 	push ebp
 	
 	mov ebp, esp
+
+	mov eax, [ebp + 8]
+
+	push esi
+	push ebx
 
 	mov esi, offset key
 
@@ -58,6 +63,9 @@ keepgoing:
 	mov ebx, [eax]
 	cmp ebx, 0 ;if the null char is reached, finish
 	jne keepShifting
+
+	pop ebx
+	pop esi
 
 	pop ebp
 	ret

@@ -33,25 +33,31 @@ asm_havel_hakimi PROC
 	mov eax, [ebp+8] ;eax holds the ptr
 	mov ecx, [ebp+12] ;ecx holds the count
 
+	push esi
+
 	;rewrite the array in a new location with the zeros removed
 	push ecx
 
 	mov ebx, -4
-	mov edx, -4
+	mov edx, ebp
+	;sub edx, 4
 
 keepRewriting:
+	dec ecx
+
 	add ebx, 4
 
 	mov esi, dword ptr [eax + ebx]
 
 	cmp esi, 0
-	loope keepRewriting
+	je keepRewriting
 
-	add edx, 4
+	sub edx, 4
 
-;	mov byte ptr [eax - edx], esi
+	mov dword ptr [edx], esi
 
-	loop keepRewriting
+	test ecx, ecx
+	jnz keepRewriting
 
 	pop ecx
 
@@ -63,6 +69,8 @@ keepRewriting:
 
 	pop eax
 	pop ecx
+
+	pop esi
 
 	pop ebp
 

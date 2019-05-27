@@ -79,7 +79,8 @@ int main()
 
 	asm_sort_in_place(&v[0], v.size());
 
-	asm_havel_hakimi(new int[10] {5, 3, 0, 2, 6, 2, 0, 7, 2, 5}, 4);
+	cout << asm_havel_hakimi(new int[10] {5, 3, 0, 2, 6, 2, 0, 7, 2, 5}, 10) << endl;
+
 	//to track memory leaks
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif
