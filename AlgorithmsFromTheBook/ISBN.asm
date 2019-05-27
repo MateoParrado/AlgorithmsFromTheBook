@@ -18,7 +18,7 @@ asm_check_ISBN PROC
 
 	mov ebx, 0 ;bl will hold data, so ebx must be clear
 	
-	mov ebx, eax;mov ptr to ebx
+	mov ebx, [ebp+8]
 
 	mov ecx, 10 ;loop ten times for the ten numbers
 

@@ -75,7 +75,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <Optimization>Disabled</Optimization>
+      <Optimization>MaxSpeed</Optimization>
       <SDLCheck>true</SDLCheck>
       <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -175,9 +175,11 @@
     <MASM Include="decrypt.asm" />
     <MASM Include="encryption.asm" />
     <MASM Include="evenodd.asm" />
+    <MASM Include="HavelHakimi.asm" />
     <MASM Include="ISBN.asm" />
     <MASM Include="multiplication.asm" />
     <MASM Include="palindrome.asm" />
+    <MASM Include="Sorting.asm" />
     <MASM Include="wordfunnel.asm" />
     <MASM Include="xorshift.asm" />
   </ItemGroup>

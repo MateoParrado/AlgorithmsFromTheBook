@@ -59,6 +59,8 @@ extern "C" int asm_xorshift(int);
 extern "C" int asm_letters_needed(char *, char *);
 extern "C" char asm_longest_palindromic_substring(char *);
 extern "C" int asm_arithmetic_expression_calculator(char *);
+extern "C" bool asm_havel_hakimi(int *, int);
+extern "C" bool asm_sort_in_place(int *, int);
 
 //TODO
 //figure out whats going on with the template thing in the residual graph from bipartite graph constructor, and get rid of it for speed
@@ -66,20 +68,25 @@ extern "C" int asm_arithmetic_expression_calculator(char *);
 //bitpacker
 //assembler big addition
 //arithmetic interpreter
+//havel hakimi asm
 
 using namespace std;
 
 int main()
 {
 #ifdef _DEBUG
+	vector<int> v{ 5, 3, 0, 2, 6, 2, 0, 7, 2, 5 };
+
+	asm_sort_in_place(&v[0], v.size());
+
+	asm_havel_hakimi(new int[10] {5, 3, 0, 2, 6, 2, 0, 7, 2, 5}, 4);
 	//to track memory leaks
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif
-	clock_t startTime = clock();
+	//clock_t startTime = clock();
 	runAllTests();
-	std::cout << double(clock() - startTime) / (double)CLOCKS_PER_SEC << " seconds." << std::endl;
+	//std::cout << double(clock() - startTime) / (double)CLOCKS_PER_SEC << " seconds." << std::endl;
 
-	std::cout << asm_arithmetic_expression_calculator("4/2+2/2") << std::endl;
 	
 	std::getchar();
 }

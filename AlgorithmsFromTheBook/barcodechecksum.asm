@@ -18,7 +18,7 @@ asm_get_barcode_checksum PROC
 
 	mov ebx, 0 ;bl will hold data, so ebx must be clear
 	
-	mov ecx, eax ;eax holds ptr, but now ecx does
+	mov ecx, [ebp+8]
 
 	mov eax, 0 ;eax is counter
 L1:

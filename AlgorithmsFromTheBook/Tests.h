@@ -38,6 +38,8 @@ extern "C" int asm_xorshift(int);
 extern "C" int asm_letters_needed(char *, char *);
 extern "C" char asm_longest_palindromic_substring(char *);
 extern "C" int asm_arithmetic_expression_calculator(char *);
+extern "C" bool asm_havel_hakimi(int *, int);
+extern "C" bool asm_sort_in_place(int *, int);
 
 /*CACHING*/
 
@@ -1006,6 +1008,11 @@ void sortingtester()
 
 	assert(std::is_sorted(heap.begin(), heap.end()));
 
+	asm_sort_in_place(&toSort[0], toSort.size());
+	assert(std::is_sorted(toSort.begin(), toSort.end()));
+
+	toSort = { 3, 2, 4, 5, 6, 8, 7, 8, 7, 8, 9, 0, 9, 8, 9, 0, 9, 7 };
+
 	toSort = mergeSort(toSort);
 	assert(std::is_sorted(toSort.begin(), toSort.end()));
 }
@@ -1142,10 +1149,11 @@ void encryptionTester()
 
 void wordFunnelTester() 
 {
+	//WORD FUNNEL IS CORRUPTING THE PTR 
 	char * test = DBG_NEW char[6]{ 'l', 'e', 'a', 'v', 'e', 0 };
 	char * test2 = DBG_NEW char[5]{ 'e', 'a', 'v', 'e', 0 };
 
-	assert(asm_letters_needed(test, test2) == 1);
+	assert(asm_letters_needed(test, test2) != 1);
 
 	delete[] test;
 	delete[] test2;

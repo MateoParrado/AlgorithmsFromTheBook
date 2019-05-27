@@ -29,6 +29,8 @@ asm_letters_needed PROC
 
 	mov ebp, esp
 
+	push esi
+
 	mov ebp, esp ;mov into the right registers
 	mov eax, [ebp + 8]
 	mov esi, [ebp + TYPE DWORD + 8]
@@ -61,11 +63,15 @@ donestring:
 	jne retnul
 
 	mov eax, ecx ;return the number of letters needed
+
+	pop esi
 	pop ebp
 	ret
 
 retnul:
 	mov eax, -1 ;return an error code
+
+	pop esi
 	pop ebp
 	ret
 

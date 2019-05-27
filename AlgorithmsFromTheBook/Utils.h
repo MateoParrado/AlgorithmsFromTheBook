@@ -14,13 +14,13 @@ bool isEven(int x)
 
 template<class T>
 //returns the distance between two coord pair points
-double dist(std::pair<T, T> * p1, std::pair<T, T> * p2) 
+double _fastcall dist(std::pair<T, T> * p1, std::pair<T, T> * p2)
 {
 	return sqrt((p1->first - p2->first)*(p1->first - p2->first) + (p1->second - p2->second)*(p1->second - p2->second));
 };
 
 //recursive exponentiation
-int exponent(int base, int exp) 
+int _fastcall exponent(int base, int exp) 
 {
 	if (!exp) return 1;
 	if (exp == 1) return base;
@@ -29,7 +29,7 @@ int exponent(int base, int exp)
 }
 
 //has to be double bc otherwise x + 0.001 == x
-double derivative(double(*func)(double), double pos) 
+double _fastcall derivative(double(*func)(double), double pos) 
 {
 	return (func(pos + 0.0000001) - func(pos - 0.0000001)) / 0.0000002;
 }
@@ -69,7 +69,7 @@ double integral(double(*func)(double), double start, double end, unsigned int tr
 }
 
 //finds the greatest common divisor of two integers x and y
-unsigned int gcd(unsigned int x, unsigned int y) 
+unsigned int _fastcall gcd(unsigned int x, unsigned int y) 
 {
 	if (y > x)
 	{

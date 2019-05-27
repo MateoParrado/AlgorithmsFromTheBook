@@ -130,5 +130,11 @@
     <MASM Include="arithmeticExpressionInterpreter.asm">
       <Filter>Source Files</Filter>
     </MASM>
+    <MASM Include="HavelHakimi.asm">
+      <Filter>Source Files</Filter>
+    </MASM>
+    <MASM Include="Sorting.asm">
+      <Filter>Source Files</Filter>
+    </MASM>
   </ItemGroup>
 </Project>
