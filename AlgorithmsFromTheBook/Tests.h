@@ -59,6 +59,21 @@ void testPairWithSum()
 	assert(pairWithSum(14, &(p[0]), p.size()));
 }
 
+void testZeroSumSubarray()
+{
+	std::vector<int> v{ 4, 8, -3, -1, 4 };
+
+	assert(zeroSumSubarray(&(v[0]), v.size()) == std::make_pair(2, 4));
+
+	v[4] = 0;
+
+	assert(zeroSumSubarray(&(v[0]), v.size()) == std::make_pair(4, 4));
+
+	v[4] = 5;
+
+	assert(zeroSumSubarray(&(v[0]), v.size()) == std::make_pair(-1, -1));
+}
+
 #pragma endregion
 
 #pragma region CACHE TESTERS
@@ -1006,7 +1021,7 @@ void rnaStructureTester()
 	delete vec;
 }
 
-/*SEGMENTED REGRESSION*/
+#pragma region REGRESSION
 
 //this is a sufficient test for squared error because it needs squared error to work
 void segmentedLinearRegressionTester() 
@@ -1019,6 +1034,8 @@ void segmentedLinearRegressionTester()
 
 	delete vec;
 }
+
+#pragma endregion
 
 /*SORTING ALGOS*/
 
@@ -1379,6 +1396,7 @@ void runAllTests()
 	encryptionTester();
 	longestPalindromeTester();
 	testPairWithSum();
+	testZeroSumSubarray();
 }
 
 //should honestly deprecate every function in here except run all tests but whatever

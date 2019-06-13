@@ -1,6 +1,7 @@
 #pragma once
 
 #include <unordered_set>
+#include <unordered_map>
 
 //given an array of ints, finds if theres a pair of ints whos sum is sum
 bool pairWithSum(int sum, int * arr, int len)
@@ -41,4 +42,37 @@ bool pairWithSum(int sum, int * arr, int len)
 	}
 
 	return false;
+}
+
+//takes an array and finds the first continuous subarray with zero sum
+//returns the index it starts and the index it ends
+//returns (-1, -1) when no match found
+std::pair<int, int> zeroSumSubarray(int * arr, int len)
+{
+	//if the first element is zero, return the first element
+	if (*arr == 0)
+	{
+		return std::make_pair(0, 0);
+	}
+	
+	std::unordered_map<int, int> map;
+
+	int sum = 0;
+
+	//if we have reached this sum before, then the elements between the last sum and this one have zero sum
+	for (int i = 0; i < len; i++)
+	{
+		sum += arr[i];
+
+		auto iter = map.find(sum);
+		
+		if (iter != map.end())
+		{
+			return std::make_pair(iter->second + 1, i);
+		}
+		
+		map.insert(std::make_pair(sum, i));
+	}
+
+	return std::make_pair(-1, -1);
 }
