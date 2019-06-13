@@ -21,6 +21,7 @@
 #include "Map.h"
 #include "BitPacking.h"
 #include "Interpreters.h"
+#include "ArrayAlgorithms.h"
 
 #include <vector>
 #include <algorithm>
@@ -41,7 +42,26 @@ extern "C" int asm_arithmetic_expression_calculator(char *);
 extern "C" bool asm_havel_hakimi(int *, int);
 extern "C" bool asm_sort_in_place(int *, int);
 
-/*CACHING*/
+#pragma region ARRAY ALGORITHMS
+
+void testPairWithSum()
+{
+	std::vector<int> p{ 1, 2, 3, 4, 5, 6, 7, 8 };
+
+	assert(pairWithSum(14, &(p[0]), p.size()));
+
+	p[7] = 0;
+
+	assert(!pairWithSum(14, &(p[0]), p.size()));
+
+	p[7] = 7;
+
+	assert(pairWithSum(14, &(p[0]), p.size()));
+}
+
+#pragma endregion
+
+#pragma region CACHE TESTERS
 
 void cacheTester()
 {
@@ -51,6 +71,8 @@ void cacheTester()
 	assert(cacher(vec1, 2) == 2);
 	assert(cacher(vec1, 3) == 0);
 }
+
+#pragma endregion
 
 /*CLOSEST PAIR*/
 
@@ -1356,6 +1378,7 @@ void runAllTests()
 	multiplicationTester();
 	encryptionTester();
 	longestPalindromeTester();
+	testPairWithSum();
 }
 
 //should honestly deprecate every function in here except run all tests but whatever

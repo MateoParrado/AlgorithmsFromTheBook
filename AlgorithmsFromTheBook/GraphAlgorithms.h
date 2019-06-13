@@ -30,7 +30,7 @@ T * copyWithoutEdges(T * g)
 template<class T>
 Graph::WeightedGraph<T> * kruskalMinTreePriorityQueue(Graph::WeightedGraph<T> * g) 
 {
-	Heap::Heap<std::pair<unsigned int, std::pair<unsigned int, unsigned int>>> weightHeap(g->getTotalEdgesInGraph());//the orderings of the weights
+	Heap::Heap<std::pair<unsigned int, std::pair<unsigned int, unsigned int> > > weightHeap(g->getTotalEdgesInGraph());//the orderings of the weights
 
 	//initialize heap
 	for (unsigned int i = 0; i < g->edges.size(); i++) 
@@ -57,7 +57,7 @@ Graph::WeightedGraph<T> * kruskalMinTreePriorityQueue(Graph::WeightedGraph<T> * 
 
 		weightHeap.popMin();
 	}
-
+	
 	return ret;
 }
 

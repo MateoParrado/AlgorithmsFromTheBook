@@ -6,6 +6,9 @@ PUBLIC asm_havel_hakimi
 
 .code
 
+asm_sort_in_place proto
+asm_sort_in_place_rev proto
+
 ;--------------------------------------------------------
 asm_havel_hakimi PROC
 ;
@@ -30,17 +33,23 @@ asm_havel_hakimi PROC
 
 	mov ebp, esp
 
+	mov eax, [ebp]
+
 	mov eax, [ebp+8] ;eax holds the ptr
 	mov ecx, [ebp+12] ;ecx holds the count
 
 	push esi
+	push edi
 
 	;rewrite the array in a new location with the zeros removed
-	push ecx
-
 	mov ebx, -4
 	mov edx, ebp
-	;sub edx, 4
+
+	mov edi, ecx
+	jmp keepRewriting
+
+subtractFromEdi:
+	dec edi
 
 keepRewriting:
 	dec ecx
@@ -50,7 +59,7 @@ keepRewriting:
 	mov esi, dword ptr [eax + ebx]
 
 	cmp esi, 0
-	je keepRewriting
+	je subtractFromEdi
 
 	sub edx, 4
 
@@ -59,21 +68,60 @@ keepRewriting:
 	test ecx, ecx
 	jnz keepRewriting
 
-	pop ecx
+	comment&
+
+	shl edi, 2
+	sub esp, edi
+	shr edi, 2
+
+	push edi
+	push edx
 
 	;call the sorting proc
-	push ecx
-	push eax
+	;call asm_sort_in_place_rev
 
-;	call asm_sort_in_place
+	pop edx
+	pop edi
 
-	pop eax
-	pop ecx
+	&
+	mov esp, ebp
+	add esp, 4
 
+nextPerson:
+	mov eax, [edx]
+	cmp dword ptr [edx], edi
+	jg retFalse ;if the value in the position is greater than then length, return false
+
+	;otherwise, subtract from all the other ones and keep going
+	mov ecx, dword ptr [edx]
+	add edx, 4
+	mov eax, edx
+
+keepSubbing:
+	dec dword ptr [eax]
+	add eax, 4
+	loop keepSubbing
+
+	;subtract from edi and keep going
+	dec edi
+	jnz nextPerson
+
+	pop edi
 	pop esi
 
 	pop ebp
 
+	mov al, 1
+	ret
+
+retFalse:
+
+	pop esi
+	pop edi
+
+	pop ebp
+
+	xor al, al
 	ret
 asm_havel_hakimi ENDP
 

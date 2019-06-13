@@ -46,6 +46,7 @@
 #include "Knapsack.h"
 #include "Map.h"
 #include "BitPacking.h"
+#include "ArrayAlgorithms.h"
 #include "Tests.h"
 
 //assembly externals, ignore the green squigglies
@@ -72,14 +73,20 @@ extern "C" bool asm_sort_in_place(int *, int);
 
 using namespace std;
 
+int thisIsAStupidFunction(int x, int y)
+{
+	return x * y;
+}
+
 int main()
 {
 #ifdef _DEBUG
-	vector<int> v{ 5, 3, 0, 2, 6, 2, 0, 7, 2, 5 };
+	int x = thisIsAStupidFunction(4, 3);
 
-	asm_sort_in_place(&v[0], v.size());
+	//cout << asm_havel_hakimi(new int[10] {5, 3, 0, 2, 6, 2, 0, 7, 2, 9}, 10) << endl;
 
-	cout << asm_havel_hakimi(new int[10] {5, 3, 0, 2, 6, 2, 0, 7, 2, 5}, 10) << endl;
+
+	//cout << x;
 
 	//to track memory leaks
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
@@ -87,7 +94,6 @@ int main()
 	//clock_t startTime = clock();
 	runAllTests();
 	//std::cout << double(clock() - startTime) / (double)CLOCKS_PER_SEC << " seconds." << std::endl;
-
 	
 	std::getchar();
 }

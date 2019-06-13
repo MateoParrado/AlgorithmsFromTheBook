@@ -98,6 +98,9 @@
     <ClInclude Include="Interpreters.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ArrayAlgorithms.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <MASM Include="evenodd.asm">
