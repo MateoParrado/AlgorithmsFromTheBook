@@ -1153,13 +1153,13 @@ void checksumTester()
 	assert(asm_get_barcode_checksum(p) == 3);
 	p[1] += 3;
 	assert(asm_get_barcode_checksum(p) == 0);
-	delete p;
+	delete[] p;
 
 	char * c = DBG_NEW char[10]{ 0,3,8,5,4,8,6,8,0,4 };
 	assert(asm_check_ISBN(c));
 	c[1]++;
 	assert(!asm_check_ISBN(c));
-	delete c;
+	delete[] c;
 }
 
 void multiplicationTester() 

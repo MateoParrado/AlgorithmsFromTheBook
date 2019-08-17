@@ -12,7 +12,7 @@ bool pairWithSum(int sum, int * arr, int len)
 	for (int i = 0; i < len; i++)
 	{
 		//if sum is even and arr[i] == sum / 2, check if its already in there, because if it is then we have a winner
-		if (sum | 1 == sum && *(arr + i) == sum >> 1)
+		if (((sum | 1) != sum) && *(arr + i) == sum >> 1)
 		{
 			if (set.find(sum >> 1) != set.end())
 			{

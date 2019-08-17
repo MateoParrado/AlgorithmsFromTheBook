@@ -337,7 +337,7 @@ namespace SinglyLinkedList
 			return *this;
 		}
 
-		LinkedList(LinkedList&& other) 
+		LinkedList(LinkedList&& other) noexcept
 		{
 			head = other.head;
 			tail = other.tail;
@@ -732,7 +732,7 @@ namespace XORLinkedList
 
 		LinkedList& operator=(const LinkedList&) = delete;
 
-		LinkedList(LinkedList&& other)
+		LinkedList(LinkedList&& other) noexcept
 		{
 			head = other.head;
 			tail = other.tail;

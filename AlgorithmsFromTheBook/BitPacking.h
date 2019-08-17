@@ -593,7 +593,7 @@ namespace BitPacking
 
 		}
 
-		BitArray(BitArray&& old) 
+		BitArray(BitArray&& old) noexcept
 		{
 			this->size = old.size;
 			this->ptr = old.ptr;
@@ -609,7 +609,7 @@ namespace BitPacking
 			return ret;
 		}
 
-		BitArray& operator=(BitArray&& old)
+		BitArray& operator=(BitArray&& old) noexcept
 		{
 			if (this != &old)
 			{

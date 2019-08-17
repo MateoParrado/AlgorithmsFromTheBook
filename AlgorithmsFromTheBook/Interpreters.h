@@ -110,4 +110,4 @@ int arithmeticExpressionCalculator(char * s) {
 	return retVal;
 }
 
-#pragma deprecated tokenize
+#pragma deprecated(tokenize)
