@@ -211,7 +211,7 @@ unsigned int getPrimes(unsigned int i)
 }
 
 //reverses bits in a char
-unsigned char reverse(unsigned char c)
+inline unsigned char reverse(unsigned char c)
 {
 	c = (c & 0xF0) >> 4 | (c & 0x0F) << 4;
 	c = (c & 0xCC) >> 2 | (c & 0x33) << 2;
@@ -219,3 +219,17 @@ unsigned char reverse(unsigned char c)
 
 	return c;
 }
+
+#pragma warning (disable : 4146)
+
+static inline uint32_t rotl(uint32_t n, unsigned int c)
+{
+	return (n << c) | (n >> (32 - c));
+}
+
+static inline uint32_t rotr(uint32_t n, unsigned int c)
+{
+	return n >> c | n << (32 - c);
+}
+
+#pragma warning (default : 4146)

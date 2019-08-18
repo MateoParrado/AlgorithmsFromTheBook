@@ -47,6 +47,7 @@
 #include "Map.h"
 #include "BitPacking.h"
 #include "ArrayAlgorithms.h"
+#include "Hash.h"
 #include "Tests.h"
 
 //assembly externals, ignore the green squigglies
@@ -81,19 +82,12 @@ int thisIsAStupidFunction(int x, int y)
 int main()
 {
 #ifdef _DEBUG
-	int x = thisIsAStupidFunction(4, 3);
-
-	//cout << asm_havel_hakimi(new int[10] {5, 3, 0, 2, 6, 2, 0, 7, 2, 9}, 10) << endl;
-
-
-	//cout << x;
-
 	//to track memory leaks
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif
-	//clock_t startTime = clock();
+	clock_t startTime = clock();
 	runAllTests();
-	//std::cout << double(clock() - startTime) / (double)CLOCKS_PER_SEC << " seconds." << std::endl;
+	std::cout << double(clock() - startTime) / (double)CLOCKS_PER_SEC << " seconds." << std::endl;
 	
 	std::getchar();
 }

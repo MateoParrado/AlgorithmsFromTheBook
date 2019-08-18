@@ -30,6 +30,14 @@ namespace BitPacking
 
 		/*GETTERS AND SETTERS*/
 
+		void assignByte(unsigned int pos, char val) {
+			ptr[pos] = val;
+		}
+
+		char getByte(unsigned int pos) {
+			return ptr[pos];
+		}
+
 		void setBit(int x) 
 		{
 			ptr[x / 8] |= (128 >> x % 8);

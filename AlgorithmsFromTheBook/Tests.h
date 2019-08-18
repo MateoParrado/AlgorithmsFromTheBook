@@ -22,6 +22,7 @@
 #include "BitPacking.h"
 #include "Interpreters.h"
 #include "ArrayAlgorithms.h"
+#include "Hash.h"
 
 #include <vector>
 #include <algorithm>
@@ -88,6 +89,23 @@ void cacheTester()
 }
 
 #pragma endregion
+
+/*HASH*/
+
+void hashTester() {
+	uint32_t* ptr = SHA256("", 0);
+
+	assert(ptr[0] == 0xe3b0c442);
+	assert(ptr[1] == 0x98fc1c14);
+	assert(ptr[2] == 0x9afbf4c8);
+	assert(ptr[3] == 0x996fb924);
+	assert(ptr[4] == 0x27ae41e4);
+	assert(ptr[5] == 0x649b934c);
+	assert(ptr[6] == 0xa495991b);
+	assert(ptr[7] == 0x7852b855);
+
+	delete[] ptr;
+}
 
 /*CLOSEST PAIR*/
 
@@ -1397,6 +1415,7 @@ void runAllTests()
 	longestPalindromeTester();
 	testPairWithSum();
 	testZeroSumSubarray();
+	hashTester();
 }
 
 //should honestly deprecate every function in here except run all tests but whatever
