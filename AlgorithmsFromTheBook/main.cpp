@@ -67,9 +67,8 @@ extern "C" bool asm_sort_in_place(int *, int);
 //TODO
 //figure out whats going on with the template thing in the residual graph from bipartite graph constructor, and get rid of it for speed
 ///optimizaitons in segmented linear regression (266/284), calculate errors in constant time
-//bitpacker
 //assembler big addition
-//arithmetic interpreter
+//write personal pair and replace all std::pairs with it for better move construction
 //havel hakimi asm
 
 using namespace std;

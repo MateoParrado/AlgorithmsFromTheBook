@@ -45,7 +45,7 @@ extern "C" bool asm_sort_in_place(int *, int);
 
 #pragma region ARRAY ALGORITHMS
 
-void testPairWithSum()
+void pairWithSumTester()
 {
 	std::vector<int> p{ 1, 2, 3, 4, 5, 6, 7, 8 };
 
@@ -60,7 +60,7 @@ void testPairWithSum()
 	assert(pairWithSum(14, &(p[0]), p.size()));
 }
 
-void testZeroSumSubarray()
+void zeroSumSubarrayTester()
 {
 	std::vector<int> v{ 4, 8, -3, -1, 4 };
 
@@ -166,6 +166,20 @@ void pointInPolygonTester()
 	assert(!pointInPolygon({ .5, 1.5 }, &poly[0], 3));
 	assert(!pointInPolygon({ 1.5, .5 }, &poly[0], 3));
 	assert(!pointInPolygon({ -.5, .5 }, &poly[0], 3));
+}
+
+void convexHullTester()
+{
+	std::pair<double, double> * pts = DBG_NEW std::pair<double, double>[5]{ std::make_pair(0.0, 0.0), std::make_pair(1.0, 0.0), std::make_pair(0.0, 1.0), std::make_pair(1.0, 1.0), std::make_pair(0.5, 0.5) };
+
+	auto p = smallestConvexHull(pts, 5);
+
+	assert(p[0] == std::make_pair(0.0, 0.0));
+	assert(p[1] == std::make_pair(1.0, 0.0));
+	assert(p[2] == std::make_pair(1.0, 1.0));
+	assert(p[3] == std::make_pair(0.0, 1.0));
+
+	delete[] pts;
 }
 
 /*GRAPH ALGORITHMSH*/
@@ -1413,9 +1427,10 @@ void runAllTests()
 	multiplicationTester();
 	encryptionTester();
 	longestPalindromeTester();
-	testPairWithSum();
-	testZeroSumSubarray();
+	pairWithSumTester();
+	zeroSumSubarrayTester();
 	hashTester();
+	convexHullTester();
 }
 
 //should honestly deprecate every function in here except run all tests but whatever

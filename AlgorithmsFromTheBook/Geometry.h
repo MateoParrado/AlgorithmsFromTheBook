@@ -125,3 +125,83 @@ bool pointInPolygon(std::pair<double, double> point, std::pair<double, double> *
 
 	return true;
 }
+
+//returns angle between points where p2 right above p1 is 0 and p1 right above p2 is 180 in degrees
+double getAngleBetweenPoints(std::pair<double, double> p1, std::pair<double, double> p2) noexcept
+{
+	double temp = atan2(p1.second - p2.second, p1.first - p2.first) * 180 / PI;
+
+	temp += 180;
+
+	return temp >= 360 ? temp - 360 : temp;
+}
+
+//takes in a pair of points and finds the convex hull that contains them using the smallest area
+//if you have two points in the same place its undefined behavior
+std::vector<std::pair<double, double>> smallestConvexHull(std::pair<double, double>* ptr, int len) 
+{
+	//move values into a vector
+	std::vector<std::pair<double, double>> vec;
+	vec.reserve(len);
+
+	//move everything into vector so we can delete it
+	for (int i = 0; i < len; i++) 
+	{
+		vec.push_back(ptr[i]);
+	}
+
+	int startingVal = 0;
+
+	//start on leftmost point
+	{
+		double leftMost = 1000000000000;
+
+		for (int i = 0; i < len; i++)
+		{
+			if (vec[i].first < leftMost) 
+			{
+				startingVal = i;
+				leftMost = vec[i].first;
+			}
+		}
+	}
+
+	//move starting val into return
+	std::vector<std::pair<double, double>> retVec;
+	retVec.push_back(ptr[startingVal]);
+	vec.erase(vec.begin() + startingVal);
+
+	int currentVal = 0;
+
+	std::pair<double, double> startingPair = retVec[0];
+
+	do
+	{
+		//add starting pair back in the second time we run this
+		if (retVec.size() == 2)
+		{
+			vec.push_back(startingPair);
+		}
+
+		double minAngle = 10000000000;
+
+		//find the first clockwise point
+		for (unsigned int i = 0; i < vec.size(); i++)
+		{
+			if (getAngleBetweenPoints(*retVec.rbegin(), vec[i]) < minAngle)
+			{
+				minAngle = getAngleBetweenPoints(*retVec.rbegin(), vec[i]);
+
+				currentVal = i;
+			}
+		}
+
+		retVec.push_back(vec[currentVal]);
+		vec.erase(vec.begin() + currentVal);
+	} while (*retVec.rbegin() != startingPair);
+
+	//we readded the starting point lsat time, un add it
+	retVec.pop_back();
+
+	return retVec;
+}
