@@ -3,6 +3,7 @@
 #include "LinkedList.h"
 
 //finds a stable matching between two sets of "men" and "women"
+//the first parameter is a list of all of our men, we use it to get the size of the arrays, god only knows why i didn't just take an integer
 //the second two parameters should be pointers to the 0th index of two dimensional arrays
 std::vector<std::pair<unsigned int, unsigned int>> stableMatch(XORLinkedList::LinkedList<unsigned int>& men, const unsigned int * firstManFirstPick, const unsigned int * firstWomanFirstPick) 
 {

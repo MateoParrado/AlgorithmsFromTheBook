@@ -92,6 +92,7 @@ unsigned int dijkstraGcd(unsigned int x, unsigned int y)
 
 	return (x > y) ? dijkstraGcd(x - y, y) : dijkstraGcd(x, y - x);
 }
+
 template<class T>
 //get a pair in the form {slope, intercept} of the regression line of a group of points
 //no idea how this works

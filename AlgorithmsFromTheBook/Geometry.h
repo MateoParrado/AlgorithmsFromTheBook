@@ -31,6 +31,27 @@ bool lineSegmentIntersection(std::pair<double, double> p, std::pair<double, doub
 	return false;
 }
 
+//if two line segments intersect returns a pair of their intersection else returns 
+//copied off of stack overflow
+std::pair<bool, std::pair<double, double>> get_line_intersection(std::pair<double, double> p0, std::pair<double, double> p1, 
+												std::pair<double, double> p2, std::pair<double, double> p3)
+{
+	double s1_x, s1_y, s2_x, s2_y;
+	s1_x = p1.first - p0.first;     s1_y = p1.second - p0.second;
+	s2_x = p3.first - p2.first;     s2_y = p3.second - p2.second;
+
+	float s, t;
+	s = (-s1_y * (p0.first - p2.first) + s1_x * (p0.second - p2.second)) / (-s2_x * s1_y + s1_x * s2_y);
+	t = (s2_x * (p0.second - p2.second) - s2_y * (p0.first - p2.first)) / (-s2_x * s1_y + s1_x * s2_y);
+
+	if (s >= 0 && s <= 1 && t >= 0 && t <= 1)
+	{
+		return std::make_pair(true, std::make_pair(p0.first + (t * s1_x), p0.second + (t * s1_y)));
+	}
+
+	return std::make_pair(false, std::make_pair(0.0, 0.0)); // No collision
+}
+
 //checks if a rectangle intersects with an elipse
 bool rectIntersectsEllipse(std::pair<double, double> rectTopLeft, double width, double height, std::pair<double, double> ellipseCenter, double widthRadius, double heightRadius) 
 {
